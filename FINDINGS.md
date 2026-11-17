@@ -409,9 +409,12 @@ new lines go.
   [#81](https://github.com/bluekeyes/go-gitdiff/pull/81) (open since July 2026).
 - patch-ng: not found in the tracker.
 - BusyBox patch also turns `@@ -1 +0,0 @@` on a ten-line file (delete the first
-  line) into an empty file, with exit 0: it copies the rest of the file only
-  when the hunk's new length is not zero. Its source says that it "does not
-  use the location information", which is why the insertion lands at the end.
+  line) into an empty file, with exit 0: on the first hunk it takes a new range
+  of `+0,0` to mean that the file ends up empty. A hunk without context that
+  deletes lines further down (`@@ -3,2 +2,0 @@`, `git/ranges/u0-delete`)
+  deletes nothing, also with exit 0: a hunk is looked for only when its new
+  side has lines. Its source says that it "does not use the location
+  information", which is why the insertion lands at the end.
 
 **`\ No newline at end of file`.** BusyBox patch (1.36.1 and 1.38.0) and
 patch-ng read the marker and do nothing with it: a file that should end without
