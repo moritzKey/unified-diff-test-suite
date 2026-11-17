@@ -52,7 +52,7 @@ const failure = (answer) => (answer.hang ? 'hang' : answer.died ? 'crash' : null
 const errorOf = (answer) => String(answer.error ?? 'no reason given').slice(0, 300);
 
 /** Apply the whole diff to the whole tree. */
-async function applyToTree(proc, id, diffPath, c, dir) {
+export async function applyToTree(proc, id, diffPath, c, dir) {
   rmSync(dir, { recursive: true, force: true });
   materialize(dir, { files: c.old });
   const before = scanTree(dir);
@@ -78,7 +78,7 @@ function sectionSlices(diff) {
 }
 
 /** Apply each file section to the old content of its file. */
-async function applyToFiles(proc, meta, id, diff, vector, c, dir) {
+export async function applyToFiles(proc, meta, id, diff, vector, c, dir) {
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
   const slices = sectionSlices(diff);

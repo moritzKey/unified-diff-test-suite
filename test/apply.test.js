@@ -5,7 +5,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { loadRegistry } from '../src/adapters.js';
+import { loadRegistry, ROOT } from '../src/adapters.js';
 import { runApplier } from '../src/apply.js';
 import { applyCase, applyInfo } from '../src/applycase.js';
 import { loadIndex, loadVector } from '../src/corpus.js';
@@ -176,5 +176,25 @@ test('the reference appliers pass every patch through the adapter protocol', asy
     const tested = Object.entries(results).filter(([, r]) => r.verdict !== 'n/a');
     assert.deepEqual(tested.filter(([, r]) => r.verdict !== 'ok').map(([id, r]) => `${id}: ${r.verdict} ${r.findings[0]?.message ?? ''}`), [], name);
     assert.equal(tested.length, patches, name);
+  }
+});
+
+test('the applier fuzzer raises no false alarm: the reference applier is right on random scenarios', async () => {
+  const { spawnSync } = await import('node:child_process');
+  const { readFileSync } = await import('node:fs');
+  const out = makeTempDir('udts-fuzz-apply-test-');
+  try {
+    const res = spawnSync(process.execPath, ['src/fuzz-apply.js', '--seed', '5', '--count', '25', '--no-minimise', '--adapter', 'reference-js', '--out', out], {
+      cwd: ROOT,
+      encoding: 'utf8',
+    });
+    assert.equal(res.status, 0, res.stderr);
+    const stats = JSON.parse(readFileSync(join(out, 'stats-seed5.json'), 'utf8'));
+    const st = stats.appliers['reference (JavaScript)'] ?? Object.values(stats.appliers)[0];
+    assert.ok(st.asked >= 10, `only ${st.asked} scenarios were patches`);
+    assert.deepEqual(st.kinds, {});
+    assert.equal(st.ok, st.asked);
+  } finally {
+    rmSync(out, { recursive: true, force: true });
   }
 });

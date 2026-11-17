@@ -235,7 +235,7 @@ function cloneScenario(s) {
 }
 
 /** Candidate simplifications of a scenario, most drastic first. */
-function* simplifications(s) {
+export function* simplifications(s) {
   // fewer states
   if (s.states.length > 2) {
     for (let drop = 0; drop < s.states.length; drop++) {
@@ -341,7 +341,7 @@ function* simplifications(s) {
   }
 }
 
-function sizeOf(s) {
+export function sizeOf(s) {
   let n = s.states.length * 50 + s.producer.args.length * 20 + (s.producer.config ? 30 : 0) + (s.producer.kind === 'git-diff' ? 0 : 40);
   for (const st of s.states) for (const e of st.files) n += 30 + e.path.length * 2 + e.content.length + (e.mode === MODE.FILE ? 0 : 15);
   return n;
@@ -349,7 +349,7 @@ function sizeOf(s) {
 
 // ---- the loop ------------------------------------------------------------------
 
-class Session {
+export class Session {
   constructor(specs, { timeoutMs }) {
     this.dir = join(process.env.UDTS_TMP ?? tmpdir(), `udts-fuzz-${process.pid}-${Date.now()}`);
     mkdirSync(this.dir, { recursive: true });

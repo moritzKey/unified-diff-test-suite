@@ -13,6 +13,7 @@
     "run": "node src/run.js",
     "apply": "node src/apply.js",
     "report": "node src/report.js",
-    "fuzz": "node src/fuzz.js"
+    "fuzz": "node src/fuzz.js",
+    "fuzz-apply": "node src/fuzz-apply.js"
   }
 }

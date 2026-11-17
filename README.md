@@ -172,7 +172,7 @@ check and the runs of all parsers and appliers give identical results with
 Node.js 20, 22, 24 and 26.
 
 ```sh
-npm test                                  # the suite's own tests (47)
+npm test                                  # the suite's own tests (48)
 node src/generate.js --check              # rebuild every vector and compare
 
 cd adapters/node && npm ci && cd ../..    # the JavaScript libraries under test
@@ -189,6 +189,7 @@ node src/apply.js                         # every applier; writes results/apply/
 node src/apply.js --adapter gnu-patch --show
 node src/report.js                        # RESULTS.md and APPLY.md
 node src/fuzz.js --seed 1 --count 2000    # differential fuzzing with minimisation
+node src/fuzz-apply.js --seed 1 --count 300   # the same for the appliers
 ```
 
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs these steps on
