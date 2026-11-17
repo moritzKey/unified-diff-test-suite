@@ -18,8 +18,8 @@ is full of traps. This repository contains
   ([`RESULTS.md`](RESULTS.md), [`FINDINGS.md`](FINDINGS.md));
 - **the same for programs that apply patches**: 208 of the vectors come with
   the file tree before and after, and `git apply`, GNU patch, BusyBox patch,
-  toybox patch, the BSD patch of FreeBSD and macOS, libgit2, JGit and six
-  libraries are asked to get from one to the other
+  toybox patch, the BSD patch of FreeBSD and macOS, Mercurial, libgit2, JGit
+  and six libraries are asked to get from one to the other
   ([`APPLY.md`](APPLY.md));
 - **a description of the format** as the tools actually write it
   ([`SPEC.md`](SPEC.md));
@@ -143,6 +143,7 @@ one: it reported success and the files are not what they should be.
 | BSD patch (FreeBSD, = macOS) | 208 | 140 | 23 | 24 | 21 |
 | libgit2 1.9.7 (`git_apply`) | 194 | 161 | 29 | – | 4 |
 | JGit 7.8.1 (`Git.apply()`) | 208 | 182 | 21 | 1 | 4 |
+| Mercurial 7.2.4 (`hg import`) | 208 | 171 | 6 | 22 | 9 |
 | patch-ng 1.19.1 | 208 | 127 | 38 | 13 | 30 |
 | jsdiff 9.0.0 (`applyPatch`) | 184 | 184 | – | – | – |
 | whatthepatch 1.0.7 (`apply_diff`) | 184 | 173 | 6 | – | 5 |
@@ -158,7 +159,8 @@ toybox patch deletes the file, and JGit and BusyBox patch leave it empty. A
 diff that removes the final newline of a file says so with `\ No newline at
 end of file`; BusyBox patch, toybox patch and patch-ng apply it and leave the
 newline in. The `patch` of macOS gets all of those right, but cuts a line at a
-NUL byte and applies the change of a copied file to the original.
+NUL byte and applies the change of a copied file to the original. Mercurial
+drops the renames of a patch that Mercurial itself wrote with `diff.noprefix`.
 [`FINDINGS.md`](FINDINGS.md#13-applying) has the rest.
 
 ## Running it

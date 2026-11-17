@@ -34,6 +34,7 @@ There are four ways this can end:
 | [libgit2](#libgit2) | 1.9.7 (via pygit2 1.21.0) | `Diff.parse_diff, then Repository.apply (git_diff_from_buffer, git_apply)` | 194 | 161 | 29 | – | **4** | – |
 | [JGit](#jgit) | 7.8.1.202611041320-r | `Git.apply().setPatch(stream).call()` | 208 | 182 | 21 | 1 | **4** | – |
 | [patch-ng](#patch-ng) | 1.19.1 | `fromfile(path).apply(strip=N, root=directory)` | 208 | 127 | 38 | 13 | **30** | – |
+| [Mercurial](#mercurial) | 7.2.4 | `hg import --no-commit -pN FILE` | 208 | 171 | 6 | 22 | **9** | – |
 | [jsdiff](#jsdiff) | 9.0.0 | `applyPatch(source, patch)` | 184 | 184 | – | – | – | – |
 | [whatthepatch](#whatthepatch) | 1.0.7 | `apply_diff(diff, old_text)  with diff from parse_patch(text)` | 184 | 173 | 6 | – | **5** | – |
 | [go-gitdiff](#go-gitdiff) | v0.9.0 | `gitdiff.Parse, then gitdiff.Apply(dst, src, file)` | 189 | 182 | 2 | – | **5** | – |
@@ -55,6 +56,7 @@ What the wrong results are (a patch can show several):
 | libgit2 | 4 | 2 | – | 2 | – | – |
 | JGit | 4 | 1 | 1 | 1 | 2 | – |
 | patch-ng | 30 | 22 | 3 | 7 | 2 | 2 |
+| Mercurial | 9 | – | 7 | 6 | – | 6 |
 | whatthepatch | 5 | 5 | – | – | – | – |
 | go-gitdiff | 5 | 5 | – | – | – | – |
 | java-diff-utils | 4 | 4 | – | – | – | – |
@@ -74,6 +76,7 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 | libgit2 | 145/166, **4 wrong** | 9/10 | 7/18 | – |
 | JGit | 153/166, **4 wrong** | 10/10 | 10/18 | 9/14 |
 | patch-ng | 103/166, **24 wrong** | 8/10, **1 wrong** | 6/18, **3 wrong** | 10/14, **2 wrong** |
+| Mercurial | 140/166, **3 wrong** | 10/10 | 11/18, **5 wrong** | 10/14, **1 wrong** |
 | jsdiff | 144/144 | 10/10 | 16/16 | 14/14 |
 | whatthepatch | 135/144, **4 wrong** | 10/10 | 16/16 | 12/14, **1 wrong** |
 | go-gitdiff | 142/148, **4 wrong** | 10/10 | 17/17 | 13/14, **1 wrong** |
@@ -84,22 +87,22 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 
 Vectors of the `git` tier, grouped by tag; a vector can carry several. "12/14, **1**" reads: 14 patches given, 12 applied correctly, 1 applied wrongly without an error.
 
-| trap | git apply | git apply --unidiff-zero | GNU patch | BusyBox patch | toybox patch | BSD patch | libgit2 | JGit | patch-ng | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
-| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | 2/9, **4** | 1/9, **2** | 8/9, **1** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
-| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 1/20, **7** | 4/20, **6** | 16/20, **1** | 17/20 | 16/20, **1** | 6/20, **10** | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
-| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
-| carriage returns in content | **7/7** | **7/7** | **7/7** | 5/7 | 6/7 | 6/7 | **7/7** | **7/7** | 5/7, **1** | **7/7** | 1/7, **4** | **7/7** | **7/7** | 1/7, **3** |
-| spaces in file names | 20/21 | 20/21 | 16/21 | 13/21, **5** | 16/21, **4** | 13/21, **2** | 15/21 | 19/21, **1** | 12/21, **1** | **17/17** | **17/17** | **17/17** | **17/17** | **17/17** |
-| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **2** | 16/19, **1** | 0/19, **2** | 17/19, **2** | 15/19, **1** | 0/19, **1** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
-| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **4** | 3/10, **4** | 3/10, **2** | 5/10 | **10/10** | 3/10 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
-| renames | **16/16** | **16/16** | 13/16, **1** | 1/16, **10** | 2/16, **9** | 2/16, **4** | 14/16 | 14/16 | 7/16, **4** | **7/7** | **7/7** | **7/7** | **7/7** | **7/7** |
-| copies | **3/3** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 1/3, **2** | **3/3** | 0/3, **2** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
-| mode changes | 9/10 | 9/10 | 8/10 | 0/10, **9** | 1/10, **8** | 1/10, **3** | 8/10 | **10/10** | 4/10 | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
-| empty files | **8/8** | **8/8** | 7/8 | 1/8, **5** | 2/8, **6** | 2/8, **2** | 4/8 | **8/8** | 1/8, **2** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
-| binary patches | **3/3** | **3/3** | 0/3 | 0/3, **3** | 0/3, **3** | 0/3 | **3/3** | **3/3** | 0/3 | – | – | **3/3** | **3/3** | – |
-| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **1** | 2/6, **2** | 0/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| trap | git apply | git apply --unidiff-zero | GNU patch | BusyBox patch | toybox patch | BSD patch | libgit2 | JGit | patch-ng | Mercurial | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
+| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | 2/9, **4** | 1/9, **2** | 8/9, **1** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
+| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 1/20, **7** | 4/20, **6** | 16/20, **1** | 17/20 | 16/20, **1** | 6/20, **10** | 19/20 | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
+| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | **6/6** | **6/6** | **6/6** | 5/6 | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
+| carriage returns in content | **7/7** | **7/7** | **7/7** | 5/7 | 6/7 | 6/7 | **7/7** | **7/7** | 5/7, **1** | 5/7 | **7/7** | 1/7, **4** | **7/7** | **7/7** | 1/7, **3** |
+| spaces in file names | 20/21 | 20/21 | 16/21 | 13/21, **5** | 16/21, **4** | 13/21, **2** | 15/21 | 19/21, **1** | 12/21, **1** | 14/21, **1** | **17/17** | **17/17** | **17/17** | **17/17** | **17/17** |
+| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **2** | 16/19, **1** | 0/19, **2** | 17/19, **2** | 15/19, **1** | 0/19, **1** | 0/19, **3** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
+| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **4** | 3/10, **4** | 3/10, **2** | 5/10 | **10/10** | 3/10 | 5/10, **1** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| renames | **16/16** | **16/16** | 13/16, **1** | 1/16, **10** | 2/16, **9** | 2/16, **4** | 14/16 | 14/16 | 7/16, **4** | 12/16, **1** | **7/7** | **7/7** | **7/7** | **7/7** | **7/7** |
+| copies | **3/3** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 1/3, **2** | **3/3** | 0/3, **2** | **3/3** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
+| mode changes | 9/10 | 9/10 | 8/10 | 0/10, **9** | 1/10, **8** | 1/10, **3** | 8/10 | **10/10** | 4/10 | 9/10, **1** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
+| empty files | **8/8** | **8/8** | 7/8 | 1/8, **5** | 2/8, **6** | 2/8, **2** | 4/8 | **8/8** | 1/8, **2** | **8/8** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
+| binary patches | **3/3** | **3/3** | 0/3 | 0/3, **3** | 0/3, **3** | 0/3 | **3/3** | **3/3** | 0/3 | **3/3** | – | – | **3/3** | **3/3** | – |
+| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **1** | 2/6, **2** | 0/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
 
 ## Per program
 
@@ -504,6 +507,45 @@ patch-ng 1.19.1 · Python · <https://github.com/conan-io/python-patch-ng>
 | FileNotFoundError: [Errno N] No such file or directory: FILE | 2 | `git/ops/symlink-deleted` |
 | IndexError: list index out of range | 1 | `git/paths/pure-rename-with-spaces` |
 | UnicodeDecodeError: FILE codec can't decode byte NxeN in position N: invalid continuation byte | 1 | `git-config/quotepath/off-latin1-name` |
+
+### mercurial
+
+Mercurial 7.2.4 · Python · <https://www.mercurial-scm.org/>
+
+- Under test: `hg import --no-commit -pN FILE` — on a directory
+- hg import patches tracked files only, and only in a working directory without changes: the directory is made a repository first and its files committed (hg init; hg commit -A). A file that hg cannot track (a name with a newline or a carriage return) makes that step fail, and the patch counts as refused. HGPLAIN=1 and an empty HGRCPATH keep any configuration out.
+
+171 of 208 patches are applied correctly.
+
+**Wrong without an error (9):**
+
+| vector | what is in the directory afterwards |
+| --- | --- |
+| `git/paths/two-names-one-quoted` | "we\tird.txt" does not exist (and 1 more difference) |
+| `git/paths/mode-change-quoted` | "prüfen.sh" has mode 100644, expected 100755 |
+| `git/paths/quoted-name-with-space-added` | "Übersicht 2024.txt" does not exist (and 1 more difference) |
+| `git-config/noprefix/option` | "tool.sh" has mode 100644, expected 100755 (and 2 more differences) |
+| `git-config/noprefix/config` | "tool.sh" has mode 100644, expected 100755 (and 2 more differences) |
+| `git-config/mnemonic/commit-and-index` | "tool.sh" has mode 100644, expected 100755 (and 2 more differences) |
+| `git-config/mnemonic/index-and-worktree` | "tool.sh" has mode 100644, expected 100755 |
+| `git-config/prefix/custom` | "tool.sh" has mode 100644, expected 100755 (and 2 more differences) |
+| `gnu/new-and-deleted-files` | "gone.txt" exists and should not |
+
+**Left half-done (22):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| RuntimeError: hg import: exit N: unable to find FILE for patching | 19 | `git/paths/trailing-space` |
+| RuntimeError: hg import: exit N: abort: cannot create FILE: destination already exists | 2 | `git/ops/swap-two-files-break-rewrites` |
+| RuntimeError: hg import: exit N: patching file FILE | 1 | `git/bytes/classic-mac-file` |
+
+**Refused (6):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| RuntimeError: hg import: exit N: abort: failed to synchronize metadata for FILE | 3 | `git/paths/space-then-b-slash` |
+| RuntimeError: hg commit: exit N: abort: FILE and FILE disallowed in filenames: FILE | 2 | `git/paths/newline` |
+| RuntimeError: hg commit: exit N: warning: filename contains FILE, which is invalid on Windows: FILE | 1 | `gnu/special-names` |
 
 ### jsdiff
 

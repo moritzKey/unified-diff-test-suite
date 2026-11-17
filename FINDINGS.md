@@ -1,7 +1,7 @@
 # Findings
 
 What the corpus showed when it was first run, on 16 and 17 November 2026,
-against the latest release of twenty-five parsers, and against thirteen programs
+against the latest release of twenty-five parsers, and against fourteen programs
 that apply patches. The numbers are in [`RESULTS.md`](RESULTS.md) and
 [`APPLY.md`](APPLY.md); this file explains them, one kind of problem at a
 time, and records what was already known to the projects.
@@ -39,7 +39,7 @@ Vector ids below (`git/paths/space`) are files under `corpus/vectors/`.
 | 10 | binary files are not recognised | gitdiff-parser, jsdiff, git-diff-view, parse-git-diff, patch-ng, patch and gitpatch (Rust), unidiff (Rust), diffparser (Java) |
 | 11 | names are damaged when the prefixes are not `a/` and `b/` | parse-diff, diff2html, unidiff, go-gitdiff |
 | 12 | a tool's result depends on the user's git configuration | gitleaks (not trufflehog) |
-| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, libgit2, JGit, patch-ng, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
+| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, libgit2, JGit, Mercurial, patch-ng, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
 
 No parser hung. Four programs end abnormally on valid input: the Rust crates
 patch and gitpatch panic (section 14), waigani/diffparser panics on GNU diffs,
@@ -374,14 +374,15 @@ second case, as `--no-color` closes the first.
 
 Sections 1 to 12 are about reading a diff. This one is about acting on it.
 208 of the vectors are patches in the plain sense — the vector records the tree
-before and the tree after — and thirteen programs were asked to get from one to
+before and the tree after — and fourteen programs were asked to get from one to
 the other ([`APPLY.md`](APPLY.md) has every result; `node src/apply.js --adapter
 gnu-patch --show` repeats one). A program may refuse a patch. What matters here
 is the other outcome: it reports success, and a file is not what it should be.
 I reproduced the cases of `git apply`, GNU patch, BusyBox patch, toybox patch,
 libgit2, JGit and patch-ng by calling the program by hand, outside the harness;
 the go-gitdiff case is the one its own tracker describes. toybox patch and JGit
-were added a day later and have their own section, 15; BSD patch has section 16.
+were added a day later and have their own section, 15; BSD patch and Mercurial
+have sections 16 and 17.
 
 **Zero context.** A hunk made with `-U0` that only inserts has an old range of
 length zero, `@@ -5,0 +6 @@`, and that range names the line *after which* the
@@ -652,6 +653,52 @@ Upstream: FreeBSD's Bugzilla has nothing on NUL bytes or git's headers. The
 nearest are 238971 ("patch(1) modifies the wrong file", a mail made by
 `git format-patch` applied without `-p1`; closed for lack of feedback) and
 181272 (names with blanks; fixed in 2013).
+
+## 17. Mercurial
+
+Added on 17 November 2026: `hg import --no-commit` of Mercurial 7.2.4, the
+latest release. It patches tracked files only, in a working directory without
+changes, so the adapter commits the old tree first. Mercurial's patch code
+(`mercurial/patch.py`) is its own, and it reads git's extended headers.
+
+171 of 208 patches are right, 6 are refused, 22 are refused after a reject
+file was written or part of the change was made, and 9 are wrong with exit
+status 0. The content of files is handled well: zero-length ranges, the
+no-newline marker, binary patches, copies, empty files and symbolic links are
+all right. A file with classic Mac line endings (CR only) is refused.
+
+- **A `diff --git` line without `a/` and `b/` is not taken for git's**, and the
+  extended headers below it are skipped. A rename with changes is applied to
+  the old name and the rename is lost, a mode change is lost, and the exit
+  status is 0 (five vectors made with `diff.noprefix`, `diff.mnemonicPrefix` or
+  other prefixes). Mercurial writes such patches itself: with
+  `diff.noprefix=True` in the configuration, `hg diff --git` and `hg export`
+  print `diff --git old.txt new.txt`, and `hg import -p0` of that output
+  changes `old.txt` in place, leaves the mode alone and reports success. Every
+  test of the line in `patch.py` is for `diff --git a/` (`gitre`). The option
+  broke `hg record` in 2014 (issue 4459) and `--stat` in 2017 (issue 5759);
+  both were fixed where they occurred.
+- **Quoted names are not unquoted.** git quotes a name with a byte outside
+  ASCII by default, and `hg import` looks for a file whose name is the quoted
+  text: "unable to find '\303\274ber.txt"' for patching", in all 19 vectors
+  with such names. Three of them pass without an error: a new file
+  `Übersicht 2024.txt` is created as `\303\234bersicht 2024.txt"` (as by BSD
+  patch, section 16), a rename to `we<TAB>ird.txt` leaves the file under its
+  old name with the new content, and a mode change of `prüfen.sh` does
+  nothing.
+- **Renames are carried out one after another.** When three files rotate
+  their names, or two are swapped (`git/ops/rename-chain`,
+  `git/ops/swap-two-files-break-rewrites`), it stops with "cannot create
+  one.txt: destination already exists", and one of the files is then missing
+  from the working directory. git renames them all at once. The repository
+  still has the file (`hg revert`).
+- A file that a GNU diff deletes — all lines removed, and the timestamp of the
+  epoch on the `+++` line, which is the only sign GNU diff gives — is left
+  behind empty (`gnu/new-and-deleted-files`). GNU patch removes it.
+
+Upstream: nothing in Mercurial's tracker (foss.heptapod.net, which holds the
+old Bugzilla too) on git's quoting or on importing a patch without prefixes.
+Issue 3723 (2012, closed) was about names with spaces in Mercurial's own diffs.
 
 ## Smaller observations
 

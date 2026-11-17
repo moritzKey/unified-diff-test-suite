@@ -12,14 +12,14 @@ import { MODE } from './tree.js';
 
 const SLASH = Buffer.from('/');
 
-/** Scan a directory. A `.git` at the top is not part of the tree. */
+/** Scan a directory. A `.git` or `.hg` at the top (the repository an applier works in) is not part of the tree. */
 export function scanTree(dir) {
   const root = toBuf(dir);
   const tree = new Map();
   const walk = (rel) => {
     const full = rel.length ? Buffer.concat([root, SLASH, rel]) : root;
     for (const name of readdirSync(full, { encoding: 'buffer' })) {
-      if (rel.length === 0 && name.toString('latin1') === '.git') continue;
+      if (rel.length === 0 && (name.toString('latin1') === '.git' || name.toString('latin1') === '.hg')) continue;
       const path = rel.length ? Buffer.concat([rel, SLASH, name]) : name;
       const abs = Buffer.concat([root, SLASH, path]);
       const st = lstatSync(abs);

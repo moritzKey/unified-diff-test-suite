@@ -209,6 +209,11 @@
       "cmd": [".venv/bin/python", "run.py", "apply:patch_ng"]
     },
     {
+      "name": "mercurial",
+      "cwd": "python",
+      "cmd": [".venv/bin/python", "run.py", "apply:mercurial"]
+    },
+    {
       "name": "jsdiff",
       "cwd": "node",
       "cmd": ["node", "run.mjs", "apply:jsdiff"]
