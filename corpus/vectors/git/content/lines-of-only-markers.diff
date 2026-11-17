@@ -1,0 +1,15 @@
+diff --git a/art.txt b/art.txt
+index c588002..9207e3a 100644
+--- a/art.txt
++++ b/art.txt
+@@ -1,6 +1,7 @@
+-+
+ -
+++
+  
+-+-+
+---
++-+-
+ ++
++--
+++

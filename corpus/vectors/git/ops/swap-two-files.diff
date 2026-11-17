@@ -1,0 +1,42 @@
+diff --git a/left.txt b/left.txt
+index f02e68a..e6381dc 100644
+--- a/left.txt
++++ b/left.txt
+@@ -1,8 +1,8 @@
+-left 1
+-left 2
+-left 3
+-left 4
+-left 5
+-left 6
+-left 7
+-left 8
++right 1
++right 2
++right 3
++right 4
++right 5
++right 6
++right 7
++right 8
+diff --git a/right.txt b/right.txt
+index e6381dc..f02e68a 100644
+--- a/right.txt
++++ b/right.txt
+@@ -1,8 +1,8 @@
+-right 1
+-right 2
+-right 3
+-right 4
+-right 5
+-right 6
+-right 7
+-right 8
++left 1
++left 2
++left 3
++left 4
++left 5
++left 6
++left 7
++left 8

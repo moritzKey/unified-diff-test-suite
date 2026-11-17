@@ -1,0 +1,86 @@
+{
+  "id": "git-config/prefix/without-slash",
+  "title": "Prefixes that are not directories: --src-prefix=OLD- --dst-prefix=NEW-",
+  "description": null,
+  "tier": "git-config",
+  "tags": ["prefix","custom-prefix"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","--src-prefix=OLD-","--dst-prefix=NEW-","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "OLD-",
+    "new": "NEW-"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": false
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": false
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "OLD-app.js",
+        "new_name": "NEW-app.js",
+        "old_path": "app.js",
+        "new_path": "app.js",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"one","old_no":1,"new_no":null},
+              {"type":"add","text":"two","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "skip": "the names carry a prefix that is not a directory"
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "--src-prefix=OLD-",
+      "--dst-prefix=NEW-"
+    ],
+    "prefixes": [
+      "OLD-",
+      "NEW-"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"app.js","content":"one\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"app.js","content":"two\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/80-config.js"
+}

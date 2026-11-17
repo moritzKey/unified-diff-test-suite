@@ -1,0 +1,15 @@
+diff --git a/ctl.txt b/ctl.txt
+index 7d863c7..14cb223 100644
+--- a/ctl.txt
++++ b/ctl.txt
+@@ -1,5 +1,5 @@
+-ab
+-cd
+-ef
+-gh
+-ij
++aB
++cD
++eF
++gH
++iJ

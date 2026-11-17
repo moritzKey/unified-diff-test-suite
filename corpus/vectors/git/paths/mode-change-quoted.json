@@ -1,0 +1,70 @@
+{
+  "id": "git/paths/mode-change-quoted",
+  "title": "A mode change of a file with a non-ASCII name: quoted names on the \"diff --git\" line only",
+  "description": null,
+  "tier": "git",
+  "tags": ["paths","quoted-path","mode","unicode"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/prüfen.sh",
+        "new_name": "b/prüfen.sh",
+        "old_path": "prüfen.sh",
+        "new_path": "prüfen.sh",
+        "old_mode": "100644",
+        "new_mode": "100755",
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"prüfen.sh","content":"#!/bin/sh\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"prüfen.sh","content":"#!/bin/sh\n","mode":"100755"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/50-paths.js"
+}

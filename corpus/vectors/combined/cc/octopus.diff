@@ -1,0 +1,14 @@
+diff --cc f.txt
+index 1a2ce89,97f9e06,e4536ee..63093a3
+--- a/f.txt
++++ b/f.txt
+@@@@ -1,6 -1,6 -1,6 +1,6 @@@@
+   1
+   2
+-  three (one)
+ - three (two)
+  -three (three)
++++three (all)
+   4
+   5
+   6

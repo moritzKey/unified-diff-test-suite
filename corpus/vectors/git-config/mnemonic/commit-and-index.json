@@ -1,0 +1,192 @@
+{
+  "id": "git-config/mnemonic/commit-and-index",
+  "title": "diff.mnemonicPrefix with --cached: \"c/\" (commit) and \"i/\" (index)",
+  "description": null,
+  "tier": "git-config",
+  "tags": ["prefix","mnemonic","added","deleted","rename","mode"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","--cached","<state0>"],
+    "config": {
+      "diff.mnemonicPrefix": "true"
+    }
+  },
+  "prefixes": {
+    "old": "c/",
+    "new": "i/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "deleted",
+        "old_name": "c/gone.txt",
+        "new_name": null,
+        "old_path": "gone.txt",
+        "new_path": null,
+        "old_mode": "100644",
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 0,
+            "new_lines": 0,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"bye","old_no":1,"new_no":null}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "added",
+        "old_name": null,
+        "new_name": "i/made.txt",
+        "old_path": null,
+        "new_path": "made.txt",
+        "old_mode": null,
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 0,
+        "hunks": [
+          {
+            "old_start": 0,
+            "old_lines": 0,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"add","text":"hi","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "renamed",
+        "old_name": "c/old name.txt",
+        "new_name": "i/new name.txt",
+        "old_path": "old name.txt",
+        "new_path": "new name.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": 76,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 6,
+            "old_lines": 4,
+            "new_start": 6,
+            "new_lines": 4,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"6","old_no":6,"new_no":6},
+              {"type":"context","text":"7","old_no":7,"new_no":7},
+              {"type":"context","text":"8","old_no":8,"new_no":8},
+              {"type":"delete","text":"9","old_no":9,"new_no":null},
+              {"type":"add","text":"nine","old_no":null,"new_no":9}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "modified",
+        "old_name": "c/src/app.js",
+        "new_name": "i/src/app.js",
+        "old_path": "src/app.js",
+        "new_path": "src/app.js",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 3,
+            "new_start": 1,
+            "new_lines": 3,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"one","old_no":1,"new_no":1},
+              {"type":"delete","text":"two","old_no":2,"new_no":null},
+              {"type":"add","text":"2","old_no":null,"new_no":2},
+              {"type":"context","text":"three","old_no":3,"new_no":3}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "modified",
+        "old_name": "c/tool.sh",
+        "new_name": "i/tool.sh",
+        "old_path": "tool.sh",
+        "new_path": "tool.sh",
+        "old_mode": "100644",
+        "new_mode": "100755",
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff-cached",
+    "args": [],
+    "config": {
+      "diff.mnemonicPrefix": "true"
+    },
+    "prefixes": [
+      "c/",
+      "i/"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"src/app.js","content":"one\ntwo\nthree\n"},
+          {"path":"gone.txt","content":"bye\n"},
+          {"path":"tool.sh","content":"#!/bin/sh\n"},
+          {"path":"old name.txt","content":"1\n2\n3\n4\n5\n6\n7\n8\n9\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"src/app.js","content":"one\n2\nthree\n"},
+          {"path":"made.txt","content":"hi\n"},
+          {"path":"tool.sh","content":"#!/bin/sh\n","mode":"100755"},
+          {"path":"new name.txt","content":"1\n2\n3\n4\n5\n6\n7\n8\nnine\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/80-config.js"
+}

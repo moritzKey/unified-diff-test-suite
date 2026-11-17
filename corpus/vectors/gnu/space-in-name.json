@@ -1,0 +1,84 @@
+{
+  "id": "gnu/space-in-name",
+  "title": "A space in the name: GNU diff quotes it (\"a/my file.txt\"), git would not",
+  "description": null,
+  "tier": "gnu",
+  "tags": ["quoted-path","space-in-path"],
+  "producer": {
+    "tool": "diff",
+    "version": "3.10",
+    "argv": ["diff","-ruN","a","b"],
+    "env": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": false,
+    "git_apply_numstat": false
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": null,
+        "old_name": "a/my file.txt",
+        "new_name": "b/my file.txt",
+        "old_path": "my file.txt",
+        "new_path": "my file.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"old","old_no":1,"new_no":null},
+              {"type":"add","text":"new","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": false
+  },
+  "recipe": {
+    "kind": "gnu-diff",
+    "args": [
+      "-ruN"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"my file.txt","content":"old\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"my file.txt","content":"new\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/90-gnu.js"
+}

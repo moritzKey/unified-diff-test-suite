@@ -1,0 +1,90 @@
+{
+  "id": "git/ops/copy-and-edit",
+  "title": "A copy with a change in the copy",
+  "description": null,
+  "tier": "git",
+  "tags": ["copy"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","-C","--find-copies-harder","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "copied",
+        "old_name": "a/template.txt",
+        "new_name": "b/instance.txt",
+        "old_path": "template.txt",
+        "new_path": "instance.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": 89,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 5,
+            "new_start": 1,
+            "new_lines": 5,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"line 1","old_no":1,"new_no":1},
+              {"type":"delete","text":"line 2","old_no":2,"new_no":null},
+              {"type":"add","text":"line two","old_no":null,"new_no":2},
+              {"type":"context","text":"line 3","old_no":3,"new_no":3},
+              {"type":"context","text":"line 4","old_no":4,"new_no":4},
+              {"type":"context","text":"line 5","old_no":5,"new_no":5}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "-C",
+      "--find-copies-harder"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"template.txt","content":"line 1\nline 2\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"template.txt","content":"line 1\nline 2\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\n"},
+          {"path":"instance.txt","content":"line 1\nline two\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

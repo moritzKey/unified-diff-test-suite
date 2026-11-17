@@ -1,0 +1,25 @@
+:100644 100644 d00491f 0cfbf08 M	a.txt
+:100644 000000 587be6b 0000000 D	gone.txt
+:000000 100644 0000000 975fbec A	made.txt
+
+diff --git a/a.txt b/a.txt
+index d00491f..0cfbf08 100644
+--- a/a.txt
++++ b/a.txt
+@@ -1 +1 @@
+-1
++2
+diff --git a/gone.txt b/gone.txt
+deleted file mode 100644
+index 587be6b..0000000
+--- a/gone.txt
++++ /dev/null
+@@ -1 +0,0 @@
+-x
+diff --git a/made.txt b/made.txt
+new file mode 100644
+index 0000000..975fbec
+--- /dev/null
++++ b/made.txt
+@@ -0,0 +1 @@
++y

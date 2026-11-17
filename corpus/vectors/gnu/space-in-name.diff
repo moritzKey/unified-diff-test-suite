@@ -1,0 +1,6 @@
+diff -ruN "a/my file.txt" "b/my file.txt"
+--- "a/my file.txt"	2000-01-01 00:00:00.000000000 +0000
++++ "b/my file.txt"	2000-01-01 01:00:00.000000000 +0000
+@@ -1 +1 @@
+-old
++new

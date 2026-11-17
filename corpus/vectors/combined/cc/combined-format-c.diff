@@ -1,0 +1,16 @@
+diff --combined f.txt
+index b422dc7,04e3cdd..c00272a
+--- a/f.txt
++++ b/f.txt
+@@@ -1,8 -1,8 +1,8 @@@
+  1
+ -2
+ +two (ours)
+  3
+  4
+--5
+++five (merge)
+  6
+- 7
++ seven (theirs)
+  8

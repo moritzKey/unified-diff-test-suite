@@ -1,0 +1,8 @@
+diff --git a/tool b/tool
+new file mode 100755
+index 0000000..039e4d0
+--- /dev/null
++++ b/tool
+@@ -0,0 +1,2 @@
++#!/bin/sh
++exit 0

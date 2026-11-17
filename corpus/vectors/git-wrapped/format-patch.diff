@@ -1,0 +1,22 @@
+From 27edd165fb6cd98854c5a25372d0919541b58519 Mon Sep 17 00:00:00 2001
+From: A U Thor <author@example.com>
+Date: Sat, 1 Jan 2000 00:01:00 +0000
+Subject: [PATCH] Say two
+
+The greeting is now a two.
+---
+ app.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/app.py b/app.py
+index 377a21a..ac6780c 100644
+--- a/app.py
++++ b/app.py
+@@ -1,3 +1,3 @@
+ import sys
+ 
+-print("one")
++print("two")
+-- 
+2.43.0
+

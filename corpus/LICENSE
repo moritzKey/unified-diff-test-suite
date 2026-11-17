@@ -1,0 +1,13 @@
+The test vectors in this directory (everything under corpus/) are dedicated to
+the public domain under the Creative Commons CC0 1.0 Universal Public Domain
+Dedication.
+
+To the extent possible under law, the contributors of the
+unified-diff-test-suite have waived all copyright and related or neighbouring
+rights to these files. You can copy, modify and distribute them, including for
+commercial purposes, without asking permission and without attribution.
+
+Full text: https://creativecommons.org/publicdomain/zero/1.0/legalcode
+
+The diffs themselves are the output of git and GNU diffutils for file contents
+written for this corpus.

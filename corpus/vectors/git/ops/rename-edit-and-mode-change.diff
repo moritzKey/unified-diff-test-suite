@@ -1,0 +1,17 @@
+diff --git a/script b/bin/script.sh
+old mode 100644
+new mode 100755
+similarity index 87%
+rename from script
+rename to bin/script.sh
+index 624b469..6da28a4
+--- a/script
++++ b/bin/script.sh
+@@ -1,6 +1,6 @@
+ line 1
+ line 2
+-line 3
++line three
+ line 4
+ line 5
+ line 6

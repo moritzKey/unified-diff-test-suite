@@ -1,0 +1,70 @@
+{
+  "id": "git/paths/pure-rename-with-spaces",
+  "title": "A rename without content change between names with spaces: no \"---\"/\"+++\" lines at all",
+  "description": null,
+  "tier": "git",
+  "tags": ["paths","space-in-path","rename","header-ambiguity"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "renamed",
+        "old_name": "a/old name.txt",
+        "new_name": "b/new name.txt",
+        "old_path": "old name.txt",
+        "new_path": "new name.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": 100,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"old name.txt","content":"one\ntwo\nthree\nfour\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"new name.txt","content":"one\ntwo\nthree\nfour\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/50-paths.js"
+}

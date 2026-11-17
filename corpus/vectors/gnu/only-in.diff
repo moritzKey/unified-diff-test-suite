@@ -1,0 +1,14 @@
+Only in a: gone.txt
+diff -ru a/kept.txt b/kept.txt
+--- a/kept.txt	2000-01-01 00:00:00.000000000 +0000
++++ b/kept.txt	2000-01-01 01:00:00.000000000 +0000
+@@ -1 +1 @@
+-k
++K
+Only in b: made.txt
+diff -ru a/z.txt b/z.txt
+--- a/z.txt	2000-01-01 00:00:00.000000000 +0000
++++ b/z.txt	2000-01-01 01:00:00.000000000 +0000
+@@ -1 +1 @@
+-z
++Z

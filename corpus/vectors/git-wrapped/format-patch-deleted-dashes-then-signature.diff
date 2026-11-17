@@ -1,0 +1,19 @@
+From 1ac2a23fe4464734a50a09aa2a247bb86d79be9b Mon Sep 17 00:00:00 2001
+From: A U Thor <author@example.com>
+Date: Sat, 1 Jan 2000 00:01:00 +0000
+Subject: [PATCH] two
+
+---
+ mail.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/mail.txt b/mail.txt
+index b366d4d..0917008 100644
+--- a/mail.txt
++++ b/mail.txt
+@@ -1,2 +1 @@
+ Bye
+--- 
+-- 
+2.43.0
+

@@ -1,0 +1,15 @@
+diff --git a/hello.txt b/hello.txt
+index 11b97c4..cf2fa8f 100644
+--- a/hello.txt
++++ b/hello.txt
+@@ -1,5 +1,5 @@
+-Grüße
+-你好
+-👋🏽
+-é
+-שלום
++Grüße!
++您好
++👋🏿
++é
++שלום עולם

@@ -1,0 +1,14 @@
+diff --git a/a.sql b/a.sql
+index 6d03cec..e0ac49d 100644
+--- a/a.sql
++++ b/a.sql
+@@ -1,2 +1 @@
+ SELECT 1;
+--- trailing note
+diff --git a/b.sql b/b.sql
+index e7f8100..8b28b9e 100644
+--- a/b.sql
++++ b/b.sql
+@@ -1 +1 @@
+-SELECT 2;
++SELECT 3;

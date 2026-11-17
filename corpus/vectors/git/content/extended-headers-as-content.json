@@ -1,0 +1,89 @@
+{
+  "id": "git/content/extended-headers-as-content",
+  "title": "File lines that read like git extended headers",
+  "description": null,
+  "tier": "git",
+  "tags": ["content-lookalike","fake-file-header"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/headers.txt",
+        "new_name": "b/headers.txt",
+        "old_path": "headers.txt",
+        "new_path": "headers.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 4,
+        "deletions": 4,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 5,
+            "new_start": 1,
+            "new_lines": 5,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"new file mode 100644","old_no":1,"new_no":null},
+              {"type":"delete","text":"rename from a.txt","old_no":2,"new_no":null},
+              {"type":"delete","text":"rename to b.txt","old_no":3,"new_no":null},
+              {"type":"delete","text":"similarity index 90%","old_no":4,"new_no":null},
+              {"type":"add","text":"deleted file mode 100644","old_no":null,"new_no":1},
+              {"type":"add","text":"copy from a.txt","old_no":null,"new_no":2},
+              {"type":"add","text":"copy to b.txt","old_no":null,"new_no":3},
+              {"type":"add","text":"Binary files a/x and b/x differ","old_no":null,"new_no":4},
+              {"type":"context","text":"keep","old_no":5,"new_no":5}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"headers.txt","content":"new file mode 100644\nrename from a.txt\nrename to b.txt\nsimilarity index 90%\nkeep\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"headers.txt","content":"deleted file mode 100644\ncopy from a.txt\ncopy to b.txt\nBinary files a/x and b/x differ\nkeep\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/30-content.js"
+}

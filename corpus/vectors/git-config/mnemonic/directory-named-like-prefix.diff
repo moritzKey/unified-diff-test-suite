@@ -1,0 +1,14 @@
+diff --git i/i/w/c.txt w/i/w/c.txt
+index 5626abf..f719efd 100644
+--- i/i/w/c.txt
++++ w/i/w/c.txt
+@@ -1 +1 @@
+-one
++two
+diff --git i/w/i/o.txt w/w/i/o.txt
+index e438487..4723a1b 100644
+--- i/w/i/o.txt
++++ w/w/i/o.txt
+@@ -1 +1 @@
+-uno
++dos

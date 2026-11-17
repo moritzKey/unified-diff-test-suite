@@ -1,0 +1,102 @@
+{
+  "id": "combined/cc/octopus",
+  "title": "A merge of three parents: four \"@\" and three marker columns",
+  "description": null,
+  "tier": "combined",
+  "tags": ["combined","octopus"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","show","--format=","<state4>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": false,
+    "git_apply_numstat": false
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "combined": true,
+        "status": "modified",
+        "path": "f.txt",
+        "old_name": "a/f.txt",
+        "new_name": "b/f.txt",
+        "parents": 3,
+        "binary": false,
+        "hunks": [
+          {
+            "parent_ranges": [{"start":1,"lines":6},{"start":1,"lines":6},{"start":1,"lines":6}],
+            "new_start": 1,
+            "new_lines": 6,
+            "section": "",
+            "lines": [
+              {"markers":"   ","text":"1"},
+              {"markers":"   ","text":"2"},
+              {"markers":"-  ","text":"three (one)"},
+              {"markers":" - ","text":"three (two)"},
+              {"markers":"  -","text":"three (three)"},
+              {"markers":"+++","text":"three (all)"},
+              {"markers":"   ","text":"4"},
+              {"markers":"   ","text":"5"},
+              {"markers":"   ","text":"6"}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "skip": "a combined diff describes a merge, it is not a patch"
+  },
+  "recipe": {
+    "kind": "git-merge",
+    "args": [
+      "--format="
+    ],
+    "parents": [[],[0],[0],[0],[1,2,3]],
+    "states": [
+      {
+        "message": "base",
+        "files": [
+          {"path":"f.txt","content":"1\n2\n3\n4\n5\n6\n"}
+        ]
+      },
+      {
+        "message": "one",
+        "files": [
+          {"path":"f.txt","content":"1\n2\nthree (one)\n4\n5\n6\n"}
+        ]
+      },
+      {
+        "message": "two",
+        "files": [
+          {"path":"f.txt","content":"1\n2\nthree (two)\n4\n5\n6\n"}
+        ]
+      },
+      {
+        "message": "three",
+        "files": [
+          {"path":"f.txt","content":"1\n2\nthree (three)\n4\n5\n6\n"}
+        ]
+      },
+      {
+        "message": "Octopus merge",
+        "files": [
+          {"path":"f.txt","content":"1\n2\nthree (all)\n4\n5\n6\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/85-combined.js"
+}

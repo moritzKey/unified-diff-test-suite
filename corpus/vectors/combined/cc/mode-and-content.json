@@ -1,0 +1,91 @@
+{
+  "id": "combined/cc/mode-and-content",
+  "title": "A merge that changes content and makes the file executable: \"mode 100644,100644..100755\"",
+  "description": null,
+  "tier": "combined",
+  "tags": ["combined","mode"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","show","--format=","<state3>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": false,
+    "git_apply_numstat": false
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "combined": true,
+        "status": "modified",
+        "path": "run",
+        "old_name": "a/run",
+        "new_name": "b/run",
+        "parents": 2,
+        "binary": false,
+        "hunks": [
+          {
+            "parent_ranges": [{"start":1,"lines":2},{"start":1,"lines":2}],
+            "new_start": 1,
+            "new_lines": 2,
+            "section": "",
+            "lines": [
+              {"markers":"  ","text":"#!/bin/sh"},
+              {"markers":"- ","text":"echo ours"},
+              {"markers":" -","text":"echo theirs"},
+              {"markers":"++","text":"echo both"}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "skip": "a combined diff describes a merge, it is not a patch"
+  },
+  "recipe": {
+    "kind": "git-merge",
+    "args": [
+      "--format="
+    ],
+    "parents": [[],[0],[0],[1,2]],
+    "states": [
+      {
+        "message": "base",
+        "files": [
+          {"path":"run","content":"#!/bin/sh\necho base\n"}
+        ]
+      },
+      {
+        "message": "ours",
+        "files": [
+          {"path":"run","content":"#!/bin/sh\necho ours\n"}
+        ]
+      },
+      {
+        "message": "theirs",
+        "files": [
+          {"path":"run","content":"#!/bin/sh\necho theirs\n"}
+        ]
+      },
+      {
+        "message": "Merge",
+        "files": [
+          {"path":"run","content":"#!/bin/sh\necho both\n","mode":"100755"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/85-combined.js"
+}

@@ -1,0 +1,138 @@
+{
+  "id": "git/ops/swap-two-files",
+  "title": "Two files exchange their contents: reported as two modifications",
+  "description": null,
+  "tier": "git",
+  "tags": ["rename"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/left.txt",
+        "new_name": "b/left.txt",
+        "old_path": "left.txt",
+        "new_path": "left.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 8,
+        "deletions": 8,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 8,
+            "new_start": 1,
+            "new_lines": 8,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"left 1","old_no":1,"new_no":null},
+              {"type":"delete","text":"left 2","old_no":2,"new_no":null},
+              {"type":"delete","text":"left 3","old_no":3,"new_no":null},
+              {"type":"delete","text":"left 4","old_no":4,"new_no":null},
+              {"type":"delete","text":"left 5","old_no":5,"new_no":null},
+              {"type":"delete","text":"left 6","old_no":6,"new_no":null},
+              {"type":"delete","text":"left 7","old_no":7,"new_no":null},
+              {"type":"delete","text":"left 8","old_no":8,"new_no":null},
+              {"type":"add","text":"right 1","old_no":null,"new_no":1},
+              {"type":"add","text":"right 2","old_no":null,"new_no":2},
+              {"type":"add","text":"right 3","old_no":null,"new_no":3},
+              {"type":"add","text":"right 4","old_no":null,"new_no":4},
+              {"type":"add","text":"right 5","old_no":null,"new_no":5},
+              {"type":"add","text":"right 6","old_no":null,"new_no":6},
+              {"type":"add","text":"right 7","old_no":null,"new_no":7},
+              {"type":"add","text":"right 8","old_no":null,"new_no":8}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "modified",
+        "old_name": "a/right.txt",
+        "new_name": "b/right.txt",
+        "old_path": "right.txt",
+        "new_path": "right.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 8,
+        "deletions": 8,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 8,
+            "new_start": 1,
+            "new_lines": 8,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"right 1","old_no":1,"new_no":null},
+              {"type":"delete","text":"right 2","old_no":2,"new_no":null},
+              {"type":"delete","text":"right 3","old_no":3,"new_no":null},
+              {"type":"delete","text":"right 4","old_no":4,"new_no":null},
+              {"type":"delete","text":"right 5","old_no":5,"new_no":null},
+              {"type":"delete","text":"right 6","old_no":6,"new_no":null},
+              {"type":"delete","text":"right 7","old_no":7,"new_no":null},
+              {"type":"delete","text":"right 8","old_no":8,"new_no":null},
+              {"type":"add","text":"left 1","old_no":null,"new_no":1},
+              {"type":"add","text":"left 2","old_no":null,"new_no":2},
+              {"type":"add","text":"left 3","old_no":null,"new_no":3},
+              {"type":"add","text":"left 4","old_no":null,"new_no":4},
+              {"type":"add","text":"left 5","old_no":null,"new_no":5},
+              {"type":"add","text":"left 6","old_no":null,"new_no":6},
+              {"type":"add","text":"left 7","old_no":null,"new_no":7},
+              {"type":"add","text":"left 8","old_no":null,"new_no":8}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"left.txt","content":"left 1\nleft 2\nleft 3\nleft 4\nleft 5\nleft 6\nleft 7\nleft 8\n"},
+          {"path":"right.txt","content":"right 1\nright 2\nright 3\nright 4\nright 5\nright 6\nright 7\nright 8\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"left.txt","content":"right 1\nright 2\nright 3\nright 4\nright 5\nright 6\nright 7\nright 8\n"},
+          {"path":"right.txt","content":"left 1\nleft 2\nleft 3\nleft 4\nleft 5\nleft 6\nleft 7\nleft 8\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

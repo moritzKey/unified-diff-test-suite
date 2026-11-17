@@ -1,0 +1,70 @@
+{
+  "id": "git/ops/empty-file-renamed",
+  "title": "An empty file \"renamed\": git pairs any deleted empty file with any added one",
+  "description": null,
+  "tier": "git",
+  "tags": ["empty-file","rename","no-hunks"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "renamed",
+        "old_name": "a/a/.gitkeep",
+        "new_name": "b/b/.gitkeep",
+        "old_path": "a/.gitkeep",
+        "new_path": "b/.gitkeep",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": 100,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"a/.gitkeep","content":""}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"b/.gitkeep","content":""}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

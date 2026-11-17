@@ -1,0 +1,9 @@
+diff --git a/old-mac.txt b/old-mac.txt
+index d05815f..dfd9fa7 100644
+--- a/old-mac.txt
++++ b/old-mac.txt
+@@ -1 +1 @@
+-onetwothree
+\ No newline at end of file
++oneTWOthree
+\ No newline at end of file

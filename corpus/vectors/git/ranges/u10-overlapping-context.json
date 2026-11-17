@@ -1,0 +1,119 @@
+{
+  "id": "git/ranges/u10-overlapping-context",
+  "title": "-U10: nearby changes merge into one hunk",
+  "description": null,
+  "tier": "git",
+  "tags": ["hunk-header"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","-U10","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/f.txt",
+        "new_name": "b/f.txt",
+        "old_path": "f.txt",
+        "new_path": "f.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 2,
+        "deletions": 2,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 35,
+            "new_start": 1,
+            "new_lines": 35,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"1","old_no":1,"new_no":1},
+              {"type":"context","text":"2","old_no":2,"new_no":2},
+              {"type":"context","text":"3","old_no":3,"new_no":3},
+              {"type":"context","text":"4","old_no":4,"new_no":4},
+              {"type":"context","text":"5","old_no":5,"new_no":5},
+              {"type":"context","text":"6","old_no":6,"new_no":6},
+              {"type":"context","text":"7","old_no":7,"new_no":7},
+              {"type":"context","text":"8","old_no":8,"new_no":8},
+              {"type":"context","text":"9","old_no":9,"new_no":9},
+              {"type":"delete","text":"10","old_no":10,"new_no":null},
+              {"type":"add","text":"changed 10","old_no":null,"new_no":10},
+              {"type":"context","text":"11","old_no":11,"new_no":11},
+              {"type":"context","text":"12","old_no":12,"new_no":12},
+              {"type":"context","text":"13","old_no":13,"new_no":13},
+              {"type":"context","text":"14","old_no":14,"new_no":14},
+              {"type":"context","text":"15","old_no":15,"new_no":15},
+              {"type":"context","text":"16","old_no":16,"new_no":16},
+              {"type":"context","text":"17","old_no":17,"new_no":17},
+              {"type":"context","text":"18","old_no":18,"new_no":18},
+              {"type":"context","text":"19","old_no":19,"new_no":19},
+              {"type":"context","text":"20","old_no":20,"new_no":20},
+              {"type":"context","text":"21","old_no":21,"new_no":21},
+              {"type":"context","text":"22","old_no":22,"new_no":22},
+              {"type":"context","text":"23","old_no":23,"new_no":23},
+              {"type":"context","text":"24","old_no":24,"new_no":24},
+              {"type":"delete","text":"25","old_no":25,"new_no":null},
+              {"type":"add","text":"changed 25","old_no":null,"new_no":25},
+              {"type":"context","text":"26","old_no":26,"new_no":26},
+              {"type":"context","text":"27","old_no":27,"new_no":27},
+              {"type":"context","text":"28","old_no":28,"new_no":28},
+              {"type":"context","text":"29","old_no":29,"new_no":29},
+              {"type":"context","text":"30","old_no":30,"new_no":30},
+              {"type":"context","text":"31","old_no":31,"new_no":31},
+              {"type":"context","text":"32","old_no":32,"new_no":32},
+              {"type":"context","text":"33","old_no":33,"new_no":33},
+              {"type":"context","text":"34","old_no":34,"new_no":34},
+              {"type":"context","text":"35","old_no":35,"new_no":35}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "-U10"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"f.txt","content":"1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"f.txt","content":"1\n2\n3\n4\n5\n6\n7\n8\n9\nchanged 10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\nchanged 25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/20-ranges.js"
+}

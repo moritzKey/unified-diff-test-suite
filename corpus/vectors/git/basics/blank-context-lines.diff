@@ -1,0 +1,12 @@
+diff --git a/poem.txt b/poem.txt
+index 24fc15f..3257965 100644
+--- a/poem.txt
++++ b/poem.txt
+@@ -2,6 +2,6 @@ one
+ 
+ two
+ 
+-three
++THREE
+ 
+ four

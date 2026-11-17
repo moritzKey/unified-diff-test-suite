@@ -1,0 +1,12 @@
+diff --git a/mixed.txt b/mixed.txt
+index e00d4e4..fd70da5 100644
+--- a/mixed.txt
++++ b/mixed.txt
+@@ -1,4 +1,4 @@
+-a
+-b
++a
++b
+ c
+-d
++D

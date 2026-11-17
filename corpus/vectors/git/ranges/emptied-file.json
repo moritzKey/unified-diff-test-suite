@@ -1,0 +1,83 @@
+{
+  "id": "git/ranges/emptied-file",
+  "title": "Every line deleted, but the file stays (\"+0,0\" without \"deleted file\")",
+  "description": "Looks like a deletion in the hunk header alone; only the absence of \"deleted file mode\" and of /dev/null says the file still exists.",
+  "tier": "git",
+  "tags": ["hunk-header","zero-count","empty-file"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/notes.txt",
+        "new_name": "b/notes.txt",
+        "old_path": "notes.txt",
+        "new_path": "notes.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 3,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 3,
+            "new_start": 0,
+            "new_lines": 0,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"one","old_no":1,"new_no":null},
+              {"type":"delete","text":"two","old_no":2,"new_no":null},
+              {"type":"delete","text":"three","old_no":3,"new_no":null}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"notes.txt","content":"one\ntwo\nthree\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"notes.txt","content":""}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/20-ranges.js"
+}

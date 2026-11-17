@@ -1,0 +1,241 @@
+{
+  "id": "git/basics/many-hunks",
+  "title": "Ten hunks in one file",
+  "description": null,
+  "tier": "git",
+  "tags": ["basics"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/grid.txt",
+        "new_name": "b/grid.txt",
+        "old_path": "grid.txt",
+        "new_path": "grid.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 10,
+        "deletions": 10,
+        "hunks": [
+          {
+            "old_start": 7,
+            "old_lines": 7,
+            "new_start": 7,
+            "new_lines": 7,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"7","old_no":7,"new_no":7},
+              {"type":"context","text":"8","old_no":8,"new_no":8},
+              {"type":"context","text":"9","old_no":9,"new_no":9},
+              {"type":"delete","text":"10","old_no":10,"new_no":null},
+              {"type":"add","text":"row 10","old_no":null,"new_no":10},
+              {"type":"context","text":"11","old_no":11,"new_no":11},
+              {"type":"context","text":"12","old_no":12,"new_no":12},
+              {"type":"context","text":"13","old_no":13,"new_no":13}
+            ]
+          },
+          {
+            "old_start": 27,
+            "old_lines": 7,
+            "new_start": 27,
+            "new_lines": 7,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"27","old_no":27,"new_no":27},
+              {"type":"context","text":"28","old_no":28,"new_no":28},
+              {"type":"context","text":"29","old_no":29,"new_no":29},
+              {"type":"delete","text":"30","old_no":30,"new_no":null},
+              {"type":"add","text":"row 30","old_no":null,"new_no":30},
+              {"type":"context","text":"31","old_no":31,"new_no":31},
+              {"type":"context","text":"32","old_no":32,"new_no":32},
+              {"type":"context","text":"33","old_no":33,"new_no":33}
+            ]
+          },
+          {
+            "old_start": 47,
+            "old_lines": 7,
+            "new_start": 47,
+            "new_lines": 7,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"47","old_no":47,"new_no":47},
+              {"type":"context","text":"48","old_no":48,"new_no":48},
+              {"type":"context","text":"49","old_no":49,"new_no":49},
+              {"type":"delete","text":"50","old_no":50,"new_no":null},
+              {"type":"add","text":"row 50","old_no":null,"new_no":50},
+              {"type":"context","text":"51","old_no":51,"new_no":51},
+              {"type":"context","text":"52","old_no":52,"new_no":52},
+              {"type":"context","text":"53","old_no":53,"new_no":53}
+            ]
+          },
+          {
+            "old_start": 67,
+            "old_lines": 7,
+            "new_start": 67,
+            "new_lines": 7,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"67","old_no":67,"new_no":67},
+              {"type":"context","text":"68","old_no":68,"new_no":68},
+              {"type":"context","text":"69","old_no":69,"new_no":69},
+              {"type":"delete","text":"70","old_no":70,"new_no":null},
+              {"type":"add","text":"row 70","old_no":null,"new_no":70},
+              {"type":"context","text":"71","old_no":71,"new_no":71},
+              {"type":"context","text":"72","old_no":72,"new_no":72},
+              {"type":"context","text":"73","old_no":73,"new_no":73}
+            ]
+          },
+          {
+            "old_start": 87,
+            "old_lines": 7,
+            "new_start": 87,
+            "new_lines": 7,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"87","old_no":87,"new_no":87},
+              {"type":"context","text":"88","old_no":88,"new_no":88},
+              {"type":"context","text":"89","old_no":89,"new_no":89},
+              {"type":"delete","text":"90","old_no":90,"new_no":null},
+              {"type":"add","text":"row 90","old_no":null,"new_no":90},
+              {"type":"context","text":"91","old_no":91,"new_no":91},
+              {"type":"context","text":"92","old_no":92,"new_no":92},
+              {"type":"context","text":"93","old_no":93,"new_no":93}
+            ]
+          },
+          {
+            "old_start": 107,
+            "old_lines": 7,
+            "new_start": 107,
+            "new_lines": 7,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"107","old_no":107,"new_no":107},
+              {"type":"context","text":"108","old_no":108,"new_no":108},
+              {"type":"context","text":"109","old_no":109,"new_no":109},
+              {"type":"delete","text":"110","old_no":110,"new_no":null},
+              {"type":"add","text":"row 110","old_no":null,"new_no":110},
+              {"type":"context","text":"111","old_no":111,"new_no":111},
+              {"type":"context","text":"112","old_no":112,"new_no":112},
+              {"type":"context","text":"113","old_no":113,"new_no":113}
+            ]
+          },
+          {
+            "old_start": 127,
+            "old_lines": 7,
+            "new_start": 127,
+            "new_lines": 7,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"127","old_no":127,"new_no":127},
+              {"type":"context","text":"128","old_no":128,"new_no":128},
+              {"type":"context","text":"129","old_no":129,"new_no":129},
+              {"type":"delete","text":"130","old_no":130,"new_no":null},
+              {"type":"add","text":"row 130","old_no":null,"new_no":130},
+              {"type":"context","text":"131","old_no":131,"new_no":131},
+              {"type":"context","text":"132","old_no":132,"new_no":132},
+              {"type":"context","text":"133","old_no":133,"new_no":133}
+            ]
+          },
+          {
+            "old_start": 147,
+            "old_lines": 7,
+            "new_start": 147,
+            "new_lines": 7,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"147","old_no":147,"new_no":147},
+              {"type":"context","text":"148","old_no":148,"new_no":148},
+              {"type":"context","text":"149","old_no":149,"new_no":149},
+              {"type":"delete","text":"150","old_no":150,"new_no":null},
+              {"type":"add","text":"row 150","old_no":null,"new_no":150},
+              {"type":"context","text":"151","old_no":151,"new_no":151},
+              {"type":"context","text":"152","old_no":152,"new_no":152},
+              {"type":"context","text":"153","old_no":153,"new_no":153}
+            ]
+          },
+          {
+            "old_start": 167,
+            "old_lines": 7,
+            "new_start": 167,
+            "new_lines": 7,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"167","old_no":167,"new_no":167},
+              {"type":"context","text":"168","old_no":168,"new_no":168},
+              {"type":"context","text":"169","old_no":169,"new_no":169},
+              {"type":"delete","text":"170","old_no":170,"new_no":null},
+              {"type":"add","text":"row 170","old_no":null,"new_no":170},
+              {"type":"context","text":"171","old_no":171,"new_no":171},
+              {"type":"context","text":"172","old_no":172,"new_no":172},
+              {"type":"context","text":"173","old_no":173,"new_no":173}
+            ]
+          },
+          {
+            "old_start": 187,
+            "old_lines": 7,
+            "new_start": 187,
+            "new_lines": 7,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"187","old_no":187,"new_no":187},
+              {"type":"context","text":"188","old_no":188,"new_no":188},
+              {"type":"context","text":"189","old_no":189,"new_no":189},
+              {"type":"delete","text":"190","old_no":190,"new_no":null},
+              {"type":"add","text":"row 190","old_no":null,"new_no":190},
+              {"type":"context","text":"191","old_no":191,"new_no":191},
+              {"type":"context","text":"192","old_no":192,"new_no":192},
+              {"type":"context","text":"193","old_no":193,"new_no":193}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"grid.txt","content":"1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n46\n47\n48\n49\n50\n51\n52\n53\n54\n55\n56\n57\n58\n59\n60\n61\n62\n63\n64\n65\n66\n67\n68\n69\n70\n71\n72\n73\n74\n75\n76\n77\n78\n79\n80\n81\n82\n83\n84\n85\n86\n87\n88\n89\n90\n91\n92\n93\n94\n95\n96\n97\n98\n99\n100\n101\n102\n103\n104\n105\n106\n107\n108\n109\n110\n111\n112\n113\n114\n115\n116\n117\n118\n119\n120\n121\n122\n123\n124\n125\n126\n127\n128\n129\n130\n131\n132\n133\n134\n135\n136\n137\n138\n139\n140\n141\n142\n143\n144\n145\n146\n147\n148\n149\n150\n151\n152\n153\n154\n155\n156\n157\n158\n159\n160\n161\n162\n163\n164\n165\n166\n167\n168\n169\n170\n171\n172\n173\n174\n175\n176\n177\n178\n179\n180\n181\n182\n183\n184\n185\n186\n187\n188\n189\n190\n191\n192\n193\n194\n195\n196\n197\n198\n199\n200\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"grid.txt","content":"1\n2\n3\n4\n5\n6\n7\n8\n9\nrow 10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\nrow 30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n46\n47\n48\n49\nrow 50\n51\n52\n53\n54\n55\n56\n57\n58\n59\n60\n61\n62\n63\n64\n65\n66\n67\n68\n69\nrow 70\n71\n72\n73\n74\n75\n76\n77\n78\n79\n80\n81\n82\n83\n84\n85\n86\n87\n88\n89\nrow 90\n91\n92\n93\n94\n95\n96\n97\n98\n99\n100\n101\n102\n103\n104\n105\n106\n107\n108\n109\nrow 110\n111\n112\n113\n114\n115\n116\n117\n118\n119\n120\n121\n122\n123\n124\n125\n126\n127\n128\n129\nrow 130\n131\n132\n133\n134\n135\n136\n137\n138\n139\n140\n141\n142\n143\n144\n145\n146\n147\n148\n149\nrow 150\n151\n152\n153\n154\n155\n156\n157\n158\n159\n160\n161\n162\n163\n164\n165\n166\n167\n168\n169\nrow 170\n171\n172\n173\n174\n175\n176\n177\n178\n179\n180\n181\n182\n183\n184\n185\n186\n187\n188\n189\nrow 190\n191\n192\n193\n194\n195\n196\n197\n198\n199\n200\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/10-basics.js"
+}

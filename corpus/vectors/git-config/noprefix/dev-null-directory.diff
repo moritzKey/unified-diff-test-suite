@@ -1,0 +1,14 @@
+diff --git dev/null dev/null
+index 5626abf..f719efd 100644
+--- dev/null
++++ dev/null
+@@ -1 +1 @@
+-one
++two
+diff --git dev/zero dev/zero
+new file mode 100644
+index 0000000..3e75765
+--- /dev/null
++++ dev/zero
+@@ -0,0 +1 @@
++new

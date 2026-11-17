@@ -1,0 +1,10 @@
+diff --cc run
+index f98e179,a0cdcce..320ab08
+mode 100644,100644..100755
+--- a/run
++++ b/run
+@@@ -1,2 -1,2 +1,2 @@@
+  #!/bin/sh
+- echo ours
+ -echo theirs
+++echo both

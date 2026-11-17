@@ -1,0 +1,9 @@
+diff --git a/macro.c b/macro.c
+index 632124c..b3b8f92 100644
+--- a/macro.c
++++ b/macro.c
+@@ -1,3 +1,3 @@
+ #define STEP \
+---count;
++++count;
+ int x;

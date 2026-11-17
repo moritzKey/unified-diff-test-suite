@@ -1,0 +1,19 @@
+diff --git i/gone.txt w/gone.txt
+deleted file mode 100644
+index b023018..0000000
+--- i/gone.txt
++++ /dev/null
+@@ -1 +0,0 @@
+-bye
+diff --git i/src/app.js w/src/app.js
+index 4cb29ea..f04eb26 100644
+--- i/src/app.js
++++ w/src/app.js
+@@ -1,3 +1,3 @@
+ one
+-two
++2
+ three
+diff --git i/tool.sh w/tool.sh
+old mode 100644
+new mode 100755

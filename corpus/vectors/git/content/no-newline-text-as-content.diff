@@ -1,0 +1,11 @@
+diff --git a/faq.txt b/faq.txt
+index e2084f5..b565da1 100644
+--- a/faq.txt
++++ b/faq.txt
+@@ -1,3 +1,3 @@
+-Q: what does this mean?
++Q: what does it mean?
+ \ No newline at end of file
+-A: see below
++A: see above
+\ No newline at end of file

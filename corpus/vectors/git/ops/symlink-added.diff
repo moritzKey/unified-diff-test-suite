@@ -1,0 +1,8 @@
+diff --git a/latest b/latest
+new file mode 120000
+index 0000000..5324bf5
+--- /dev/null
++++ b/latest
+@@ -0,0 +1 @@
++releases/2.0
+\ No newline at end of file

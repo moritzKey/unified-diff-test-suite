@@ -1,0 +1,90 @@
+{
+  "id": "combined/cc/no-newline",
+  "title": "A combined diff with \"\\ No newline at end of file\"",
+  "description": null,
+  "tier": "combined",
+  "tags": ["combined","no-newline"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","show","--format=","<state3>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": false,
+    "git_apply_numstat": false
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "combined": true,
+        "status": "modified",
+        "path": "v",
+        "old_name": "a/v",
+        "new_name": "b/v",
+        "parents": 2,
+        "binary": false,
+        "hunks": [
+          {
+            "parent_ranges": [{"start":1,"lines":1},{"start":1,"lines":1}],
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"markers":"- ","text":"2"},
+              {"markers":" -","text":"3"},
+              {"markers":"++","text":"4"}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "skip": "a combined diff describes a merge, it is not a patch"
+  },
+  "recipe": {
+    "kind": "git-merge",
+    "args": [
+      "--format="
+    ],
+    "parents": [[],[0],[0],[1,2]],
+    "states": [
+      {
+        "message": "base",
+        "files": [
+          {"path":"v","content":"1"}
+        ]
+      },
+      {
+        "message": "ours",
+        "files": [
+          {"path":"v","content":"2"}
+        ]
+      },
+      {
+        "message": "theirs",
+        "files": [
+          {"path":"v","content":"3"}
+        ]
+      },
+      {
+        "message": "Merge",
+        "files": [
+          {"path":"v","content":"4"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/85-combined.js"
+}

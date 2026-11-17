@@ -1,0 +1,88 @@
+{
+  "id": "git-config/noprefix/top-level-file",
+  "title": "--no-prefix with a file in the top-level directory",
+  "description": null,
+  "tier": "git-config",
+  "tags": ["prefix","noprefix"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","--no-prefix","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "",
+    "new": ""
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "Makefile",
+        "new_name": "Makefile",
+        "old_path": "Makefile",
+        "new_path": "Makefile",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"all:","old_no":1,"new_no":null},
+              {"type":"add","text":"all: build","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 0,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "--no-prefix"
+    ],
+    "prefixes": [
+      "",
+      ""
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"Makefile","content":"all:\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"Makefile","content":"all: build\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/80-config.js"
+}

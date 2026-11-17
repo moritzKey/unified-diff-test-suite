@@ -1,0 +1,111 @@
+{
+  "id": "gnu/only-in",
+  "title": "diff -ru without -N: \"Only in a: gone.txt\" lines between the file diffs",
+  "description": null,
+  "tier": "gnu",
+  "tags": ["only-in","prelude"],
+  "producer": {
+    "tool": "diff",
+    "version": "3.10",
+    "argv": ["diff","-ru","a","b"],
+    "env": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": false,
+    "git_apply_numstat": false
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": null,
+        "old_name": "a/kept.txt",
+        "new_name": "b/kept.txt",
+        "old_path": "kept.txt",
+        "new_path": "kept.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"k","old_no":1,"new_no":null},
+              {"type":"add","text":"K","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      },
+      {
+        "status": null,
+        "old_name": "a/z.txt",
+        "new_name": "b/z.txt",
+        "old_path": "z.txt",
+        "new_path": "z.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"z","old_no":1,"new_no":null},
+              {"type":"add","text":"Z","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "skip": "the diff does not describe every difference between the two trees"
+  },
+  "recipe": {
+    "kind": "gnu-diff",
+    "args": [
+      "-ru"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"gone.txt","content":"a\n"},
+          {"path":"kept.txt","content":"k\n"},
+          {"path":"z.txt","content":"z\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"kept.txt","content":"K\n"},
+          {"path":"made.txt","content":"c\n"},
+          {"path":"z.txt","content":"Z\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/90-gnu.js"
+}

@@ -1,0 +1,8 @@
+diff --cc old.txt
+index 814f4a4,814f4a4..0000000
+deleted file mode 100644,100644
+--- a/old.txt
++++ /dev/null
+@@@ -1,2 -1,2 +1,0 @@@
+--one
+--two

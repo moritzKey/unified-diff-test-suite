@@ -1,0 +1,17 @@
+diff --git a/a.txt b/a.txt
+index d00491f..0cfbf08 100644
+--- a/a.txt
++++ b/a.txt
+@@ -1 +1 @@
+-1
++2
+diff --git a/m.bin b/m.bin
+index 390ca19..d451767 100644
+Binary files a/m.bin and b/m.bin differ
+diff --git a/z.txt b/z.txt
+index d00491f..0cfbf08 100644
+--- a/z.txt
++++ b/z.txt
+@@ -1 +1 @@
+-1
++2

@@ -1,0 +1,6 @@
+diff --git a/img/a.png b/img/b.png
+similarity index 70%
+rename from img/a.png
+rename to img/b.png
+index 390ca19..402d72c 100644
+Binary files a/img/a.png and b/img/b.png differ

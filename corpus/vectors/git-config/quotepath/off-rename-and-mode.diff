@@ -1,0 +1,7 @@
+diff --git a/alt/naïve.txt b/neu/naïve.txt
+similarity index 100%
+rename from alt/naïve.txt
+rename to neu/naïve.txt
+diff --git a/süß.sh b/süß.sh
+old mode 100644
+new mode 100755

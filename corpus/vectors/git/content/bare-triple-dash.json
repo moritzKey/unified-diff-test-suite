@@ -1,0 +1,83 @@
+{
+  "id": "git/content/bare-triple-dash",
+  "title": "Deleting a line \"--\" yields a bare \"---\"",
+  "description": null,
+  "tier": "git",
+  "tags": ["content-lookalike","fake-file-header"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/mail.txt",
+        "new_name": "b/mail.txt",
+        "old_path": "mail.txt",
+        "new_path": "mail.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 3,
+            "new_start": 1,
+            "new_lines": 2,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"Regards","old_no":1,"new_no":1},
+              {"type":"delete","text":"--","old_no":2,"new_no":null},
+              {"type":"context","text":"Alice","old_no":3,"new_no":2}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"mail.txt","content":"Regards\n--\nAlice\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"mail.txt","content":"Regards\nAlice\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/30-content.js"
+}

@@ -1,0 +1,196 @@
+{
+  "id": "gnu/special-names",
+  "title": "Quotes, backslashes, TABs, newlines and non-ASCII bytes in names (C locale)",
+  "description": null,
+  "tier": "gnu",
+  "tags": ["quoted-path","control-chars","unicode"],
+  "producer": {
+    "tool": "diff",
+    "version": "3.10",
+    "argv": ["diff","-ruN","a","b"],
+    "env": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": false,
+    "git_apply_numstat": false
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": null,
+        "old_name": "a/b\\s.txt",
+        "new_name": "b/b\\s.txt",
+        "old_path": "b\\s.txt",
+        "new_path": "b\\s.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"1","old_no":1,"new_no":null},
+              {"type":"add","text":"2","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      },
+      {
+        "status": null,
+        "old_name": "a/n\nn.txt",
+        "new_name": "b/n\nn.txt",
+        "old_path": "n\nn.txt",
+        "new_path": "n\nn.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"1","old_no":1,"new_no":null},
+              {"type":"add","text":"2","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      },
+      {
+        "status": null,
+        "old_name": "a/q\"q.txt",
+        "new_name": "b/q\"q.txt",
+        "old_path": "q\"q.txt",
+        "new_path": "q\"q.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"1","old_no":1,"new_no":null},
+              {"type":"add","text":"2","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      },
+      {
+        "status": null,
+        "old_name": "a/t\tt.txt",
+        "new_name": "b/t\tt.txt",
+        "old_path": "t\tt.txt",
+        "new_path": "t\tt.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"1","old_no":1,"new_no":null},
+              {"type":"add","text":"2","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      },
+      {
+        "status": null,
+        "old_name": "a/ü.txt",
+        "new_name": "b/ü.txt",
+        "old_path": "ü.txt",
+        "new_path": "ü.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"1","old_no":1,"new_no":null},
+              {"type":"add","text":"2","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": false
+  },
+  "recipe": {
+    "kind": "gnu-diff",
+    "args": [
+      "-ruN"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"q\"q.txt","content":"1\n"},
+          {"path":"b\\s.txt","content":"1\n"},
+          {"path":"t\tt.txt","content":"1\n"},
+          {"path":"n\nn.txt","content":"1\n"},
+          {"path":"ü.txt","content":"1\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"q\"q.txt","content":"2\n"},
+          {"path":"b\\s.txt","content":"2\n"},
+          {"path":"t\tt.txt","content":"2\n"},
+          {"path":"n\nn.txt","content":"2\n"},
+          {"path":"ü.txt","content":"2\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/90-gnu.js"
+}

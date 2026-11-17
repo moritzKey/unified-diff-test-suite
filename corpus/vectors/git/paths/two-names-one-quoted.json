@@ -1,0 +1,85 @@
+{
+  "id": "git/paths/two-names-one-quoted",
+  "title": "A rename where only the new name needs quoting",
+  "description": null,
+  "tier": "git",
+  "tags": ["paths","quoted-path","rename","header-ambiguity"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "renamed",
+        "old_name": "a/plain.txt",
+        "new_name": "b/we\tird.txt",
+        "old_path": "plain.txt",
+        "new_path": "we\tird.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": 70,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 4,
+            "new_start": 1,
+            "new_lines": 4,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"one","old_no":1,"new_no":1},
+              {"type":"context","text":"two","old_no":2,"new_no":2},
+              {"type":"context","text":"three","old_no":3,"new_no":3},
+              {"type":"delete","text":"four","old_no":4,"new_no":null},
+              {"type":"add","text":"four!","old_no":null,"new_no":4}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"plain.txt","content":"one\ntwo\nthree\nfour\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"we\tird.txt","content":"one\ntwo\nthree\nfour!\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/50-paths.js"
+}

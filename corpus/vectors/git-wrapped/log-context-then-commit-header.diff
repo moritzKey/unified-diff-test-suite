@@ -1,0 +1,57 @@
+commit 076ce0c5077bb24ad787276d5f6ca4e40493cd45
+Author: A U Thor <author@example.com>
+Date:   Sat Jan 1 00:02:00 2000 +0000
+
+    three
+
+diff --git a/f.txt b/f.txt
+index f04bfa0..b1739c0 100644
+--- a/f.txt
++++ b/f.txt
+@@ -1,6 +1,6 @@
+ 1
+ two
+-3
++three
+ 4
+ 5
+ 6
+
+commit 2cddff827d1f3e2c69ac075a995f68e6d37534ea
+Author: A U Thor <author@example.com>
+Date:   Sat Jan 1 00:01:00 2000 +0000
+
+    two
+
+diff --git a/f.txt b/f.txt
+index 535d2b0..f04bfa0 100644
+--- a/f.txt
++++ b/f.txt
+@@ -1,5 +1,5 @@
+ 1
+-2
++two
+ 3
+ 4
+ 5
+
+commit 54e5c4bc80727defe5a3b868afaffc23fd67472f
+Author: A U Thor <author@example.com>
+Date:   Sat Jan 1 00:00:00 2000 +0000
+
+    one
+
+diff --git a/f.txt b/f.txt
+new file mode 100644
+index 0000000..535d2b0
+--- /dev/null
++++ b/f.txt
+@@ -0,0 +1,8 @@
++1
++2
++3
++4
++5
++6
++7
++8

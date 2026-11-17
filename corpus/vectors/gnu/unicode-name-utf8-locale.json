@@ -1,0 +1,117 @@
+{
+  "id": "gnu/unicode-name-utf8-locale",
+  "title": "A non-ASCII name under a UTF-8 locale",
+  "description": null,
+  "tier": "gnu",
+  "tags": ["unicode","locale"],
+  "producer": {
+    "tool": "diff",
+    "version": "3.10",
+    "argv": ["diff","-ruN","a","b"],
+    "env": {
+      "LC_ALL": "C.UTF-8"
+    }
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": false,
+    "git_apply_numstat": false
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": null,
+        "old_name": "a/größe.txt",
+        "new_name": "b/größe.txt",
+        "old_path": "größe.txt",
+        "new_path": "größe.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"1","old_no":1,"new_no":null},
+              {"type":"add","text":"2","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      },
+      {
+        "status": null,
+        "old_name": "a/plain.txt",
+        "new_name": "b/plain.txt",
+        "old_path": "plain.txt",
+        "new_path": "plain.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"1","old_no":1,"new_no":null},
+              {"type":"add","text":"2","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": false
+  },
+  "recipe": {
+    "kind": "gnu-diff",
+    "args": [
+      "-ruN"
+    ],
+    "env": {
+      "LC_ALL": "C.UTF-8"
+    },
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"größe.txt","content":"1\n"},
+          {"path":"plain.txt","content":"1\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"größe.txt","content":"2\n"},
+          {"path":"plain.txt","content":"2\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/90-gnu.js"
+}

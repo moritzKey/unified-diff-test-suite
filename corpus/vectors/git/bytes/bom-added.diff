@@ -1,0 +1,8 @@
+diff --git a/data.csv b/data.csv
+index 85970d9..d43fc07 100644
+--- a/data.csv
++++ b/data.csv
+@@ -1,2 +1,2 @@
+-id,name
++﻿id,name
+ 1,x

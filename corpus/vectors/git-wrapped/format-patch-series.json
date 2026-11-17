@@ -1,0 +1,144 @@
+{
+  "id": "git-wrapped/format-patch-series",
+  "title": "git format-patch: a series of two mails in one mbox",
+  "description": null,
+  "tier": "git-wrapped",
+  "tags": ["prelude","mbox","signature","multiple-commits"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","format-patch","--stdout","<state0>..<state2>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/app.py",
+        "new_name": "b/app.py",
+        "old_path": "app.py",
+        "new_path": "app.py",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 3,
+            "new_start": 1,
+            "new_lines": 3,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"import sys","old_no":1,"new_no":1},
+              {"type":"context","text":"","old_no":2,"new_no":2},
+              {"type":"delete","text":"print(\"one\")","old_no":3,"new_no":null},
+              {"type":"add","text":"print(\"two\")","old_no":null,"new_no":3}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "added",
+        "old_name": null,
+        "new_name": "b/CHANGES",
+        "old_path": null,
+        "new_path": "CHANGES",
+        "old_mode": null,
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 0,
+        "hunks": [
+          {
+            "old_start": 0,
+            "old_lines": 0,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"add","text":"- three","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "modified",
+        "old_name": "a/app.py",
+        "new_name": "b/app.py",
+        "old_path": "app.py",
+        "new_path": "app.py",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 3,
+            "new_start": 1,
+            "new_lines": 3,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"import sys","old_no":1,"new_no":1},
+              {"type":"context","text":"","old_no":2,"new_no":2},
+              {"type":"delete","text":"print(\"two\")","old_no":3,"new_no":null},
+              {"type":"add","text":"print(\"three\")","old_no":null,"new_no":3}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "skip": "several commits in one text"
+  },
+  "recipe": {
+    "kind": "git-format-patch",
+    "args": [],
+    "states": [
+      {
+        "message": "Initial import",
+        "files": [
+          {"path":"app.py","content":"import sys\n\nprint(\"one\")\n"},
+          {"path":"README","content":"readme\n"}
+        ]
+      },
+      {
+        "message": "Say two\n\nThe greeting is now a two.",
+        "files": [
+          {"path":"app.py","content":"import sys\n\nprint(\"two\")\n"},
+          {"path":"README","content":"readme\n"}
+        ]
+      },
+      {
+        "message": "Add a changelog and say three",
+        "files": [
+          {"path":"app.py","content":"import sys\n\nprint(\"three\")\n"},
+          {"path":"README","content":"readme\n"},
+          {"path":"CHANGES","content":"- three\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/70-wrappers.js"
+}

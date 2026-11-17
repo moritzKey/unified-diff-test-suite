@@ -1,0 +1,6 @@
+diff -ruN project.orig/src/x.c project/src/x.c
+--- project.orig/src/x.c	2000-01-01 00:00:00.000000000 +0000
++++ project/src/x.c	2000-01-01 01:00:00.000000000 +0000
+@@ -1 +1 @@
+-int x;
++long x;

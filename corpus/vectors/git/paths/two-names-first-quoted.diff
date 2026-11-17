@@ -1,0 +1,13 @@
+diff --git "a/we\tird.txt" b/plain.txt
+similarity index 70%
+rename from "we\tird.txt"
+rename to plain.txt
+index f384549..62bddc4 100644
+--- "a/we\tird.txt"
++++ b/plain.txt
+@@ -1,4 +1,4 @@
+ one
+ two
+ three
+-four
++four!

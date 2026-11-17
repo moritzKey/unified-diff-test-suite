@@ -1,0 +1,70 @@
+{
+  "id": "git/ops/mode-removed",
+  "title": "chmod -x",
+  "description": null,
+  "tier": "git",
+  "tags": ["mode","no-hunks"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/run.sh",
+        "new_name": "b/run.sh",
+        "old_path": "run.sh",
+        "new_path": "run.sh",
+        "old_mode": "100755",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"run.sh","content":"#!/bin/sh\n","mode":"100755"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"run.sh","content":"#!/bin/sh\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

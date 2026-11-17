@@ -1,0 +1,4 @@
+diff --git a/a/.gitkeep b/b/.gitkeep
+similarity index 100%
+rename from a/.gitkeep
+rename to b/.gitkeep

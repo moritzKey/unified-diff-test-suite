@@ -1,0 +1,85 @@
+{
+  "id": "git/content/backslash-lines",
+  "title": "File lines that start with a backslash",
+  "description": null,
+  "tier": "git",
+  "tags": ["content-lookalike"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/tex.tex",
+        "new_name": "b/tex.tex",
+        "old_path": "tex.tex",
+        "new_path": "tex.tex",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 2,
+        "deletions": 2,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 3,
+            "new_start": 1,
+            "new_lines": 3,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"\\section{One}","old_no":1,"new_no":null},
+              {"type":"add","text":"\\section{Two}","old_no":null,"new_no":1},
+              {"type":"context","text":"\\textbf{x}","old_no":2,"new_no":2},
+              {"type":"delete","text":"\\\\","old_no":3,"new_no":null},
+              {"type":"add","text":"\\","old_no":null,"new_no":3}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"tex.tex","content":"\\section{One}\n\\textbf{x}\n\\\\\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"tex.tex","content":"\\section{Two}\n\\textbf{x}\n\\\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/30-content.js"
+}

@@ -1,0 +1,95 @@
+{
+  "id": "git/content/fake-header-pair-before-next-hunk",
+  "title": "A fake header pair at the end of one hunk, immediately followed by the next hunk",
+  "description": "With -U0 the second hunk header follows directly, so \"--- a/x\", \"+++ b/x\", \"@@ ...\" appear in a row in the middle of one file. A parser that does not count lines attributes the second hunk to a file \"x\" that is not part of the diff.",
+  "tier": "git",
+  "tags": ["content-lookalike","fake-file-header","u0"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","-U0","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/notes.txt",
+        "new_name": "b/notes.txt",
+        "old_path": "notes.txt",
+        "new_path": "notes.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 2,
+        "deletions": 2,
+        "hunks": [
+          {
+            "old_start": 3,
+            "old_lines": 1,
+            "new_start": 3,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"-- a/secrets.env","old_no":3,"new_no":null},
+              {"type":"add","text":"++ b/secrets.env","old_no":null,"new_no":3}
+            ]
+          },
+          {
+            "old_start": 7,
+            "old_lines": 1,
+            "new_start": 7,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"password = \"old\"","old_no":7,"new_no":null},
+              {"type":"add","text":"password = \"new\"","old_no":null,"new_no":7}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "-U0"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"notes.txt","content":"1\n2\n-- a/secrets.env\n4\n5\n6\npassword = \"old\"\n8\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"notes.txt","content":"1\n2\n++ b/secrets.env\n4\n5\n6\npassword = \"new\"\n8\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/30-content.js"
+}

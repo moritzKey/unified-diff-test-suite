@@ -1,0 +1,80 @@
+{
+  "id": "git/newline/deleted-file-without",
+  "title": "A deleted file without a final newline",
+  "description": null,
+  "tier": "git",
+  "tags": ["no-newline","deleted"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "deleted",
+        "old_name": "a/f.txt",
+        "new_name": null,
+        "old_path": "f.txt",
+        "new_path": null,
+        "old_mode": "100644",
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 2,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 2,
+            "new_start": 0,
+            "new_lines": 0,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"one","old_no":1,"new_no":null},
+              {"type":"delete","text":"two","old_no":2,"new_no":null,"no_newline":true}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"f.txt","content":"one\ntwo"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": []
+      }
+    ]
+  },
+  "source": "scenarios/40-newline.js"
+}

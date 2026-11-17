@@ -1,0 +1,120 @@
+{
+  "id": "combined/cc/two-files-and-prose",
+  "title": "Two files in one combined diff, plus an ordinary-looking commit header",
+  "description": null,
+  "tier": "combined",
+  "tags": ["combined","prelude"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","show","<state3>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": false,
+    "git_apply_numstat": false
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "combined": true,
+        "status": "modified",
+        "path": "a.txt",
+        "old_name": "a/a.txt",
+        "new_name": "b/a.txt",
+        "parents": 2,
+        "binary": false,
+        "hunks": [
+          {
+            "parent_ranges": [{"start":1,"lines":4},{"start":1,"lines":4}],
+            "new_start": 1,
+            "new_lines": 4,
+            "section": "",
+            "lines": [
+              {"markers":"- ","text":"one o"},
+              {"markers":" -","text":"one t"},
+              {"markers":"++","text":"one m"},
+              {"markers":"  ","text":"2"},
+              {"markers":"  ","text":"3"},
+              {"markers":"  ","text":"4"}
+            ]
+          }
+        ]
+      },
+      {
+        "combined": true,
+        "status": "modified",
+        "path": "z.txt",
+        "old_name": "a/z.txt",
+        "new_name": "b/z.txt",
+        "parents": 2,
+        "binary": false,
+        "hunks": [
+          {
+            "parent_ranges": [{"start":2,"lines":4},{"start":2,"lines":4}],
+            "new_start": 2,
+            "new_lines": 4,
+            "section": "",
+            "lines": [
+              {"markers":"  ","text":"2"},
+              {"markers":"  ","text":"3"},
+              {"markers":"  ","text":"4"},
+              {"markers":"- ","text":"five o"},
+              {"markers":" -","text":"five t"},
+              {"markers":"++","text":"five m"}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "skip": "a combined diff describes a merge, it is not a patch"
+  },
+  "recipe": {
+    "kind": "git-merge",
+    "args": [],
+    "parents": [[],[0],[0],[1,2]],
+    "states": [
+      {
+        "message": "base",
+        "files": [
+          {"path":"a.txt","content":"1\n2\n3\n4\n5\n"},
+          {"path":"z.txt","content":"1\n2\n3\n4\n5\n"}
+        ]
+      },
+      {
+        "message": "ours",
+        "files": [
+          {"path":"a.txt","content":"one o\n2\n3\n4\n5\n"},
+          {"path":"z.txt","content":"1\n2\n3\n4\nfive o\n"}
+        ]
+      },
+      {
+        "message": "theirs",
+        "files": [
+          {"path":"a.txt","content":"one t\n2\n3\n4\n5\n"},
+          {"path":"z.txt","content":"1\n2\n3\n4\nfive t\n"}
+        ]
+      },
+      {
+        "message": "Merge\n\nConflicts:\n\ta.txt\n\tz.txt",
+        "files": [
+          {"path":"a.txt","content":"one m\n2\n3\n4\n5\n"},
+          {"path":"z.txt","content":"1\n2\n3\n4\nfive m\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/85-combined.js"
+}

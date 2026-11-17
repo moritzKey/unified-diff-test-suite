@@ -1,0 +1,8 @@
+diff --git a/ops.txt b/ops.txt
+index 422c2b7..05bb9ca 100644
+--- a/ops.txt
++++ b/ops.txt
+@@ -1,2 +1,3 @@
+ a
++++
+ b

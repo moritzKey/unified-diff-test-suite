@@ -1,0 +1,13 @@
+diff --cc list.md
+index d5b13de,4cd7502..54e90b5
+--- a/list.md
++++ b/list.md
+@@@ -1,6 -1,6 +1,7 @@@
+  # Shopping
+  
+  - apples
+--- bread
++++ flour
+  - cheese
+ +- dates
++ - eggs

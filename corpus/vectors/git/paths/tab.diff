@@ -1,0 +1,7 @@
+diff --git "a/col1\tcol2.tsv" "b/col1\tcol2.tsv"
+index 3367afd..3e75765 100644
+--- "a/col1\tcol2.tsv"
++++ "b/col1\tcol2.tsv"
+@@ -1 +1 @@
+-old
++new

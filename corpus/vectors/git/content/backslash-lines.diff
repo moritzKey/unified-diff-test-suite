@@ -1,0 +1,10 @@
+diff --git a/tex.tex b/tex.tex
+index 9bb30f3..60a8c33 100644
+--- a/tex.tex
++++ b/tex.tex
+@@ -1,3 +1,3 @@
+-\section{One}
++\section{Two}
+ \textbf{x}
+-\\
++\

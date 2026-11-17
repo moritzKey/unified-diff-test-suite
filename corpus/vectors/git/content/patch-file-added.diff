@@ -1,0 +1,12 @@
+diff --git a/fix.patch b/fix.patch
+new file mode 100644
+index 0000000..e4684be
+--- /dev/null
++++ b/fix.patch
+@@ -0,0 +1,6 @@
++--- a/x.txt
+++++ b/x.txt
++@@ -1 +1 @@
++-old
+++new
++\ No newline at end of file

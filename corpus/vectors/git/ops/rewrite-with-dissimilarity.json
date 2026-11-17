@@ -1,0 +1,158 @@
+{
+  "id": "git/ops/rewrite-with-dissimilarity",
+  "title": "A complete rewrite with -B: \"dissimilarity index\" and one all-minus, all-plus hunk",
+  "description": null,
+  "tier": "git",
+  "tags": ["rewrite"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","-B","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/notes.txt",
+        "new_name": "b/notes.txt",
+        "old_path": "notes.txt",
+        "new_path": "notes.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 36,
+        "deletions": 40,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 40,
+            "new_start": 1,
+            "new_lines": 36,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"old thought number 1","old_no":1,"new_no":null},
+              {"type":"delete","text":"old thought number 2","old_no":2,"new_no":null},
+              {"type":"delete","text":"old thought number 3","old_no":3,"new_no":null},
+              {"type":"delete","text":"old thought number 4","old_no":4,"new_no":null},
+              {"type":"delete","text":"old thought number 5","old_no":5,"new_no":null},
+              {"type":"delete","text":"old thought number 6","old_no":6,"new_no":null},
+              {"type":"delete","text":"old thought number 7","old_no":7,"new_no":null},
+              {"type":"delete","text":"old thought number 8","old_no":8,"new_no":null},
+              {"type":"delete","text":"old thought number 9","old_no":9,"new_no":null},
+              {"type":"delete","text":"old thought number 10","old_no":10,"new_no":null},
+              {"type":"delete","text":"old thought number 11","old_no":11,"new_no":null},
+              {"type":"delete","text":"old thought number 12","old_no":12,"new_no":null},
+              {"type":"delete","text":"old thought number 13","old_no":13,"new_no":null},
+              {"type":"delete","text":"old thought number 14","old_no":14,"new_no":null},
+              {"type":"delete","text":"old thought number 15","old_no":15,"new_no":null},
+              {"type":"delete","text":"old thought number 16","old_no":16,"new_no":null},
+              {"type":"delete","text":"old thought number 17","old_no":17,"new_no":null},
+              {"type":"delete","text":"old thought number 18","old_no":18,"new_no":null},
+              {"type":"delete","text":"old thought number 19","old_no":19,"new_no":null},
+              {"type":"delete","text":"old thought number 20","old_no":20,"new_no":null},
+              {"type":"delete","text":"old thought number 21","old_no":21,"new_no":null},
+              {"type":"delete","text":"old thought number 22","old_no":22,"new_no":null},
+              {"type":"delete","text":"old thought number 23","old_no":23,"new_no":null},
+              {"type":"delete","text":"old thought number 24","old_no":24,"new_no":null},
+              {"type":"delete","text":"old thought number 25","old_no":25,"new_no":null},
+              {"type":"delete","text":"old thought number 26","old_no":26,"new_no":null},
+              {"type":"delete","text":"old thought number 27","old_no":27,"new_no":null},
+              {"type":"delete","text":"old thought number 28","old_no":28,"new_no":null},
+              {"type":"delete","text":"old thought number 29","old_no":29,"new_no":null},
+              {"type":"delete","text":"old thought number 30","old_no":30,"new_no":null},
+              {"type":"delete","text":"old thought number 31","old_no":31,"new_no":null},
+              {"type":"delete","text":"old thought number 32","old_no":32,"new_no":null},
+              {"type":"delete","text":"old thought number 33","old_no":33,"new_no":null},
+              {"type":"delete","text":"old thought number 34","old_no":34,"new_no":null},
+              {"type":"delete","text":"old thought number 35","old_no":35,"new_no":null},
+              {"type":"delete","text":"old thought number 36","old_no":36,"new_no":null},
+              {"type":"delete","text":"old thought number 37","old_no":37,"new_no":null},
+              {"type":"delete","text":"old thought number 38","old_no":38,"new_no":null},
+              {"type":"delete","text":"old thought number 39","old_no":39,"new_no":null},
+              {"type":"delete","text":"old thought number 40","old_no":40,"new_no":null},
+              {"type":"add","text":"a new idea, the 1th","old_no":null,"new_no":1},
+              {"type":"add","text":"a new idea, the 2th","old_no":null,"new_no":2},
+              {"type":"add","text":"a new idea, the 3th","old_no":null,"new_no":3},
+              {"type":"add","text":"a new idea, the 4th","old_no":null,"new_no":4},
+              {"type":"add","text":"a new idea, the 5th","old_no":null,"new_no":5},
+              {"type":"add","text":"a new idea, the 6th","old_no":null,"new_no":6},
+              {"type":"add","text":"a new idea, the 7th","old_no":null,"new_no":7},
+              {"type":"add","text":"a new idea, the 8th","old_no":null,"new_no":8},
+              {"type":"add","text":"a new idea, the 9th","old_no":null,"new_no":9},
+              {"type":"add","text":"a new idea, the 10th","old_no":null,"new_no":10},
+              {"type":"add","text":"a new idea, the 11th","old_no":null,"new_no":11},
+              {"type":"add","text":"a new idea, the 12th","old_no":null,"new_no":12},
+              {"type":"add","text":"a new idea, the 13th","old_no":null,"new_no":13},
+              {"type":"add","text":"a new idea, the 14th","old_no":null,"new_no":14},
+              {"type":"add","text":"a new idea, the 15th","old_no":null,"new_no":15},
+              {"type":"add","text":"a new idea, the 16th","old_no":null,"new_no":16},
+              {"type":"add","text":"a new idea, the 17th","old_no":null,"new_no":17},
+              {"type":"add","text":"a new idea, the 18th","old_no":null,"new_no":18},
+              {"type":"add","text":"a new idea, the 19th","old_no":null,"new_no":19},
+              {"type":"add","text":"a new idea, the 20th","old_no":null,"new_no":20},
+              {"type":"add","text":"a new idea, the 21th","old_no":null,"new_no":21},
+              {"type":"add","text":"a new idea, the 22th","old_no":null,"new_no":22},
+              {"type":"add","text":"a new idea, the 23th","old_no":null,"new_no":23},
+              {"type":"add","text":"a new idea, the 24th","old_no":null,"new_no":24},
+              {"type":"add","text":"a new idea, the 25th","old_no":null,"new_no":25},
+              {"type":"add","text":"a new idea, the 26th","old_no":null,"new_no":26},
+              {"type":"add","text":"a new idea, the 27th","old_no":null,"new_no":27},
+              {"type":"add","text":"a new idea, the 28th","old_no":null,"new_no":28},
+              {"type":"add","text":"a new idea, the 29th","old_no":null,"new_no":29},
+              {"type":"add","text":"a new idea, the 30th","old_no":null,"new_no":30},
+              {"type":"add","text":"a new idea, the 31th","old_no":null,"new_no":31},
+              {"type":"add","text":"a new idea, the 32th","old_no":null,"new_no":32},
+              {"type":"add","text":"a new idea, the 33th","old_no":null,"new_no":33},
+              {"type":"add","text":"a new idea, the 34th","old_no":null,"new_no":34},
+              {"type":"add","text":"a new idea, the 35th","old_no":null,"new_no":35},
+              {"type":"add","text":"a new idea, the 36th","old_no":null,"new_no":36}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "-B"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"notes.txt","content":"old thought number 1\nold thought number 2\nold thought number 3\nold thought number 4\nold thought number 5\nold thought number 6\nold thought number 7\nold thought number 8\nold thought number 9\nold thought number 10\nold thought number 11\nold thought number 12\nold thought number 13\nold thought number 14\nold thought number 15\nold thought number 16\nold thought number 17\nold thought number 18\nold thought number 19\nold thought number 20\nold thought number 21\nold thought number 22\nold thought number 23\nold thought number 24\nold thought number 25\nold thought number 26\nold thought number 27\nold thought number 28\nold thought number 29\nold thought number 30\nold thought number 31\nold thought number 32\nold thought number 33\nold thought number 34\nold thought number 35\nold thought number 36\nold thought number 37\nold thought number 38\nold thought number 39\nold thought number 40\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"notes.txt","content":"a new idea, the 1th\na new idea, the 2th\na new idea, the 3th\na new idea, the 4th\na new idea, the 5th\na new idea, the 6th\na new idea, the 7th\na new idea, the 8th\na new idea, the 9th\na new idea, the 10th\na new idea, the 11th\na new idea, the 12th\na new idea, the 13th\na new idea, the 14th\na new idea, the 15th\na new idea, the 16th\na new idea, the 17th\na new idea, the 18th\na new idea, the 19th\na new idea, the 20th\na new idea, the 21th\na new idea, the 22th\na new idea, the 23th\na new idea, the 24th\na new idea, the 25th\na new idea, the 26th\na new idea, the 27th\na new idea, the 28th\na new idea, the 29th\na new idea, the 30th\na new idea, the 31th\na new idea, the 32th\na new idea, the 33th\na new idea, the 34th\na new idea, the 35th\na new idea, the 36th\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

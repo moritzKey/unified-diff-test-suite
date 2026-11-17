@@ -1,0 +1,88 @@
+{
+  "id": "gnu/other-directory-names",
+  "title": "Directories with other names: diff -ruN project.orig project",
+  "description": null,
+  "tier": "gnu",
+  "tags": ["prefix"],
+  "producer": {
+    "tool": "diff",
+    "version": "3.10",
+    "argv": ["diff","-ruN","project.orig","project"],
+    "env": {}
+  },
+  "prefixes": {
+    "old": "project.orig/",
+    "new": "project/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": false,
+    "git_apply_numstat": false
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": null,
+        "old_name": "project.orig/src/x.c",
+        "new_name": "project/src/x.c",
+        "old_path": "src/x.c",
+        "new_path": "src/x.c",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"int x;","old_no":1,"new_no":null},
+              {"type":"add","text":"long x;","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": false
+  },
+  "recipe": {
+    "kind": "gnu-diff",
+    "args": [
+      "-ruN"
+    ],
+    "dirs": [
+      "project.orig",
+      "project"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"src/x.c","content":"int x;\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"src/x.c","content":"long x;\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/90-gnu.js"
+}

@@ -1,0 +1,7 @@
+diff --git Makefile Makefile
+index 1263948..ab59909 100644
+--- Makefile
++++ Makefile
+@@ -1 +1 @@
+-all:
++all: build

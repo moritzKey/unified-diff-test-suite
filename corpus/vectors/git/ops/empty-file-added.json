@@ -1,0 +1,71 @@
+{
+  "id": "git/ops/empty-file-added",
+  "title": "A new empty file: a header, an index line and nothing else",
+  "description": "There is no \"+++ b/name\" line to read the name from.",
+  "tier": "git",
+  "tags": ["empty-file","added","no-hunks"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "added",
+        "old_name": null,
+        "new_name": "b/.gitkeep",
+        "old_path": null,
+        "new_path": ".gitkeep",
+        "old_mode": null,
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"keep.txt","content":"k\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"keep.txt","content":"k\n"},
+          {"path":".gitkeep","content":""}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

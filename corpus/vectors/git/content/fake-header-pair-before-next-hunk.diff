@@ -1,0 +1,10 @@
+diff --git a/notes.txt b/notes.txt
+index 8cf182a..7c6426f 100644
+--- a/notes.txt
++++ b/notes.txt
+@@ -3 +3 @@
+--- a/secrets.env
++++ b/secrets.env
+@@ -7 +7 @@
+-password = "old"
++password = "new"

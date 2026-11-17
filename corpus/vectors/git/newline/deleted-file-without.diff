@@ -1,0 +1,9 @@
+diff --git a/f.txt b/f.txt
+deleted file mode 100644
+index 9ed40b4..0000000
+--- a/f.txt
++++ /dev/null
+@@ -1,2 +0,0 @@
+-one
+-two
+\ No newline at end of file

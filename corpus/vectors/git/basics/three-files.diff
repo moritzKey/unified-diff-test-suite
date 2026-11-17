@@ -1,0 +1,21 @@
+diff --git a/a.txt b/a.txt
+index 4a58007..4358161 100644
+--- a/a.txt
++++ b/a.txt
+@@ -1 +1 @@
+-alpha
++ALPHA
+diff --git a/b.txt b/b.txt
+deleted file mode 100644
+index 65b2df8..0000000
+--- a/b.txt
++++ /dev/null
+@@ -1 +0,0 @@
+-beta
+diff --git a/d.txt b/d.txt
+new file mode 100644
+index 0000000..ab135ee
+--- /dev/null
++++ b/d.txt
+@@ -0,0 +1 @@
++delta

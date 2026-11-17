@@ -1,0 +1,7 @@
+diff --git OLD-app.js NEW-app.js
+index 5626abf..f719efd 100644
+--- OLD-app.js
++++ NEW-app.js
+@@ -1 +1 @@
+-one
++two

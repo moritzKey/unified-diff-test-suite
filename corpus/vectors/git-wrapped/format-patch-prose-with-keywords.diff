@@ -1,0 +1,25 @@
+From 91d775856ec60ba6a9589871decf6e64f4721502 Mon Sep 17 00:00:00 2001
+From: A U Thor <author@example.com>
+Date: Sat, 1 Jan 2000 00:01:00 +0000
+Subject: [PATCH] Detect binary files earlier
+
+Binary files are now detected before the name is read.
+index entries keep their mode.
+new file mode bits are preserved.
+similarity index is no longer rounded.
+
+Signed-off-by: A U Thor <author@example.com>
+---
+ reader.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/reader.c b/reader.c
+index fff6310..85ea706 100644
+--- a/reader.c
++++ b/reader.c
+@@ -1 +1,2 @@
++int read_header(void);
+ int read(void);
+-- 
+2.43.0
+

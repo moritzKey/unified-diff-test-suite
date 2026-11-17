@@ -1,0 +1,4 @@
+diff --git a/util.js b/lib/helpers/util.js
+similarity index 100%
+rename from util.js
+rename to lib/helpers/util.js

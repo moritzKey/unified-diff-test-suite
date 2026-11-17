@@ -1,0 +1,10 @@
+diff --git a/odd b/odd
+index fe4f02a..88d33ca 120000
+--- a/odd
++++ b/odd
+@@ -1 +1,2 @@
+-first
+\ No newline at end of file
++-- a/x
++++ b/x
+\ No newline at end of file

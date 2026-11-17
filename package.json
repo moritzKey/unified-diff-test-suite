@@ -1,0 +1,18 @@
+{
+  "name": "unified-diff-test-suite",
+  "version": "0.1.0",
+  "description": "A conformance corpus for programs that read diffs, with git itself as the oracle.",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "generate": "node src/generate.js",
+    "check": "node src/generate.js --check",
+    "run": "node src/run.js",
+    "apply": "node src/apply.js",
+    "report": "node src/report.js",
+    "fuzz": "node src/fuzz.js"
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "id": "git/bytes/lf-to-crlf",
+  "title": "Line endings converted from LF to CRLF: every line changes",
+  "description": null,
+  "tier": "git",
+  "tags": ["line-endings","cr"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/conv.txt",
+        "new_name": "b/conv.txt",
+        "old_path": "conv.txt",
+        "new_path": "conv.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 2,
+        "deletions": 2,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 2,
+            "new_start": 1,
+            "new_lines": 2,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"one","old_no":1,"new_no":null},
+              {"type":"delete","text":"two","old_no":2,"new_no":null},
+              {"type":"add","text":"one\r","old_no":null,"new_no":1},
+              {"type":"add","text":"two\r","old_no":null,"new_no":2}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"conv.txt","content":"one\ntwo\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"conv.txt","content":"one\r\ntwo\r\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/45-bytes.js"
+}

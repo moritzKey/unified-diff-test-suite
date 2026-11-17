@@ -1,0 +1,94 @@
+{
+  "id": "combined/cc/file-added-by-merge",
+  "title": "A file that exists in neither parent and is created by the merge",
+  "description": null,
+  "tier": "combined",
+  "tags": ["combined","added"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","show","--format=","<state3>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": false,
+    "git_apply_numstat": false
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "combined": true,
+        "status": "added",
+        "path": "notes.txt",
+        "old_name": null,
+        "new_name": "b/notes.txt",
+        "parents": 2,
+        "binary": false,
+        "hunks": [
+          {
+            "parent_ranges": [{"start":1,"lines":0},{"start":1,"lines":0}],
+            "new_start": 1,
+            "new_lines": 2,
+            "section": "",
+            "lines": [
+              {"markers":"++","text":"merged by hand"},
+              {"markers":"++","text":"see ticket"}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "skip": "a combined diff describes a merge, it is not a patch"
+  },
+  "recipe": {
+    "kind": "git-merge",
+    "args": [
+      "--format="
+    ],
+    "parents": [[],[0],[0],[1,2]],
+    "states": [
+      {
+        "message": "base",
+        "files": [
+          {"path":"a.txt","content":"a\n"}
+        ]
+      },
+      {
+        "message": "ours",
+        "files": [
+          {"path":"a.txt","content":"a\n"},
+          {"path":"o.txt","content":"o\n"}
+        ]
+      },
+      {
+        "message": "theirs",
+        "files": [
+          {"path":"a.txt","content":"a\n"},
+          {"path":"t.txt","content":"t\n"}
+        ]
+      },
+      {
+        "message": "Merge",
+        "files": [
+          {"path":"a.txt","content":"a\n"},
+          {"path":"o.txt","content":"o\n"},
+          {"path":"t.txt","content":"t\n"},
+          {"path":"notes.txt","content":"merged by hand\nsee ticket\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/85-combined.js"
+}

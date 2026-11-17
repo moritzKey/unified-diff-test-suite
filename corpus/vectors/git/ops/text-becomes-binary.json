@@ -1,0 +1,67 @@
+{
+  "id": "git/ops/text-becomes-binary",
+  "title": "A text file that turns binary",
+  "description": null,
+  "tier": "git",
+  "tags": ["binary","no-hunks"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/data",
+        "new_name": "b/data",
+        "old_path": "data",
+        "new_path": "data",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": "notice",
+        "additions": null,
+        "deletions": null,
+        "hunks": []
+      }
+    ]
+  },
+  "apply": {
+    "skip": "a binary file changed and the diff does not carry its content"
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"data","content":"plain text\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"data","content":"\u0000\u0001\u0002\u0003"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

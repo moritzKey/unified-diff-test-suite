@@ -1,0 +1,11 @@
+diff --git a/paged.el b/paged.el
+index f095344..e262ea2 100644
+--- a/paged.el
++++ b/paged.el
+@@ -1,4 +1,4 @@
+ ;;; a
+-
++;;; page two
+ ;;; b
+-(provide 'x)
++(provide 'y)

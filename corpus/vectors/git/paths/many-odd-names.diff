@@ -1,0 +1,98 @@
+diff --git a/ s.txt b/ s.txt
+index d00491f..0cfbf08 100644
+--- a/ s.txt	
++++ b/ s.txt	
+@@ -1 +1 @@
+-1
++2
+diff --git a/-.txt b/-.txt
+index d00491f..0cfbf08 100644
+--- a/-.txt
++++ b/-.txt
+@@ -1 +1 @@
+-1
++2
+diff --git a/a b.txt b/a b.txt
+index d00491f..0cfbf08 100644
+--- a/a b.txt	
++++ b/a b.txt	
+@@ -1 +1 @@
+-1
++2
+diff --git a/a/b/a/b.txt b/a/b/a/b.txt
+index d00491f..0cfbf08 100644
+--- a/a/b/a/b.txt
++++ b/a/b/a/b.txt
+@@ -1 +1 @@
+-1
++2
+diff --git "a/b\\s.txt" "b/b\\s.txt"
+index d00491f..0cfbf08 100644
+--- "a/b\\s.txt"
++++ "b/b\\s.txt"
+@@ -1 +1 @@
+-1
++2
+diff --git a/d/dev/null b/d/dev/null
+index d00491f..0cfbf08 100644
+--- a/d/dev/null
++++ b/d/dev/null
+@@ -1 +1 @@
+-1
++2
+diff --git a/e .txt b/e .txt
+index d00491f..0cfbf08 100644
+--- a/e .txt	
++++ b/e .txt	
+@@ -1 +1 @@
+-1
++2
+diff --git a/plain.txt b/plain.txt
+index d00491f..0cfbf08 100644
+--- a/plain.txt
++++ b/plain.txt
+@@ -1 +1 @@
+-1
++2
+diff --git "a/q\"q.txt" "b/q\"q.txt"
+index d00491f..0cfbf08 100644
+--- "a/q\"q.txt"
++++ "b/q\"q.txt"
+@@ -1 +1 @@
+-1
++2
+diff --git "a/t\tt.txt" "b/t\tt.txt"
+index d00491f..0cfbf08 100644
+--- "a/t\tt.txt"
++++ "b/t\tt.txt"
+@@ -1 +1 @@
+-1
++2
+diff --git a/x y/z w.txt b/x y/z w.txt
+index d00491f..0cfbf08 100644
+--- a/x y/z w.txt	
++++ b/x y/z w.txt	
+@@ -1 +1 @@
+-1
++2
+diff --git a/z.txt b/z.txt
+index d00491f..0cfbf08 100644
+--- a/z.txt
++++ b/z.txt
+@@ -1 +1 @@
+-1
++2
+diff --git "a/\303\244.txt" "b/\303\244.txt"
+index d00491f..0cfbf08 100644
+--- "a/\303\244.txt"
++++ "b/\303\244.txt"
+@@ -1 +1 @@
+-1
++2
+diff --git "a/\346\227\245\346\234\254\350\252\236.txt" "b/\346\227\245\346\234\254\350\252\236.txt"
+index d00491f..0cfbf08 100644
+--- "a/\346\227\245\346\234\254\350\252\236.txt"
++++ "b/\346\227\245\346\234\254\350\252\236.txt"
+@@ -1 +1 @@
+-1
++2

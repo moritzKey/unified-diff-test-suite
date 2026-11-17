@@ -1,0 +1,8 @@
+diff --git a/progress.log b/progress.log
+index 0e59aa6..21241ae 100644
+--- a/progress.log
++++ b/progress.log
+@@ -1,2 +1,2 @@
+-step 1step 2done
++step 1step 2step 3done
+ next

@@ -1,0 +1,84 @@
+{
+  "id": "git/ranges/u0-delete",
+  "title": "-U0: lines deleted from the middle (\"+2,0\")",
+  "description": null,
+  "tier": "git",
+  "tags": ["hunk-header","zero-count","u0"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","-U0","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/f.txt",
+        "new_name": "b/f.txt",
+        "old_path": "f.txt",
+        "new_path": "f.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 2,
+        "hunks": [
+          {
+            "old_start": 3,
+            "old_lines": 2,
+            "new_start": 2,
+            "new_lines": 0,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"3","old_no":3,"new_no":null},
+              {"type":"delete","text":"4","old_no":4,"new_no":null}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "-U0"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"f.txt","content":"1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"f.txt","content":"1\n2\n5\n6\n7\n8\n9\n10\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/20-ranges.js"
+}

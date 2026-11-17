@@ -1,0 +1,85 @@
+{
+  "id": "git/content/no-newline-text-as-content",
+  "title": "A file line that reads \"\\ No newline at end of file\"",
+  "description": "As content it always follows a marker character; only a line that STARTS with a backslash is the real marker.",
+  "tier": "git",
+  "tags": ["content-lookalike","no-newline"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/faq.txt",
+        "new_name": "b/faq.txt",
+        "old_path": "faq.txt",
+        "new_path": "faq.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 2,
+        "deletions": 2,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 3,
+            "new_start": 1,
+            "new_lines": 3,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"Q: what does this mean?","old_no":1,"new_no":null},
+              {"type":"add","text":"Q: what does it mean?","old_no":null,"new_no":1},
+              {"type":"context","text":"\\ No newline at end of file","old_no":2,"new_no":2},
+              {"type":"delete","text":"A: see below","old_no":3,"new_no":null},
+              {"type":"add","text":"A: see above","old_no":null,"new_no":3,"no_newline":true}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"faq.txt","content":"Q: what does this mean?\n\\ No newline at end of file\nA: see below\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"faq.txt","content":"Q: what does it mean?\n\\ No newline at end of file\nA: see above"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/30-content.js"
+}

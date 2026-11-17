@@ -1,0 +1,79 @@
+{
+  "id": "git/ops/symlink-deleted",
+  "title": "A deleted symbolic link",
+  "description": null,
+  "tier": "git",
+  "tags": ["symlink","deleted","no-newline"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "deleted",
+        "old_name": "a/latest",
+        "new_name": null,
+        "old_path": "latest",
+        "new_path": null,
+        "old_mode": "120000",
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 0,
+            "new_lines": 0,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"releases/2.0","old_no":1,"new_no":null,"no_newline":true}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"latest","content":"releases/2.0","mode":"120000"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": []
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

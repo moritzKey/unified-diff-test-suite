@@ -1,0 +1,8 @@
+diff --git a/i18n.json b/i18n.json
+index 03b1e24..7515131 100644
+--- a/i18n.json
++++ b/i18n.json
+@@ -1,2 +1,2 @@
+-{"a": "x y", "b": "p q", "c": "mn"}
++{"a": "x Y", "b": "p Q", "c": "mN"}
+ end

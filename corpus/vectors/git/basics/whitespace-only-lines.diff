@@ -1,0 +1,12 @@
+diff --git a/ws.txt b/ws.txt
+index a62e846..8f7d8e2 100644
+--- a/ws.txt
++++ b/ws.txt
+@@ -1,5 +1,5 @@
+ start
+-  
+-	
++    
++		
+  	 
+ end

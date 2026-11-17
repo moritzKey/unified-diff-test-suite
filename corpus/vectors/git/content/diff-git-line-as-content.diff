@@ -1,0 +1,10 @@
+diff --git a/howto.txt b/howto.txt
+index 684bea3..7bd8329 100644
+--- a/howto.txt
++++ b/howto.txt
+@@ -1,3 +1,4 @@
+ Run this:
+-diff --git a/one b/one
++diff --git a/two b/two
+ then that.
++index 1234567..89abcde 100644

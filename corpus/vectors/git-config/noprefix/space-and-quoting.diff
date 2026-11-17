@@ -1,0 +1,17 @@
+diff --git chmod me.sh chmod me.sh
+old mode 100644
+new mode 100755
+diff --git "gr\303\266\303\237e.txt" "gr\303\266\303\237e.txt"
+index 7898192..6178079 100644
+--- "gr\303\266\303\237e.txt"
++++ "gr\303\266\303\237e.txt"
+@@ -1 +1 @@
+-a
++b
+diff --git my notes.txt my notes.txt
+index 7898192..6178079 100644
+--- my notes.txt	
++++ my notes.txt	
+@@ -1 +1 @@
+-a
++b

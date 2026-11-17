@@ -1,0 +1,69 @@
+{
+  "id": "git/ops/binary-renamed-and-changed",
+  "title": "A binary file renamed and modified",
+  "description": null,
+  "tier": "git",
+  "tags": ["binary","rename","no-hunks"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","-M30%","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "renamed",
+        "old_name": "a/img/a.png",
+        "new_name": "b/img/b.png",
+        "old_path": "img/a.png",
+        "new_path": "img/b.png",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": 70,
+        "binary": "notice",
+        "additions": null,
+        "deletions": null,
+        "hunks": []
+      }
+    ]
+  },
+  "apply": {
+    "skip": "a binary file changed and the diff does not carry its content"
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "-M30%"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"img/a.png","content":{"base64":"iVBORw0KGgoAAAANBwoNEBMWGRwfIiUoKy4xNDc6PUBDRklMT1JVWFteYWRnam1wc3Z5fH+ChYiLjpGUl5qdoKOmqayvsrW4u77BxMfKzdDT1tnc3+Ll6Ovu8fT3+v0AAwYJDA8SFRgbHiEk"}}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"img/b.png","content":{"base64":"iVBORw0KGgoAAAANBwoNEBMWGRwfIiUoKy4xNDc6PUBDRklMT1JVWFteYWRnam1wc3Z5fH+ChYiLjpGUl5qdoKOmqayvsrW4u77BxMfKzdDT1tnc3+Ll6Ovu8fT3+v0AAwYJDA8SFRgbHiEkAQID"}}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

@@ -1,0 +1,115 @@
+{
+  "id": "git-config/prefix/two-components",
+  "title": "Prefixes of two path components: --src-prefix=1/orig/ --dst-prefix=2/work/",
+  "description": null,
+  "tier": "git-config",
+  "tags": ["prefix","custom-prefix"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","--src-prefix=1/orig/","--dst-prefix=2/work/","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "1/orig/",
+    "new": "2/work/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "added",
+        "old_name": null,
+        "new_name": "2/work/made.txt",
+        "old_path": null,
+        "new_path": "made.txt",
+        "old_mode": null,
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 0,
+        "hunks": [
+          {
+            "old_start": 0,
+            "old_lines": 0,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"add","text":"hi","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "modified",
+        "old_name": "1/orig/src/app.js",
+        "new_name": "2/work/src/app.js",
+        "old_path": "src/app.js",
+        "new_path": "src/app.js",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"one","old_no":1,"new_no":null},
+              {"type":"add","text":"two","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 2,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "--src-prefix=1/orig/",
+      "--dst-prefix=2/work/"
+    ],
+    "prefixes": [
+      "1/orig/",
+      "2/work/"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"src/app.js","content":"one\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"src/app.js","content":"two\n"},
+          {"path":"made.txt","content":"hi\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/80-config.js"
+}

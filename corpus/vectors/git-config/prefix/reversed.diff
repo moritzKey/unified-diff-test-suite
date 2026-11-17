@@ -1,0 +1,23 @@
+diff --git b/gone.txt a/gone.txt
+new file mode 100644
+index 0000000..b023018
+--- /dev/null
++++ a/gone.txt
+@@ -0,0 +1 @@
++bye
+diff --git b/made.txt a/made.txt
+deleted file mode 100644
+index 45b983b..0000000
+--- b/made.txt
++++ /dev/null
+@@ -1 +0,0 @@
+-hi
+diff --git b/src/app.js a/src/app.js
+index f04eb26..4cb29ea 100644
+--- b/src/app.js
++++ a/src/app.js
+@@ -1,3 +1,3 @@
+ one
+-2
++two
+ three

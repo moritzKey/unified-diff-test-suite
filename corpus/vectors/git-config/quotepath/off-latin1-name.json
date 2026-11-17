@@ -1,0 +1,95 @@
+{
+  "id": "git-config/quotepath/off-latin1-name",
+  "title": "core.quotePath=false with a name that is not valid UTF-8: the diff itself is not valid UTF-8",
+  "description": null,
+  "tier": "git-config",
+  "tags": ["quotepath-off","encoding"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {
+      "core.quotePath": "false"
+    }
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": false,
+    "names_are_utf8": false,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": {
+          "base64": "YS9jYWbpLnR4dA=="
+        },
+        "new_name": {
+          "base64": "Yi9jYWbpLnR4dA=="
+        },
+        "old_path": {
+          "base64": "Y2Fm6S50eHQ="
+        },
+        "new_path": {
+          "base64": "Y2Fm6S50eHQ="
+        },
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"old","old_no":1,"new_no":null},
+              {"type":"add","text":"new","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "config": {
+      "core.quotePath": "false"
+    },
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":{"base64":"Y2Fm6S50eHQ="},"content":"old\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":{"base64":"Y2Fm6S50eHQ="},"content":"new\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/80-config.js"
+}

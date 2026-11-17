@@ -1,0 +1,88 @@
+{
+  "id": "git/basics/section-heading",
+  "title": "Text after the closing @@ is the enclosing function, not content",
+  "description": null,
+  "tier": "git",
+  "tags": ["basics","hunk-header"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/main.c",
+        "new_name": "b/main.c",
+        "old_path": "main.c",
+        "new_path": "main.c",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 12,
+            "old_lines": 7,
+            "new_start": 12,
+            "new_lines": 7,
+            "section": "int main(void)",
+            "lines": [
+              {"type":"context","text":"\tint total = 0;","old_no":12,"new_no":12},
+              {"type":"context","text":"\ttotal += helper(1);","old_no":13,"new_no":13},
+              {"type":"context","text":"\ttotal += helper(2);","old_no":14,"new_no":14},
+              {"type":"delete","text":"\ttotal += helper(3);","old_no":15,"new_no":null},
+              {"type":"add","text":"\ttotal += helper(4);","old_no":null,"new_no":15},
+              {"type":"context","text":"\tprintf(\"%d\\n\", total);","old_no":16,"new_no":16},
+              {"type":"context","text":"\treturn 0;","old_no":17,"new_no":17},
+              {"type":"context","text":"}","old_no":18,"new_no":18}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"main.c","content":"#include <stdio.h>\n\nstatic int helper(int value)\n{\n\tint doubled = value * 2;\n\tint tripled = value * 3;\n\treturn doubled + tripled;\n}\n\nint main(void)\n{\n\tint total = 0;\n\ttotal += helper(1);\n\ttotal += helper(2);\n\ttotal += helper(3);\n\tprintf(\"%d\\n\", total);\n\treturn 0;\n}\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"main.c","content":"#include <stdio.h>\n\nstatic int helper(int value)\n{\n\tint doubled = value * 2;\n\tint tripled = value * 3;\n\treturn doubled + tripled;\n}\n\nint main(void)\n{\n\tint total = 0;\n\ttotal += helper(1);\n\ttotal += helper(2);\n\ttotal += helper(4);\n\tprintf(\"%d\\n\", total);\n\treturn 0;\n}\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/10-basics.js"
+}

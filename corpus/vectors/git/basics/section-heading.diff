@@ -1,0 +1,13 @@
+diff --git a/main.c b/main.c
+index e368196..6409e7b 100644
+--- a/main.c
++++ b/main.c
+@@ -12,7 +12,7 @@ int main(void)
+ 	int total = 0;
+ 	total += helper(1);
+ 	total += helper(2);
+-	total += helper(3);
++	total += helper(4);
+ 	printf("%d\n", total);
+ 	return 0;
+ }

@@ -1,0 +1,14 @@
+diff --git a/readme.txt a/readme.txt
+index 5626abf..f719efd 100644
+--- a/readme.txt
++++ a/readme.txt
+@@ -1 +1 @@
+-one
++two
+diff --git b/readme.txt b/readme.txt
+index e438487..4723a1b 100644
+--- b/readme.txt
++++ b/readme.txt
+@@ -1 +1 @@
+-uno
++dos

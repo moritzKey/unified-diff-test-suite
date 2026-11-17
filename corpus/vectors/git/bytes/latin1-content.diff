@@ -1,0 +1,8 @@
+diff --git a/legacy.txt b/legacy.txt
+index 3fa77a4..aa496c2 100644
+--- a/legacy.txt
++++ b/legacy.txt
+@@ -1,2 +1,2 @@
+-Grüße
++Grüße!
+ end

@@ -1,0 +1,80 @@
+{
+  "id": "git/ops/deleted-executable",
+  "title": "A deleted executable file (\"deleted file mode 100755\")",
+  "description": null,
+  "tier": "git",
+  "tags": ["mode","deleted"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "deleted",
+        "old_name": "a/tool",
+        "new_name": null,
+        "old_path": "tool",
+        "new_path": null,
+        "old_mode": "100755",
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 2,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 2,
+            "new_start": 0,
+            "new_lines": 0,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"#!/bin/sh","old_no":1,"new_no":null},
+              {"type":"delete","text":"exit 0","old_no":2,"new_no":null}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"tool","content":"#!/bin/sh\nexit 0\n","mode":"100755"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": []
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

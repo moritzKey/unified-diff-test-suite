@@ -1,0 +1,8 @@
+diff --git a/right.txt b/left.txt
+similarity index 100%
+rename from right.txt
+rename to left.txt
+diff --git a/left.txt b/right.txt
+similarity index 100%
+rename from left.txt
+rename to right.txt

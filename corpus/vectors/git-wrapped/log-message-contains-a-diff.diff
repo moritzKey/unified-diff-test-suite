@@ -1,0 +1,39 @@
+commit b30fb518519c0ad2aab0439232e7561213a15e48
+Author: A U Thor <author@example.com>
+Date:   Sat Jan 1 00:01:00 2000 +0000
+
+    Explain the parser fix
+    
+    The old code split this header at the wrong place:
+    
+    diff --git a/my file.txt b/my file.txt
+    index 1111111..2222222 100644
+    --- a/my file.txt
+    +++ b/my file.txt
+    @@ -1 +1 @@
+    -old
+    +new
+    
+    Binary files are detected first now.
+
+diff --git a/parser.js b/parser.js
+index 1f0e8f5..94d4036 100644
+--- a/parser.js
++++ b/parser.js
+@@ -1 +1 @@
+-split(" ")
++splitInTheMiddle()
+
+commit 22700501c5c6f7a7761361685f54a475d1d7d69d
+Author: A U Thor <author@example.com>
+Date:   Sat Jan 1 00:00:00 2000 +0000
+
+    Initial import
+
+diff --git a/parser.js b/parser.js
+new file mode 100644
+index 0000000..1f0e8f5
+--- /dev/null
++++ b/parser.js
+@@ -0,0 +1 @@
++split(" ")

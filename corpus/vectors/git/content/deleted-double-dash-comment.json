@@ -1,0 +1,85 @@
+{
+  "id": "git/content/deleted-double-dash-comment",
+  "title": "Deleting a \"-- comment\" line (SQL, Lua, Haskell, Ada) yields \"--- comment\"",
+  "description": "The most common way to meet this trap: every SQL migration that removes a comment at the start of a line.",
+  "tier": "git",
+  "tags": ["content-lookalike","fake-file-header"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/schema.sql",
+        "new_name": "b/schema.sql",
+        "old_path": "schema.sql",
+        "new_path": "schema.sql",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 5,
+            "new_start": 1,
+            "new_lines": 4,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"CREATE TABLE users (","old_no":1,"new_no":1},
+              {"type":"context","text":"  id INTEGER PRIMARY KEY","old_no":2,"new_no":2},
+              {"type":"context","text":");","old_no":3,"new_no":3},
+              {"type":"delete","text":"-- speed up lookups","old_no":4,"new_no":null},
+              {"type":"context","text":"CREATE INDEX users_id ON users (id);","old_no":5,"new_no":4}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"schema.sql","content":"CREATE TABLE users (\n  id INTEGER PRIMARY KEY\n);\n-- speed up lookups\nCREATE INDEX users_id ON users (id);\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"schema.sql","content":"CREATE TABLE users (\n  id INTEGER PRIMARY KEY\n);\nCREATE INDEX users_id ON users (id);\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/30-content.js"
+}

@@ -1,0 +1,83 @@
+{
+  "id": "git/ranges/filled-empty-file",
+  "title": "An existing empty file gets content (\"-0,0\" without \"new file\")",
+  "description": null,
+  "tier": "git",
+  "tags": ["hunk-header","zero-count","empty-file"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/notes.txt",
+        "new_name": "b/notes.txt",
+        "old_path": "notes.txt",
+        "new_path": "notes.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 3,
+        "deletions": 0,
+        "hunks": [
+          {
+            "old_start": 0,
+            "old_lines": 0,
+            "new_start": 1,
+            "new_lines": 3,
+            "section": "",
+            "lines": [
+              {"type":"add","text":"one","old_no":null,"new_no":1},
+              {"type":"add","text":"two","old_no":null,"new_no":2},
+              {"type":"add","text":"three","old_no":null,"new_no":3}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"notes.txt","content":""}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"notes.txt","content":"one\ntwo\nthree\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/20-ranges.js"
+}

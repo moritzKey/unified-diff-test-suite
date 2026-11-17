@@ -1,0 +1,12 @@
+diff --git a/log.txt b/log.txt
+index cc5b724..eaa5140 100644
+--- a/log.txt
++++ b/log.txt
+@@ -4,6 +4,6 @@ progress50% done
+ 3
+ 4
+ 5
+-6
++six
+ 7
+ 8

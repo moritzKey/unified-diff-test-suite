@@ -1,0 +1,39 @@
+diff --git old/gone.txt new/gone.txt
+deleted file mode 100644
+index b023018..0000000
+--- old/gone.txt
++++ /dev/null
+@@ -1 +0,0 @@
+-bye
+diff --git old/made.txt new/made.txt
+new file mode 100644
+index 0000000..45b983b
+--- /dev/null
++++ new/made.txt
+@@ -0,0 +1 @@
++hi
+diff --git old/old name.txt new/new name.txt
+similarity index 76%
+rename from old name.txt
+rename to new name.txt
+index 0719398..e952784 100644
+--- old/old name.txt	
++++ new/new name.txt	
+@@ -6,4 +6,4 @@
+ 6
+ 7
+ 8
+-9
++nine
+diff --git old/src/app.js new/src/app.js
+index 4cb29ea..f04eb26 100644
+--- old/src/app.js
++++ new/src/app.js
+@@ -1,3 +1,3 @@
+ one
+-two
++2
+ three
+diff --git old/tool.sh new/tool.sh
+old mode 100644
+new mode 100755

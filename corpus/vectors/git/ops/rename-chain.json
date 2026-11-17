@@ -1,0 +1,105 @@
+{
+  "id": "git/ops/rename-chain",
+  "title": "Three files rotate their names",
+  "description": null,
+  "tier": "git",
+  "tags": ["rename"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","-B","-M","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "renamed",
+        "old_name": "a/three.txt",
+        "new_name": "b/one.txt",
+        "old_path": "three.txt",
+        "new_path": "one.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": 100,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      },
+      {
+        "status": "renamed",
+        "old_name": "a/two.txt",
+        "new_name": "b/three.txt",
+        "old_path": "two.txt",
+        "new_path": "three.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": 100,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      },
+      {
+        "status": "renamed",
+        "old_name": "a/one.txt",
+        "new_name": "b/two.txt",
+        "old_path": "one.txt",
+        "new_path": "two.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": 100,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "-B",
+      "-M"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"one.txt","content":"uno linea 1\nuno linea 2\nuno linea 3\nuno linea 4\nuno linea 5\nuno linea 6\nuno linea 7\nuno linea 8\nuno linea 9\nuno linea 10\nuno linea 11\nuno linea 12\nuno linea 13\nuno linea 14\nuno linea 15\nuno linea 16\nuno linea 17\nuno linea 18\nuno linea 19\nuno linea 20\nuno linea 21\nuno linea 22\nuno linea 23\nuno linea 24\nuno linea 25\nuno linea 26\nuno linea 27\nuno linea 28\nuno linea 29\nuno linea 30\nuno linea 31\nuno linea 32\nuno linea 33\nuno linea 34\nuno linea 35\nuno linea 36\nuno linea 37\nuno linea 38\nuno linea 39\nuno linea 40\nuno linea 41\nuno linea 42\nuno linea 43\nuno linea 44\nuno linea 45\nuno linea 46\nuno linea 47\nuno linea 48\nuno linea 49\nuno linea 50\nuno linea 51\nuno linea 52\nuno linea 53\nuno linea 54\nuno linea 55\nuno linea 56\nuno linea 57\nuno linea 58\nuno linea 59\nuno linea 60\n"},
+          {"path":"two.txt","content":"dos linea 1\ndos linea 2\ndos linea 3\ndos linea 4\ndos linea 5\ndos linea 6\ndos linea 7\ndos linea 8\ndos linea 9\ndos linea 10\ndos linea 11\ndos linea 12\ndos linea 13\ndos linea 14\ndos linea 15\ndos linea 16\ndos linea 17\ndos linea 18\ndos linea 19\ndos linea 20\ndos linea 21\ndos linea 22\ndos linea 23\ndos linea 24\ndos linea 25\ndos linea 26\ndos linea 27\ndos linea 28\ndos linea 29\ndos linea 30\ndos linea 31\ndos linea 32\ndos linea 33\ndos linea 34\ndos linea 35\ndos linea 36\ndos linea 37\ndos linea 38\ndos linea 39\ndos linea 40\ndos linea 41\ndos linea 42\ndos linea 43\ndos linea 44\ndos linea 45\ndos linea 46\ndos linea 47\ndos linea 48\ndos linea 49\ndos linea 50\ndos linea 51\ndos linea 52\ndos linea 53\ndos linea 54\ndos linea 55\ndos linea 56\ndos linea 57\ndos linea 58\ndos linea 59\ndos linea 60\n"},
+          {"path":"three.txt","content":"tres linea 1\ntres linea 2\ntres linea 3\ntres linea 4\ntres linea 5\ntres linea 6\ntres linea 7\ntres linea 8\ntres linea 9\ntres linea 10\ntres linea 11\ntres linea 12\ntres linea 13\ntres linea 14\ntres linea 15\ntres linea 16\ntres linea 17\ntres linea 18\ntres linea 19\ntres linea 20\ntres linea 21\ntres linea 22\ntres linea 23\ntres linea 24\ntres linea 25\ntres linea 26\ntres linea 27\ntres linea 28\ntres linea 29\ntres linea 30\ntres linea 31\ntres linea 32\ntres linea 33\ntres linea 34\ntres linea 35\ntres linea 36\ntres linea 37\ntres linea 38\ntres linea 39\ntres linea 40\ntres linea 41\ntres linea 42\ntres linea 43\ntres linea 44\ntres linea 45\ntres linea 46\ntres linea 47\ntres linea 48\ntres linea 49\ntres linea 50\ntres linea 51\ntres linea 52\ntres linea 53\ntres linea 54\ntres linea 55\ntres linea 56\ntres linea 57\ntres linea 58\ntres linea 59\ntres linea 60\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"one.txt","content":"tres linea 1\ntres linea 2\ntres linea 3\ntres linea 4\ntres linea 5\ntres linea 6\ntres linea 7\ntres linea 8\ntres linea 9\ntres linea 10\ntres linea 11\ntres linea 12\ntres linea 13\ntres linea 14\ntres linea 15\ntres linea 16\ntres linea 17\ntres linea 18\ntres linea 19\ntres linea 20\ntres linea 21\ntres linea 22\ntres linea 23\ntres linea 24\ntres linea 25\ntres linea 26\ntres linea 27\ntres linea 28\ntres linea 29\ntres linea 30\ntres linea 31\ntres linea 32\ntres linea 33\ntres linea 34\ntres linea 35\ntres linea 36\ntres linea 37\ntres linea 38\ntres linea 39\ntres linea 40\ntres linea 41\ntres linea 42\ntres linea 43\ntres linea 44\ntres linea 45\ntres linea 46\ntres linea 47\ntres linea 48\ntres linea 49\ntres linea 50\ntres linea 51\ntres linea 52\ntres linea 53\ntres linea 54\ntres linea 55\ntres linea 56\ntres linea 57\ntres linea 58\ntres linea 59\ntres linea 60\n"},
+          {"path":"two.txt","content":"uno linea 1\nuno linea 2\nuno linea 3\nuno linea 4\nuno linea 5\nuno linea 6\nuno linea 7\nuno linea 8\nuno linea 9\nuno linea 10\nuno linea 11\nuno linea 12\nuno linea 13\nuno linea 14\nuno linea 15\nuno linea 16\nuno linea 17\nuno linea 18\nuno linea 19\nuno linea 20\nuno linea 21\nuno linea 22\nuno linea 23\nuno linea 24\nuno linea 25\nuno linea 26\nuno linea 27\nuno linea 28\nuno linea 29\nuno linea 30\nuno linea 31\nuno linea 32\nuno linea 33\nuno linea 34\nuno linea 35\nuno linea 36\nuno linea 37\nuno linea 38\nuno linea 39\nuno linea 40\nuno linea 41\nuno linea 42\nuno linea 43\nuno linea 44\nuno linea 45\nuno linea 46\nuno linea 47\nuno linea 48\nuno linea 49\nuno linea 50\nuno linea 51\nuno linea 52\nuno linea 53\nuno linea 54\nuno linea 55\nuno linea 56\nuno linea 57\nuno linea 58\nuno linea 59\nuno linea 60\n"},
+          {"path":"three.txt","content":"dos linea 1\ndos linea 2\ndos linea 3\ndos linea 4\ndos linea 5\ndos linea 6\ndos linea 7\ndos linea 8\ndos linea 9\ndos linea 10\ndos linea 11\ndos linea 12\ndos linea 13\ndos linea 14\ndos linea 15\ndos linea 16\ndos linea 17\ndos linea 18\ndos linea 19\ndos linea 20\ndos linea 21\ndos linea 22\ndos linea 23\ndos linea 24\ndos linea 25\ndos linea 26\ndos linea 27\ndos linea 28\ndos linea 29\ndos linea 30\ndos linea 31\ndos linea 32\ndos linea 33\ndos linea 34\ndos linea 35\ndos linea 36\ndos linea 37\ndos linea 38\ndos linea 39\ndos linea 40\ndos linea 41\ndos linea 42\ndos linea 43\ndos linea 44\ndos linea 45\ndos linea 46\ndos linea 47\ndos linea 48\ndos linea 49\ndos linea 50\ndos linea 51\ndos linea 52\ndos linea 53\ndos linea 54\ndos linea 55\ndos linea 56\ndos linea 57\ndos linea 58\ndos linea 59\ndos linea 60\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

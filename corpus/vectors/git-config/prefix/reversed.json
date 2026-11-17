@@ -1,0 +1,142 @@
+{
+  "id": "git-config/prefix/reversed",
+  "title": "git diff -R: the sides are swapped, and so are the prefixes (\"--- b/x\", \"+++ a/x\")",
+  "description": null,
+  "tier": "git-config",
+  "tags": ["prefix","reverse","added","deleted"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","-R","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "b/",
+    "new": "a/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "added",
+        "old_name": null,
+        "new_name": "a/gone.txt",
+        "old_path": null,
+        "new_path": "gone.txt",
+        "old_mode": null,
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 0,
+        "hunks": [
+          {
+            "old_start": 0,
+            "old_lines": 0,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"add","text":"bye","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "deleted",
+        "old_name": "b/made.txt",
+        "new_name": null,
+        "old_path": "made.txt",
+        "new_path": null,
+        "old_mode": "100644",
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 0,
+            "new_lines": 0,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"hi","old_no":1,"new_no":null}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "modified",
+        "old_name": "b/src/app.js",
+        "new_name": "a/src/app.js",
+        "old_path": "src/app.js",
+        "new_path": "src/app.js",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 3,
+            "new_start": 1,
+            "new_lines": 3,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"one","old_no":1,"new_no":1},
+              {"type":"delete","text":"2","old_no":2,"new_no":null},
+              {"type":"add","text":"two","old_no":null,"new_no":2},
+              {"type":"context","text":"three","old_no":3,"new_no":3}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 1,
+    "to": 0,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "-R"
+    ],
+    "prefixes": [
+      "b/",
+      "a/"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"src/app.js","content":"one\ntwo\nthree\n"},
+          {"path":"gone.txt","content":"bye\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"src/app.js","content":"one\n2\nthree\n"},
+          {"path":"made.txt","content":"hi\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/80-config.js"
+}

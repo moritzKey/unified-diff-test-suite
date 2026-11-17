@@ -1,0 +1,33 @@
+commit 73f804b62470c4b41a7c976a3c6ecba8dceb962a
+Merge: d12a57f b49d416
+Author: A U Thor <author@example.com>
+Date:   Sat Jan 1 00:03:00 2000 +0000
+
+    Merge
+    
+    Conflicts:
+            a.txt
+            z.txt
+
+diff --cc a.txt
+index de68279,3d3beea..9cd9905
+--- a/a.txt
++++ b/a.txt
+@@@ -1,4 -1,4 +1,4 @@@
+- one o
+ -one t
+++one m
+  2
+  3
+  4
+diff --cc z.txt
+index 82a386d,bfb43f4..2050177
+--- a/z.txt
++++ b/z.txt
+@@@ -2,4 -2,4 +2,4 @@@
+  2
+  3
+  4
+- five o
+ -five t
+++five m

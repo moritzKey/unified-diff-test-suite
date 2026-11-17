@@ -1,0 +1,14 @@
+diff --git a/template.txt b/instance.txt
+similarity index 89%
+copy from template.txt
+copy to instance.txt
+index 624b469..771a459 100644
+--- a/template.txt
++++ b/instance.txt
+@@ -1,5 +1,5 @@
+ line 1
+-line 2
++line two
+ line 3
+ line 4
+ line 5

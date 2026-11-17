@@ -1,0 +1,106 @@
+{
+  "id": "git/ranges/u0-mixed-file",
+  "title": "-U0: insertion, deletion and replacement in one file",
+  "description": null,
+  "tier": "git",
+  "tags": ["hunk-header","zero-count","u0"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","-U0","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/f.txt",
+        "new_name": "b/f.txt",
+        "old_path": "f.txt",
+        "new_path": "f.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 2,
+        "deletions": 4,
+        "hunks": [
+          {
+            "old_start": 4,
+            "old_lines": 0,
+            "new_start": 5,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"add","text":"inserted","old_no":null,"new_no":5}
+            ]
+          },
+          {
+            "old_start": 17,
+            "old_lines": 3,
+            "new_start": 17,
+            "new_lines": 0,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"17","old_no":17,"new_no":null},
+              {"type":"delete","text":"18","old_no":18,"new_no":null},
+              {"type":"delete","text":"19","old_no":19,"new_no":null}
+            ]
+          },
+          {
+            "old_start": 30,
+            "old_lines": 1,
+            "new_start": 28,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"30","old_no":30,"new_no":null},
+              {"type":"add","text":"thirty","old_no":null,"new_no":28}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "-U0"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"f.txt","content":"1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"f.txt","content":"1\n2\n3\n4\ninserted\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\nthirty\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/20-ranges.js"
+}

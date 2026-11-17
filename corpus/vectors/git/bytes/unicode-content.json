@@ -1,0 +1,90 @@
+{
+  "id": "git/bytes/unicode-content",
+  "title": "Non-ASCII content: accents, CJK, emoji, combining marks, right-to-left text",
+  "description": null,
+  "tier": "git",
+  "tags": ["unicode"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/hello.txt",
+        "new_name": "b/hello.txt",
+        "old_path": "hello.txt",
+        "new_path": "hello.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 5,
+        "deletions": 5,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 5,
+            "new_start": 1,
+            "new_lines": 5,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"Grüße","old_no":1,"new_no":null},
+              {"type":"delete","text":"你好","old_no":2,"new_no":null},
+              {"type":"delete","text":"👋🏽","old_no":3,"new_no":null},
+              {"type":"delete","text":"é","old_no":4,"new_no":null},
+              {"type":"delete","text":"שלום","old_no":5,"new_no":null},
+              {"type":"add","text":"Grüße!","old_no":null,"new_no":1},
+              {"type":"add","text":"您好","old_no":null,"new_no":2},
+              {"type":"add","text":"👋🏿","old_no":null,"new_no":3},
+              {"type":"add","text":"é","old_no":null,"new_no":4},
+              {"type":"add","text":"שלום עולם","old_no":null,"new_no":5}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"hello.txt","content":"Grüße\n你好\n👋🏽\né\nשלום\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"hello.txt","content":"Grüße!\n您好\n👋🏿\né\nשלום עולם\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/45-bytes.js"
+}

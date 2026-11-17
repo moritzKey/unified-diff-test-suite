@@ -1,0 +1,67 @@
+{
+  "id": "git/ops/binary-with-space-and-and",
+  "title": "A binary file named \"salt and pepper.bin\"",
+  "description": "The notice \"Binary files a/salt and pepper.bin and b/salt and pepper.bin differ\" cannot be split at \" and \".",
+  "tier": "git",
+  "tags": ["binary","space-in-path","header-ambiguity","no-hunks"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/salt and pepper.bin",
+        "new_name": "b/salt and pepper.bin",
+        "old_path": "salt and pepper.bin",
+        "new_path": "salt and pepper.bin",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": "notice",
+        "additions": null,
+        "deletions": null,
+        "hunks": []
+      }
+    ]
+  },
+  "apply": {
+    "skip": "a binary file changed and the diff does not carry its content"
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"salt and pepper.bin","content":{"base64":"iVBORw0KGgoAAAANBwoNEBMWGRwfIiUoKy4xNDc6PUBDRklMT1JVWFteYWRnam1wc3Z5fH+ChYiLjpGUl5qdoKOmqayvsrW4u77BxMfKzdDT1tnc3+Ll6Ovu8fT3+v0AAwYJDA8SFRgbHiEk"}}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"salt and pepper.bin","content":{"base64":"iVBORw0KGgoAAAANBwwRFhsgJSovNDk+Q0hNUldcYWZrcHV6f4SJjpOYnaKnrLG2u8DFys/U2d7j6O3y9/wBBgsQFRofJCkuMzg9QkdMUVZbYGVqb3R5foOIjZKXnKGmq7C1ur/Eyc7T2N3i"}}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

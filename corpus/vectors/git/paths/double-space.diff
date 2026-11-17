@@ -1,0 +1,7 @@
+diff --git a/two  spaces.txt b/two  spaces.txt
+index 3367afd..3e75765 100644
+--- a/two  spaces.txt	
++++ b/two  spaces.txt	
+@@ -1 +1 @@
+-old
++new

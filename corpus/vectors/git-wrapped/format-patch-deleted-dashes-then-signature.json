@@ -1,0 +1,82 @@
+{
+  "id": "git-wrapped/format-patch-deleted-dashes-then-signature",
+  "title": "git format-patch: a deleted \"-- \" line as the last line of the patch, then the real signature",
+  "description": null,
+  "tier": "git-wrapped",
+  "tags": ["prelude","mbox","signature","content-lookalike"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","format-patch","--stdout","<state0>..<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/mail.txt",
+        "new_name": "b/mail.txt",
+        "old_path": "mail.txt",
+        "new_path": "mail.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 2,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"Bye","old_no":1,"new_no":1},
+              {"type":"delete","text":"-- ","old_no":2,"new_no":null}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-format-patch",
+    "args": [],
+    "states": [
+      {
+        "message": "one",
+        "files": [
+          {"path":"mail.txt","content":"Bye\n-- \n"}
+        ]
+      },
+      {
+        "message": "two",
+        "files": [
+          {"path":"mail.txt","content":"Bye\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/70-wrappers.js"
+}

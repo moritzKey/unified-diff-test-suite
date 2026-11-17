@@ -1,0 +1,11 @@
+diff --git a/doc.txt b/doc.txt
+index 38a1600..2f52425 100644
+--- a/doc.txt
++++ b/doc.txt
+@@ -1,4 +1,4 @@
+ see below
+-@@ -1,3 +1,3 @@
+-old text
++@@ -9,9 +9,9 @@ fake
++new text
+ end

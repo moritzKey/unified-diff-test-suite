@@ -1,0 +1,16 @@
+diff --git a/old.txt b/new.txt
+similarity index 87%
+rename from old.txt
+rename to new.txt
+index 624b469..d08fad1 100644
+--- a/old.txt
++++ b/new.txt
+@@ -4,7 +4,7 @@ line 3
+ line 4
+ line 5
+ line 6
+-line 7
++line seven
+ line 8
+ line 9
+ line 10

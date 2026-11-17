@@ -1,0 +1,16 @@
+diff --git a/post.md b/post.md
+index e6cd821..681a401 100644
+--- a/post.md
++++ b/post.md
+@@ -1,9 +1,6 @@
+----
+-title: Old
+----
++title: New
+ 
+ Text
+ 
+----
+-
+ More
++---

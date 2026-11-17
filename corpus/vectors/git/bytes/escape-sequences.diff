@@ -1,0 +1,9 @@
+diff --git a/colour.txt b/colour.txt
+index fc7330b..e64912c 100644
+--- a/colour.txt
++++ b/colour.txt
+@@ -1,2 +1,2 @@
+-[31mred[0m
+-plain
++[32mgreen[0m
++plain

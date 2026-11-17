@@ -1,0 +1,87 @@
+{
+  "id": "git/basics/indentation-preserved",
+  "title": "Leading and trailing whitespace is content",
+  "description": null,
+  "tier": "git",
+  "tags": ["basics","whitespace"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/indent.py",
+        "new_name": "b/indent.py",
+        "old_path": "indent.py",
+        "new_path": "indent.py",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 2,
+        "deletions": 2,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 5,
+            "new_start": 1,
+            "new_lines": 5,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"def f():","old_no":1,"new_no":1},
+              {"type":"delete","text":"    return 1","old_no":2,"new_no":null},
+              {"type":"add","text":"        return 1","old_no":null,"new_no":2},
+              {"type":"context","text":"","old_no":3,"new_no":3},
+              {"type":"context","text":"def g():","old_no":4,"new_no":4},
+              {"type":"delete","text":"\treturn 2   ","old_no":5,"new_no":null},
+              {"type":"add","text":"\treturn 2","old_no":null,"new_no":5}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"indent.py","content":"def f():\n    return 1\n\ndef g():\n\treturn 2   \n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"indent.py","content":"def f():\n        return 1\n\ndef g():\n\treturn 2\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/10-basics.js"
+}

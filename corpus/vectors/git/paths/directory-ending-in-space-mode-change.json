@@ -1,0 +1,72 @@
+{
+  "id": "git/paths/directory-ending-in-space-mode-change",
+  "title": "A mode change below a directory whose name ends with a space: git 2.43 cannot read this back",
+  "description": "The only place that names the file is \"diff --git a/dir /run.sh b/dir /run.sh\". `git apply` gives up on it (\"git diff header lacks filename information\"): its header reader stops at the first space that is followed by a slash. git 2.56 reads it. The names were always recoverable, because both halves of the line are the same path.",
+  "tier": "git",
+  "tags": ["paths","space-in-path","mode","header-ambiguity","git-apply-rejects"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": false,
+    "git_apply_error": "error: git diff header lacks filename information when removing 1 leading pathname component (line 4)"
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/dir /run.sh",
+        "new_name": "b/dir /run.sh",
+        "old_path": "dir /run.sh",
+        "new_path": "dir /run.sh",
+        "old_mode": "100644",
+        "new_mode": "100755",
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "gitApply": "may-reject",
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"dir /run.sh","content":"#!/bin/sh\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"dir /run.sh","content":"#!/bin/sh\n","mode":"100755"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/50-paths.js"
+}

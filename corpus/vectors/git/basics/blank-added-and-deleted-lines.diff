@@ -1,0 +1,13 @@
+diff --git a/spacing.txt b/spacing.txt
+index 9b47dad..f97a294 100644
+--- a/spacing.txt
++++ b/spacing.txt
+@@ -1,6 +1,6 @@
+ a
+-
+-
+ b
+ c
++
++
+ d

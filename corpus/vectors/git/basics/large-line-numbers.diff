@@ -1,0 +1,13 @@
+diff --git a/long.txt b/long.txt
+index 7599e0c..f4c8638 100644
+--- a/long.txt
++++ b/long.txt
+@@ -19987,7 +19987,7 @@
+ 19987
+ 19988
+ 19989
+-19990
++changed
+ 19991
+ 19992
+ 19993

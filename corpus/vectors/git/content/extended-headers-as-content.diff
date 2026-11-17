@@ -1,0 +1,14 @@
+diff --git a/headers.txt b/headers.txt
+index 8511409..aa592f6 100644
+--- a/headers.txt
++++ b/headers.txt
+@@ -1,5 +1,5 @@
+-new file mode 100644
+-rename from a.txt
+-rename to b.txt
+-similarity index 90%
++deleted file mode 100644
++copy from a.txt
++copy to b.txt
++Binary files a/x and b/x differ
+ keep

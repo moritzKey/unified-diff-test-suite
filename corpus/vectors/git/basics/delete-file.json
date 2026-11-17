@@ -1,0 +1,84 @@
+{
+  "id": "git/basics/delete-file",
+  "title": "A deleted file",
+  "description": "The new side is /dev/null and the hunk header reads \"+0,0\".",
+  "tier": "git",
+  "tags": ["basics","deleted"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "deleted",
+        "old_name": "a/old.txt",
+        "new_name": null,
+        "old_path": "old.txt",
+        "new_path": null,
+        "old_mode": "100644",
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 3,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 3,
+            "new_start": 0,
+            "new_lines": 0,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"first","old_no":1,"new_no":null},
+              {"type":"delete","text":"second","old_no":2,"new_no":null},
+              {"type":"delete","text":"third","old_no":3,"new_no":null}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"keep.txt","content":"keep\n"},
+          {"path":"old.txt","content":"first\nsecond\nthird\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"keep.txt","content":"keep\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/10-basics.js"
+}

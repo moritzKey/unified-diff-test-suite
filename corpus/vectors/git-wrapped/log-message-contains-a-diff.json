@@ -1,0 +1,104 @@
+{
+  "id": "git-wrapped/log-message-contains-a-diff",
+  "title": "git log -p: a commit message that quotes a diff",
+  "description": "The message is indented by four spaces. Parsers that trim lines, or that search for \"diff --git\" anywhere in a line, find a patch that is not there.",
+  "tier": "git-wrapped",
+  "tags": ["prelude","multiple-commits","content-lookalike","fake-file-header"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","log","-p","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/parser.js",
+        "new_name": "b/parser.js",
+        "old_path": "parser.js",
+        "new_path": "parser.js",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"split(\" \")","old_no":1,"new_no":null},
+              {"type":"add","text":"splitInTheMiddle()","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "added",
+        "old_name": null,
+        "new_name": "b/parser.js",
+        "old_path": null,
+        "new_path": "parser.js",
+        "old_mode": null,
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 0,
+        "hunks": [
+          {
+            "old_start": 0,
+            "old_lines": 0,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"add","text":"split(\" \")","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "skip": "several commits in one text"
+  },
+  "recipe": {
+    "kind": "git-log",
+    "args": [],
+    "states": [
+      {
+        "message": "Initial import",
+        "files": [
+          {"path":"parser.js","content":"split(\" \")\n"}
+        ]
+      },
+      {
+        "message": "Explain the parser fix\n\nThe old code split this header at the wrong place:\n\ndiff --git a/my file.txt b/my file.txt\nindex 1111111..2222222 100644\n--- a/my file.txt\n+++ b/my file.txt\n@@ -1 +1 @@\n-old\n+new\n\nBinary files are detected first now.",
+        "files": [
+          {"path":"parser.js","content":"splitInTheMiddle()\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/70-wrappers.js"
+}

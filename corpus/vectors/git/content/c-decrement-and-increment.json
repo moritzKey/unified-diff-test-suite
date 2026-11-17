@@ -1,0 +1,84 @@
+{
+  "id": "git/content/c-decrement-and-increment",
+  "title": "C statements \"--count;\" deleted and \"++count;\" added at column 0",
+  "description": null,
+  "tier": "git",
+  "tags": ["content-lookalike","fake-file-header"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/macro.c",
+        "new_name": "b/macro.c",
+        "old_path": "macro.c",
+        "new_path": "macro.c",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 3,
+            "new_start": 1,
+            "new_lines": 3,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"#define STEP \\","old_no":1,"new_no":1},
+              {"type":"delete","text":"--count;","old_no":2,"new_no":null},
+              {"type":"add","text":"++count;","old_no":null,"new_no":2},
+              {"type":"context","text":"int x;","old_no":3,"new_no":3}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"macro.c","content":"#define STEP \\\n--count;\nint x;\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"macro.c","content":"#define STEP \\\n++count;\nint x;\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/30-content.js"
+}

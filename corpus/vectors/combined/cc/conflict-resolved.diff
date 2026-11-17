@@ -1,0 +1,14 @@
+diff --cc f.txt
+index fc14739,873c693..8ba8d82
+--- a/f.txt
++++ b/f.txt
+@@@ -1,7 -1,7 +1,7 @@@
+  1
+  2
+  3
+- four (ours)
+ -four (theirs)
+++four (both)
+  5
+  6
+  7

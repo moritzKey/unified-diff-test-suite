@@ -1,0 +1,5 @@
+GitPython==3.2.1
+patch-ng==1.19.1
+pygit2==1.21.0
+unidiff==1.0.1
+whatthepatch==1.0.7

@@ -1,0 +1,24 @@
+diff -ruN a/a.txt b/a.txt
+--- a/a.txt	2000-01-01 00:00:00.000000000 +0000
++++ b/a.txt	2000-01-01 01:00:00.000000000 +0000
+@@ -1,2 +1,2 @@
+ one
+-two
+\ No newline at end of file
++two
+diff -ruN a/b.txt b/b.txt
+--- a/b.txt	2000-01-01 00:00:00.000000000 +0000
++++ b/b.txt	2000-01-01 01:00:00.000000000 +0000
+@@ -1,2 +1,2 @@
+ one
+-two
++two
+\ No newline at end of file
+diff -ruN a/c.txt b/c.txt
+--- a/c.txt	2000-01-01 00:00:00.000000000 +0000
++++ b/c.txt	2000-01-01 01:00:00.000000000 +0000
+@@ -1 +1 @@
+-x
+\ No newline at end of file
++y
+\ No newline at end of file

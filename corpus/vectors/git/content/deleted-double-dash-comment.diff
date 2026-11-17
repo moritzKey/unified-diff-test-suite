@@ -1,0 +1,10 @@
+diff --git a/schema.sql b/schema.sql
+index dca2a39..a58c915 100644
+--- a/schema.sql
++++ b/schema.sql
+@@ -1,5 +1,4 @@
+ CREATE TABLE users (
+   id INTEGER PRIMARY KEY
+ );
+--- speed up lookups
+ CREATE INDEX users_id ON users (id);

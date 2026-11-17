@@ -1,0 +1,52 @@
+{
+  "id": "git/basics/empty-diff",
+  "title": "Nothing changed: the diff is empty",
+  "description": "Zero bytes of input must give zero files, not an exception and not one empty file.",
+  "tier": "git",
+  "tags": ["basics","empty-input"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": []
+  },
+  "apply": {
+    "skip": "the diff is empty"
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"same.txt","content":"same\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"same.txt","content":"same\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/10-basics.js"
+}

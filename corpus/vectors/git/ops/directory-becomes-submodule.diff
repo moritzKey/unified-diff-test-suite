@@ -1,0 +1,14 @@
+diff --git a/vendor b/vendor
+deleted file mode 100644
+index 48cdce8..0000000
+--- a/vendor
++++ /dev/null
+@@ -1 +0,0 @@
+-placeholder
+diff --git a/vendor b/vendor
+new file mode 160000
+index 0000000..3333333
+--- /dev/null
++++ b/vendor
+@@ -0,0 +1 @@
++Subproject commit 3333333333333333333333333333333333333333

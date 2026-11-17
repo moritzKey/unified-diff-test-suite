@@ -1,0 +1,2798 @@
+{
+ "format": 1,
+ "tools": {
+  "git": "2.43.0",
+  "diffutils": "3.10",
+  "patch": "2.7.6"
+ },
+ "count": 246,
+ "vectors": [
+  {
+   "id": "git/basics/modify-one-line",
+   "tier": "git",
+   "title": "One line changed in the middle of a file",
+   "tags": [
+    "basics"
+   ],
+   "files": 1,
+   "bytes": 155
+  },
+  {
+   "id": "git/basics/add-file",
+   "tier": "git",
+   "title": "A new file",
+   "tags": [
+    "basics",
+    "added"
+   ],
+   "files": 1,
+   "bytes": 141
+  },
+  {
+   "id": "git/basics/delete-file",
+   "tier": "git",
+   "title": "A deleted file",
+   "tags": [
+    "basics",
+    "deleted"
+   ],
+   "files": 1,
+   "bytes": 145
+  },
+  {
+   "id": "git/basics/two-hunks",
+   "tier": "git",
+   "title": "Two hunks in one file",
+   "tags": [
+    "basics"
+   ],
+   "files": 1,
+   "bytes": 206
+  },
+  {
+   "id": "git/basics/three-files",
+   "tier": "git",
+   "title": "Three files: one modified, one added, one deleted",
+   "tags": [
+    "basics",
+    "added",
+    "deleted"
+   ],
+   "files": 3,
+   "bytes": 346
+  },
+  {
+   "id": "git/basics/prepend-and-append",
+   "tier": "git",
+   "title": "Lines added at the very top and the very bottom",
+   "tags": [
+    "basics"
+   ],
+   "files": 1,
+   "bytes": 164
+  },
+  {
+   "id": "git/basics/single-line-file",
+   "tier": "git",
+   "title": "A count of 1 is left out of the hunk header",
+   "tags": [
+    "basics",
+    "hunk-header"
+   ],
+   "files": 1,
+   "bytes": 116
+  },
+  {
+   "id": "git/basics/section-heading",
+   "tier": "git",
+   "title": "Text after the closing @@ is the enclosing function, not content",
+   "tags": [
+    "basics",
+    "hunk-header"
+   ],
+   "files": 1,
+   "bytes": 263
+  },
+  {
+   "id": "git/basics/blank-context-lines",
+   "tier": "git",
+   "title": "An empty context line is spelled as a single space",
+   "tags": [
+    "basics",
+    "blank-lines"
+   ],
+   "files": 1,
+   "bytes": 144
+  },
+  {
+   "id": "git/basics/blank-added-and-deleted-lines",
+   "tier": "git",
+   "title": "Adding or deleting an empty line gives a bare \"+\" or \"-\"",
+   "tags": [
+    "basics",
+    "blank-lines"
+   ],
+   "files": 1,
+   "bytes": 141
+  },
+  {
+   "id": "git/basics/whitespace-only-lines",
+   "tier": "git",
+   "title": "Lines made of spaces and tabs",
+   "tags": [
+    "basics",
+    "whitespace"
+   ],
+   "files": 1,
+   "bytes": 135
+  },
+  {
+   "id": "git/basics/indentation-preserved",
+   "tier": "git",
+   "title": "Leading and trailing whitespace is content",
+   "tags": [
+    "basics",
+    "whitespace"
+   ],
+   "files": 1,
+   "bytes": 192
+  },
+  {
+   "id": "git/basics/large-line-numbers",
+   "tier": "git",
+   "title": "A change far down a long file",
+   "tags": [
+    "basics",
+    "hunk-header"
+   ],
+   "files": 1,
+   "bytes": 175
+  },
+  {
+   "id": "git/basics/many-hunks",
+   "tier": "git",
+   "title": "Ten hunks in one file",
+   "tags": [
+    "basics"
+   ],
+   "files": 1,
+   "bytes": 678
+  },
+  {
+   "id": "git/basics/empty-diff",
+   "tier": "git",
+   "title": "Nothing changed: the diff is empty",
+   "tags": [
+    "basics",
+    "empty-input"
+   ],
+   "files": 0,
+   "bytes": 0
+  },
+  {
+   "id": "git/ranges/u0-insert",
+   "tier": "git",
+   "title": "-U0: lines inserted in the middle (\"-5,0\")",
+   "tags": [
+    "hunk-header",
+    "zero-count",
+    "u0"
+   ],
+   "files": 1,
+   "bytes": 139
+  },
+  {
+   "id": "git/ranges/u0-insert-one",
+   "tier": "git",
+   "title": "-U0: a single line inserted (\"-5,0 +6\")",
+   "tags": [
+    "hunk-header",
+    "zero-count",
+    "u0"
+   ],
+   "files": 1,
+   "bytes": 112
+  },
+  {
+   "id": "git/ranges/u0-delete",
+   "tier": "git",
+   "title": "-U0: lines deleted from the middle (\"+2,0\")",
+   "tags": [
+    "hunk-header",
+    "zero-count",
+    "u0"
+   ],
+   "files": 1,
+   "bytes": 103
+  },
+  {
+   "id": "git/ranges/u0-replace",
+   "tier": "git",
+   "title": "-U0: one line replaced by three",
+   "tags": [
+    "hunk-header",
+    "u0"
+   ],
+   "files": 1,
+   "bytes": 112
+  },
+  {
+   "id": "git/ranges/u0-insert-at-top",
+   "tier": "git",
+   "title": "-U0: lines inserted before the first line (\"-0,0\")",
+   "tags": [
+    "hunk-header",
+    "zero-count",
+    "u0"
+   ],
+   "files": 1,
+   "bytes": 111
+  },
+  {
+   "id": "git/ranges/u0-delete-first-line",
+   "tier": "git",
+   "title": "-U0: the first line deleted (\"+0,0\")",
+   "tags": [
+    "hunk-header",
+    "zero-count",
+    "u0"
+   ],
+   "files": 1,
+   "bytes": 98
+  },
+  {
+   "id": "git/ranges/u0-append",
+   "tier": "git",
+   "title": "-U0: lines appended at the end",
+   "tags": [
+    "hunk-header",
+    "zero-count",
+    "u0"
+   ],
+   "files": 1,
+   "bytes": 115
+  },
+  {
+   "id": "git/ranges/u0-many-hunks",
+   "tier": "git",
+   "title": "-U0: adjacent single-line hunks",
+   "tags": [
+    "hunk-header",
+    "u0"
+   ],
+   "files": 1,
+   "bytes": 191
+  },
+  {
+   "id": "git/ranges/u0-mixed-file",
+   "tier": "git",
+   "title": "-U0: insertion, deletion and replacement in one file",
+   "tags": [
+    "hunk-header",
+    "zero-count",
+    "u0"
+   ],
+   "files": 1,
+   "bytes": 161
+  },
+  {
+   "id": "git/ranges/emptied-file",
+   "tier": "git",
+   "title": "Every line deleted, but the file stays (\"+0,0\" without \"deleted file\")",
+   "tags": [
+    "hunk-header",
+    "zero-count",
+    "empty-file"
+   ],
+   "files": 1,
+   "bytes": 130
+  },
+  {
+   "id": "git/ranges/filled-empty-file",
+   "tier": "git",
+   "title": "An existing empty file gets content (\"-0,0\" without \"new file\")",
+   "tags": [
+    "hunk-header",
+    "zero-count",
+    "empty-file"
+   ],
+   "files": 1,
+   "bytes": 130
+  },
+  {
+   "id": "git/ranges/u1",
+   "tier": "git",
+   "title": "-U1: one line of context",
+   "tags": [
+    "hunk-header"
+   ],
+   "files": 1,
+   "bytes": 112
+  },
+  {
+   "id": "git/ranges/u1-single-line-result",
+   "tier": "git",
+   "title": "-U1 at the top of a file: old count 2, new count omitted",
+   "tags": [
+    "hunk-header"
+   ],
+   "files": 1,
+   "bytes": 101
+  },
+  {
+   "id": "git/ranges/u10-overlapping-context",
+   "tier": "git",
+   "title": "-U10: nearby changes merge into one hunk",
+   "tags": [
+    "hunk-header"
+   ],
+   "files": 1,
+   "bytes": 254
+  },
+  {
+   "id": "git/ranges/function-context",
+   "tier": "git",
+   "title": "--function-context: the whole function is context",
+   "tags": [
+    "hunk-header"
+   ],
+   "files": 1,
+   "bytes": 257
+  },
+  {
+   "id": "git/ranges/replace-whole-file",
+   "tier": "git",
+   "title": "Every line replaced",
+   "tags": [
+    "hunk-header"
+   ],
+   "files": 1,
+   "bytes": 121
+  },
+  {
+   "id": "git/content/deleted-double-dash-comment",
+   "tier": "git",
+   "title": "Deleting a \"-- comment\" line (SQL, Lua, Haskell, Ada) yields \"--- comment\"",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header"
+   ],
+   "files": 1,
+   "bytes": 228
+  },
+  {
+   "id": "git/content/added-double-plus-line",
+   "tier": "git",
+   "title": "Adding a line that starts with \"++ \" yields \"+++ ...\"",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header"
+   ],
+   "files": 1,
+   "bytes": 148
+  },
+  {
+   "id": "git/content/fake-header-pair",
+   "tier": "git",
+   "title": "A deleted \"-- a/x\" next to an added \"++ b/x\" reads exactly like a file header pair",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header"
+   ],
+   "files": 1,
+   "bytes": 161
+  },
+  {
+   "id": "git/content/fake-header-pair-before-next-hunk",
+   "tier": "git",
+   "title": "A fake header pair at the end of one hunk, immediately followed by the next hunk",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header",
+    "u0"
+   ],
+   "files": 1,
+   "bytes": 193
+  },
+  {
+   "id": "git/content/bare-triple-dash",
+   "tier": "git",
+   "title": "Deleting a line \"--\" yields a bare \"---\"",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header"
+   ],
+   "files": 1,
+   "bytes": 129
+  },
+  {
+   "id": "git/content/bare-triple-plus",
+   "tier": "git",
+   "title": "Adding a line \"++\" yields a bare \"+++\"",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header"
+   ],
+   "files": 1,
+   "bytes": 115
+  },
+  {
+   "id": "git/content/signature-separator",
+   "tier": "git",
+   "title": "Deleting an e-mail signature separator \"-- \" yields \"--- \" with nothing after it",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header",
+    "whitespace"
+   ],
+   "files": 1,
+   "bytes": 129
+  },
+  {
+   "id": "git/content/markdown-rule-and-front-matter",
+   "tier": "git",
+   "title": "Markdown front matter and rules: lines of \"---\" added and deleted",
+   "tags": [
+    "content-lookalike"
+   ],
+   "files": 1,
+   "bytes": 167
+  },
+  {
+   "id": "git/content/c-decrement-and-increment",
+   "tier": "git",
+   "title": "C statements \"--count;\" deleted and \"++count;\" added at column 0",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header"
+   ],
+   "files": 1,
+   "bytes": 149
+  },
+  {
+   "id": "git/content/lines-of-only-markers",
+   "tier": "git",
+   "title": "Lines that consist only of \"+\", \"-\" and spaces",
+   "tags": [
+    "content-lookalike"
+   ],
+   "files": 1,
+   "bytes": 142
+  },
+  {
+   "id": "git/content/hunk-header-as-content",
+   "tier": "git",
+   "title": "File lines that look like hunk headers",
+   "tags": [
+    "content-lookalike",
+    "fake-hunk-header"
+   ],
+   "files": 1,
+   "bytes": 180
+  },
+  {
+   "id": "git/content/section-heading-contains-hunk-header",
+   "tier": "git",
+   "title": "A hunk header whose function-context text contains another \"@@ -a,b +c,d @@\"",
+   "tags": [
+    "content-lookalike",
+    "fake-hunk-header",
+    "hunk-header"
+   ],
+   "files": 1,
+   "bytes": 158
+  },
+  {
+   "id": "git/content/section-heading-with-control-characters",
+   "tier": "git",
+   "title": "A hunk header whose function-context text contains a carriage return and U+2028",
+   "tags": [
+    "hunk-header",
+    "cr",
+    "unicode",
+    "line-splitting"
+   ],
+   "files": 1,
+   "bytes": 148
+  },
+  {
+   "id": "git/content/diff-git-line-as-content",
+   "tier": "git",
+   "title": "File lines that read \"diff --git a/x b/x\"",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header"
+   ],
+   "files": 1,
+   "bytes": 215
+  },
+  {
+   "id": "git/content/extended-headers-as-content",
+   "tier": "git",
+   "title": "File lines that read like git extended headers",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header"
+   ],
+   "files": 1,
+   "bytes": 298
+  },
+  {
+   "id": "git/content/patch-file-modified",
+   "tier": "git",
+   "title": "A diff of a patch file: every line of the inner patch is content",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header",
+    "fake-hunk-header"
+   ],
+   "files": 1,
+   "bytes": 464
+  },
+  {
+   "id": "git/content/patch-file-added",
+   "tier": "git",
+   "title": "A new patch file: the inner \"--- a/x\" and \"+++ b/x\" become \"+--- a/x\" and \"++++ b/x\"",
+   "tags": [
+    "content-lookalike",
+    "added"
+   ],
+   "files": 1,
+   "bytes": 205
+  },
+  {
+   "id": "git/content/patch-file-deleted",
+   "tier": "git",
+   "title": "A deleted patch file: the inner \"--- a/x\" becomes \"---- a/x\", the inner \"-old\" becomes \"--old\"",
+   "tags": [
+    "content-lookalike",
+    "deleted"
+   ],
+   "files": 1,
+   "bytes": 209
+  },
+  {
+   "id": "git/content/no-newline-text-as-content",
+   "tier": "git",
+   "title": "A file line that reads \"\\ No newline at end of file\"",
+   "tags": [
+    "content-lookalike",
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 238
+  },
+  {
+   "id": "git/content/backslash-lines",
+   "tier": "git",
+   "title": "File lines that start with a backslash",
+   "tags": [
+    "content-lookalike"
+   ],
+   "files": 1,
+   "bytes": 154
+  },
+  {
+   "id": "git/content/deleted-comment-then-next-file",
+   "tier": "git",
+   "title": "A \"--- comment\" line as the last line of a file section, followed by another file",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header"
+   ],
+   "files": 2,
+   "bytes": 239
+  },
+  {
+   "id": "git/content/only-fake-headers",
+   "tier": "git",
+   "title": "A hunk that consists of nothing but fake headers",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header",
+    "u0"
+   ],
+   "files": 1,
+   "bytes": 149
+  },
+  {
+   "id": "git/content/timestamp-like-lines",
+   "tier": "git",
+   "title": "Content lines that look like GNU diff headers with timestamps",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header"
+   ],
+   "files": 1,
+   "bytes": 217
+  },
+  {
+   "id": "git/content/index-line-as-content",
+   "tier": "git",
+   "title": "Deleted and added lines that read \"Index: file\" and \"=====\"",
+   "tags": [
+    "content-lookalike"
+   ],
+   "files": 1,
+   "bytes": 222
+  },
+  {
+   "id": "git/newline/added-at-end",
+   "tier": "git",
+   "title": "The old file had no final newline, the new one has",
+   "tags": [
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 140
+  },
+  {
+   "id": "git/newline/removed-at-end",
+   "tier": "git",
+   "title": "The new file has no final newline, the old one had",
+   "tags": [
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 140
+  },
+  {
+   "id": "git/newline/both-missing-last-line-changed",
+   "tier": "git",
+   "title": "Neither side ends with a newline and the last line changed: two markers",
+   "tags": [
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 168
+  },
+  {
+   "id": "git/newline/both-missing-context",
+   "tier": "git",
+   "title": "Neither side ends with a newline and the last line is context: one marker after a context line",
+   "tags": [
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 147
+  },
+  {
+   "id": "git/newline/marker-mid-hunk",
+   "tier": "git",
+   "title": "Lines appended to a file that had no final newline: the marker sits in the middle of the hunk",
+   "tags": [
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 153
+  },
+  {
+   "id": "git/newline/marker-mid-hunk-both-sides",
+   "tier": "git",
+   "title": "Appending to a file without a final newline, the result again without one",
+   "tags": [
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 175
+  },
+  {
+   "id": "git/newline/new-file-without",
+   "tier": "git",
+   "title": "A new file without a final newline",
+   "tags": [
+    "no-newline",
+    "added"
+   ],
+   "files": 1,
+   "bytes": 151
+  },
+  {
+   "id": "git/newline/deleted-file-without",
+   "tier": "git",
+   "title": "A deleted file without a final newline",
+   "tags": [
+    "no-newline",
+    "deleted"
+   ],
+   "files": 1,
+   "bytes": 155
+  },
+  {
+   "id": "git/newline/single-line-file-without",
+   "tier": "git",
+   "title": "A one-line file without a newline, changed",
+   "tags": [
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 171
+  },
+  {
+   "id": "git/newline/u0-marker",
+   "tier": "git",
+   "title": "-U0 with a marker on the only line of the hunk",
+   "tags": [
+    "no-newline",
+    "u0"
+   ],
+   "files": 1,
+   "bytes": 161
+  },
+  {
+   "id": "git/newline/two-files-with-markers",
+   "tier": "git",
+   "title": "A marker at the end of one file section, directly followed by the next file",
+   "tags": [
+    "no-newline"
+   ],
+   "files": 2,
+   "bytes": 254
+  },
+  {
+   "id": "git/newline/symlink-target-changed",
+   "tier": "git",
+   "title": "A symbolic link retargeted: link targets never end with a newline",
+   "tags": [
+    "no-newline",
+    "symlink"
+   ],
+   "files": 1,
+   "bytes": 183
+  },
+  {
+   "id": "git/newline/only-a-newline-added",
+   "tier": "git",
+   "title": "An empty file becomes a single empty line",
+   "tags": [
+    "no-newline",
+    "blank-lines",
+    "empty-file"
+   ],
+   "files": 1,
+   "bytes": 97
+  },
+  {
+   "id": "git/newline/trailing-blank-lines",
+   "tier": "git",
+   "title": "Trailing empty lines added and the final newline removed",
+   "tags": [
+    "no-newline",
+    "blank-lines"
+   ],
+   "files": 1,
+   "bytes": 136
+  },
+  {
+   "id": "git/newline/context-marker-then-second-hunk-absent",
+   "tier": "git",
+   "title": "A change far from the end of a file that lacks a final newline: no marker at all",
+   "tags": [
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 117
+  },
+  {
+   "id": "git/bytes/crlf-file-modified",
+   "tier": "git",
+   "title": "A file with CRLF line endings: every content line ends with CR",
+   "tags": [
+    "line-endings",
+    "cr"
+   ],
+   "files": 1,
+   "bytes": 131
+  },
+  {
+   "id": "git/bytes/lf-to-crlf",
+   "tier": "git",
+   "title": "Line endings converted from LF to CRLF: every line changes",
+   "tags": [
+    "line-endings",
+    "cr"
+   ],
+   "files": 1,
+   "bytes": 131
+  },
+  {
+   "id": "git/bytes/mixed-line-endings",
+   "tier": "git",
+   "title": "Mixed LF and CRLF endings in one file",
+   "tags": [
+    "line-endings",
+    "cr"
+   ],
+   "files": 1,
+   "bytes": 137
+  },
+  {
+   "id": "git/bytes/lone-cr-inside-line",
+   "tier": "git",
+   "title": "A lone CR in the middle of a line is not a line break",
+   "tags": [
+    "line-endings",
+    "cr",
+    "line-splitting"
+   ],
+   "files": 1,
+   "bytes": 178
+  },
+  {
+   "id": "git/bytes/classic-mac-file",
+   "tier": "git",
+   "title": "A file that uses CR as its only line terminator is one long line without a final newline",
+   "tags": [
+    "line-endings",
+    "cr",
+    "line-splitting",
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 205
+  },
+  {
+   "id": "git/bytes/form-feed",
+   "tier": "git",
+   "title": "Form feed (page break) characters inside lines",
+   "tags": [
+    "control-chars",
+    "line-splitting"
+   ],
+   "files": 1,
+   "bytes": 170
+  },
+  {
+   "id": "git/bytes/vertical-tab-and-separators",
+   "tier": "git",
+   "title": "VT, FS, GS, RS and US control characters inside lines",
+   "tags": [
+    "control-chars",
+    "line-splitting"
+   ],
+   "files": 1,
+   "bytes": 155
+  },
+  {
+   "id": "git/bytes/unicode-line-separators",
+   "tier": "git",
+   "title": "U+2028, U+2029 and U+0085 inside lines",
+   "tags": [
+    "unicode",
+    "line-splitting"
+   ],
+   "files": 1,
+   "bytes": 204
+  },
+  {
+   "id": "git/bytes/nul-with-text-option",
+   "tier": "git",
+   "title": "NUL bytes shown as text (git diff --text)",
+   "tags": [
+    "control-chars",
+    "nul"
+   ],
+   "files": 1,
+   "bytes": 132
+  },
+  {
+   "id": "git/bytes/escape-sequences",
+   "tier": "git",
+   "title": "ANSI escape sequences and BEL inside lines",
+   "tags": [
+    "control-chars"
+   ],
+   "files": 1,
+   "bytes": 162
+  },
+  {
+   "id": "git/bytes/bom-added",
+   "tier": "git",
+   "title": "A UTF-8 byte order mark added at the start of a file",
+   "tags": [
+    "unicode",
+    "bom"
+   ],
+   "files": 1,
+   "bytes": 135
+  },
+  {
+   "id": "git/bytes/unicode-content",
+   "tier": "git",
+   "title": "Non-ASCII content: accents, CJK, emoji, combining marks, right-to-left text",
+   "tags": [
+    "unicode"
+   ],
+   "files": 1,
+   "bytes": 206
+  },
+  {
+   "id": "git/bytes/tabs-and-trailing-spaces",
+   "tier": "git",
+   "title": "Tabs inside lines and whitespace at line ends",
+   "tags": [
+    "whitespace"
+   ],
+   "files": 1,
+   "bytes": 180
+  },
+  {
+   "id": "git/bytes/long-line",
+   "tier": "git",
+   "title": "A 64 KiB line",
+   "tags": [
+    "long-line"
+   ],
+   "files": 1,
+   "bytes": 65668
+  },
+  {
+   "id": "git/bytes/latin1-content",
+   "tier": "git",
+   "title": "Content that is not valid UTF-8 (ISO-8859-1)",
+   "tags": [
+    "non-utf8",
+    "encoding"
+   ],
+   "files": 1,
+   "bytes": 137
+  },
+  {
+   "id": "git/bytes/whitespace-only-change",
+   "tier": "git",
+   "title": "Only the amount of whitespace changes",
+   "tags": [
+    "whitespace"
+   ],
+   "files": 1,
+   "bytes": 127
+  },
+  {
+   "id": "git/paths/space",
+   "tier": "git",
+   "title": "A space in the file name: the \"---\"/\"+++\" lines end with a TAB",
+   "tags": [
+    "paths",
+    "space-in-path"
+   ],
+   "files": 1,
+   "bytes": 129
+  },
+  {
+   "id": "git/paths/spaces-in-directories",
+   "tier": "git",
+   "title": "Spaces in directory names and several in the file name",
+   "tags": [
+    "paths",
+    "space-in-path"
+   ],
+   "files": 1,
+   "bytes": 213
+  },
+  {
+   "id": "git/paths/leading-space",
+   "tier": "git",
+   "title": "A file name that starts with a space",
+   "tags": [
+    "paths",
+    "space-in-path"
+   ],
+   "files": 1,
+   "bytes": 133
+  },
+  {
+   "id": "git/paths/trailing-space",
+   "tier": "git",
+   "title": "A file name that ends with a space",
+   "tags": [
+    "paths",
+    "space-in-path"
+   ],
+   "files": 1,
+   "bytes": 137
+  },
+  {
+   "id": "git/paths/double-space",
+   "tier": "git",
+   "title": "Two consecutive spaces in a file name",
+   "tags": [
+    "paths",
+    "space-in-path"
+   ],
+   "files": 1,
+   "bytes": 145
+  },
+  {
+   "id": "git/paths/space-then-b-slash",
+   "tier": "git",
+   "title": "A directory named \"a b\": the header reads \"diff --git a/a b/c.txt b/a b/c.txt\"",
+   "tags": [
+    "paths",
+    "space-in-path",
+    "header-ambiguity"
+   ],
+   "files": 1,
+   "bytes": 121
+  },
+  {
+   "id": "git/paths/header-many-b-slash",
+   "tier": "git",
+   "title": "A path in which \" b/\" occurs twice",
+   "tags": [
+    "paths",
+    "space-in-path",
+    "header-ambiguity"
+   ],
+   "files": 1,
+   "bytes": 121
+  },
+  {
+   "id": "git/paths/non-ascii-quoted",
+   "tier": "git",
+   "title": "A non-ASCII name is quoted and octal-escaped by default (\"a/\\303\\274ber.txt\")",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "unicode"
+   ],
+   "files": 1,
+   "bytes": 151
+  },
+  {
+   "id": "git/paths/cjk-quoted",
+   "tier": "git",
+   "title": "A Chinese path, quoted and octal-escaped",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "unicode"
+   ],
+   "files": 1,
+   "bytes": 299
+  },
+  {
+   "id": "git/paths/emoji-and-space-quoted",
+   "tier": "git",
+   "title": "An emoji and a space: quoted, and the TAB follows the closing quote",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "unicode",
+    "space-in-path"
+   ],
+   "files": 1,
+   "bytes": 197
+  },
+  {
+   "id": "git/paths/double-quote",
+   "tier": "git",
+   "title": "A double quote in the name (\"a/say \\\"hi\\\".txt\")",
+   "tags": [
+    "paths",
+    "quoted-path"
+   ],
+   "files": 1,
+   "bytes": 149
+  },
+  {
+   "id": "git/paths/starts-with-double-quote",
+   "tier": "git",
+   "title": "A name that itself starts and ends with a double quote",
+   "tags": [
+    "paths",
+    "quoted-path"
+   ],
+   "files": 1,
+   "bytes": 147
+  },
+  {
+   "id": "git/paths/backslash",
+   "tier": "git",
+   "title": "A backslash in the name (\"a/back\\\\slash.txt\")",
+   "tags": [
+    "paths",
+    "quoted-path"
+   ],
+   "files": 1,
+   "bytes": 151
+  },
+  {
+   "id": "git/paths/tab",
+   "tier": "git",
+   "title": "A TAB in the name (\"a/col1\\tcol2.tsv\")",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "control-chars"
+   ],
+   "files": 1,
+   "bytes": 147
+  },
+  {
+   "id": "git/paths/newline",
+   "tier": "git",
+   "title": "A newline in the name (\"a/line1\\nline2.txt\")",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "control-chars"
+   ],
+   "files": 1,
+   "bytes": 155
+  },
+  {
+   "id": "git/paths/control-chars",
+   "tier": "git",
+   "title": "BEL, ESC and DEL in the name: \\a and octal escapes",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "control-chars"
+   ],
+   "files": 1,
+   "bytes": 187
+  },
+  {
+   "id": "git/paths/carriage-return",
+   "tier": "git",
+   "title": "A carriage return in the name (\"a/cr\\rname.txt\")",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "control-chars",
+    "cr"
+   ],
+   "files": 1,
+   "bytes": 139
+  },
+  {
+   "id": "git/paths/latin1-name",
+   "tier": "git",
+   "title": "A name that is not valid UTF-8 (ISO-8859-1 \"café.txt\")",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "encoding"
+   ],
+   "files": 1,
+   "bytes": 135
+  },
+  {
+   "id": "git/paths/dev-null-lookalike",
+   "tier": "git",
+   "title": "A file at the relative path dev/null: \"--- a/dev/null\" is a real file",
+   "tags": [
+    "paths",
+    "dev-null"
+   ],
+   "files": 1,
+   "bytes": 115
+  },
+  {
+   "id": "git/paths/directory-named-a",
+   "tier": "git",
+   "title": "A top-level directory named \"a\": \"--- a/a/a.txt\"",
+   "tags": [
+    "paths",
+    "prefix"
+   ],
+   "files": 1,
+   "bytes": 111
+  },
+  {
+   "id": "git/paths/directory-named-b",
+   "tier": "git",
+   "title": "Directories named \"b\": \"+++ b/b/b/b.txt\"",
+   "tags": [
+    "paths",
+    "prefix"
+   ],
+   "files": 1,
+   "bytes": 119
+  },
+  {
+   "id": "git/paths/leading-dash",
+   "tier": "git",
+   "title": "A name that starts with a dash",
+   "tags": [
+    "paths"
+   ],
+   "files": 1,
+   "bytes": 119
+  },
+  {
+   "id": "git/paths/leading-plus",
+   "tier": "git",
+   "title": "A name that starts with a plus sign",
+   "tags": [
+    "paths"
+   ],
+   "files": 1,
+   "bytes": 119
+  },
+  {
+   "id": "git/paths/hunk-header-as-name",
+   "tier": "git",
+   "title": "A name that looks like a hunk header",
+   "tags": [
+    "paths",
+    "space-in-path"
+   ],
+   "files": 1,
+   "bytes": 145
+  },
+  {
+   "id": "git/paths/timestamp-in-name",
+   "tier": "git",
+   "title": "A name that contains a timestamp",
+   "tags": [
+    "paths",
+    "space-in-path"
+   ],
+   "files": 1,
+   "bytes": 229
+  },
+  {
+   "id": "git/paths/arrow-and-braces",
+   "tier": "git",
+   "title": "A name with \" => \" and braces, the notation of --stat for renames",
+   "tags": [
+    "paths",
+    "space-in-path"
+   ],
+   "files": 1,
+   "bytes": 149
+  },
+  {
+   "id": "git/paths/contains-and",
+   "tier": "git",
+   "title": "A name that contains \" and \"",
+   "tags": [
+    "paths",
+    "space-in-path"
+   ],
+   "files": 1,
+   "bytes": 145
+  },
+  {
+   "id": "git/paths/deep-directory",
+   "tier": "git",
+   "title": "A file forty directories deep",
+   "tags": [
+    "paths"
+   ],
+   "files": 1,
+   "bytes": 915
+  },
+  {
+   "id": "git/paths/long-name",
+   "tier": "git",
+   "title": "A 244-character file name",
+   "tags": [
+    "paths"
+   ],
+   "files": 1,
+   "bytes": 1059
+  },
+  {
+   "id": "git/paths/glob-characters",
+   "tier": "git",
+   "title": "Glob characters in the name",
+   "tags": [
+    "paths"
+   ],
+   "files": 1,
+   "bytes": 135
+  },
+  {
+   "id": "git/paths/shell-characters",
+   "tier": "git",
+   "title": "Shell and markup metacharacters in the name",
+   "tags": [
+    "paths"
+   ],
+   "files": 1,
+   "bytes": 235
+  },
+  {
+   "id": "git/paths/dotfiles",
+   "tier": "git",
+   "title": "Dot files in dot directories",
+   "tags": [
+    "paths"
+   ],
+   "files": 1,
+   "bytes": 131
+  },
+  {
+   "id": "git/paths/single-quote",
+   "tier": "git",
+   "title": "A single quote in the name (not quoted by git)",
+   "tags": [
+    "paths"
+   ],
+   "files": 1,
+   "bytes": 115
+  },
+  {
+   "id": "git/paths/tilde",
+   "tier": "git",
+   "title": "A tilde in the name",
+   "tags": [
+    "paths"
+   ],
+   "files": 1,
+   "bytes": 127
+  },
+  {
+   "id": "git/paths/no-break-space",
+   "tier": "git",
+   "title": "A no-break space in the name",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "unicode"
+   ],
+   "files": 1,
+   "bytes": 171
+  },
+  {
+   "id": "git/paths/combining-accent",
+   "tier": "git",
+   "title": "A decomposed accented letter (e + U+0301) in the name",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "unicode"
+   ],
+   "files": 1,
+   "bytes": 143
+  },
+  {
+   "id": "git/paths/literal-backslash-digits",
+   "tier": "git",
+   "title": "A name that literally contains the characters \\303\\274",
+   "tags": [
+    "paths",
+    "quoted-path"
+   ],
+   "files": 1,
+   "bytes": 147
+  },
+  {
+   "id": "git/paths/name-contains-header-split",
+   "tier": "git",
+   "title": "A file name that contains \" b/\" followed by a suffix of itself",
+   "tags": [
+    "paths",
+    "space-in-path",
+    "header-ambiguity"
+   ],
+   "files": 1,
+   "bytes": 153
+  },
+  {
+   "id": "git/paths/two-names-one-quoted",
+   "tier": "git",
+   "title": "A rename where only the new name needs quoting",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "rename",
+    "header-ambiguity"
+   ],
+   "files": 1,
+   "bytes": 218
+  },
+  {
+   "id": "git/paths/two-names-first-quoted",
+   "tier": "git",
+   "title": "A rename where only the old name needs quoting",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "rename",
+    "header-ambiguity"
+   ],
+   "files": 1,
+   "bytes": 218
+  },
+  {
+   "id": "git/paths/rename-with-spaces",
+   "tier": "git",
+   "title": "A rename between two names with spaces: the \"diff --git\" line cannot be split",
+   "tags": [
+    "paths",
+    "space-in-path",
+    "rename",
+    "header-ambiguity"
+   ],
+   "files": 1,
+   "bytes": 226
+  },
+  {
+   "id": "git/paths/pure-rename-with-spaces",
+   "tier": "git",
+   "title": "A rename without content change between names with spaces: no \"---\"/\"+++\" lines at all",
+   "tags": [
+    "paths",
+    "space-in-path",
+    "rename",
+    "header-ambiguity"
+   ],
+   "files": 1,
+   "bytes": 111
+  },
+  {
+   "id": "git/paths/mode-change-with-space",
+   "tier": "git",
+   "title": "A mode change of a file with a space in its name: the name appears only on the \"diff --git\" line",
+   "tags": [
+    "paths",
+    "space-in-path",
+    "mode",
+    "header-ambiguity"
+   ],
+   "files": 1,
+   "bytes": 67
+  },
+  {
+   "id": "git/paths/mode-change-quoted",
+   "tier": "git",
+   "title": "A mode change of a file with a non-ASCII name: quoted names on the \"diff --git\" line only",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "mode",
+    "unicode"
+   ],
+   "files": 1,
+   "bytes": 85
+  },
+  {
+   "id": "git/paths/empty-file-with-space-added",
+   "tier": "git",
+   "title": "A new empty file with spaces in its name",
+   "tags": [
+    "paths",
+    "space-in-path",
+    "added",
+    "empty-file",
+    "header-ambiguity"
+   ],
+   "files": 1,
+   "bytes": 95
+  },
+  {
+   "id": "git/paths/quoted-name-with-space-added",
+   "tier": "git",
+   "title": "A new file whose name is quoted and contains a space",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "unicode",
+    "space-in-path",
+    "added"
+   ],
+   "files": 1,
+   "bytes": 186
+  },
+  {
+   "id": "git/paths/directory-ending-in-space-mode-change",
+   "tier": "git",
+   "title": "A mode change below a directory whose name ends with a space: git 2.43 cannot read this back",
+   "tags": [
+    "paths",
+    "space-in-path",
+    "mode",
+    "header-ambiguity",
+    "git-apply-rejects"
+   ],
+   "files": 1,
+   "bytes": 71
+  },
+  {
+   "id": "git/paths/directory-ending-in-space-edit",
+   "tier": "git",
+   "title": "An edit below a directory whose name ends with a space: readable, because \"---\"/\"+++\" name the file",
+   "tags": [
+    "paths",
+    "space-in-path"
+   ],
+   "files": 1,
+   "bytes": 141
+  },
+  {
+   "id": "git/paths/case-only-rename",
+   "tier": "git",
+   "title": "A rename that changes only letter case",
+   "tags": [
+    "paths",
+    "rename"
+   ],
+   "files": 1,
+   "bytes": 99
+  },
+  {
+   "id": "git/paths/many-odd-names",
+   "tier": "git",
+   "title": "Fourteen files with awkward names in one diff",
+   "tags": [
+    "paths",
+    "quoted-path",
+    "space-in-path",
+    "unicode"
+   ],
+   "files": 14,
+   "bytes": 1738
+  },
+  {
+   "id": "git/ops/rename-pure",
+   "tier": "git",
+   "title": "A rename without content change: no index line, no \"---\"/\"+++\", no hunks",
+   "tags": [
+    "rename",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 91
+  },
+  {
+   "id": "git/ops/rename-and-edit",
+   "tier": "git",
+   "title": "A rename with a content change",
+   "tags": [
+    "rename"
+   ],
+   "files": 1,
+   "bytes": 240
+  },
+  {
+   "id": "git/ops/rename-into-directory",
+   "tier": "git",
+   "title": "A file moved into a subdirectory",
+   "tags": [
+    "rename",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 115
+  },
+  {
+   "id": "git/ops/rename-and-mode-change",
+   "tier": "git",
+   "title": "A rename that also makes the file executable",
+   "tags": [
+    "rename",
+    "mode",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 133
+  },
+  {
+   "id": "git/ops/rename-edit-and-mode-change",
+   "tier": "git",
+   "title": "Renamed, edited and made executable at once",
+   "tags": [
+    "rename",
+    "mode"
+   ],
+   "files": 1,
+   "bytes": 264
+  },
+  {
+   "id": "git/ops/renames-disabled",
+   "tier": "git",
+   "title": "The same rename with --no-renames: a deletion and an addition",
+   "tags": [
+    "rename",
+    "added",
+    "deleted"
+   ],
+   "files": 2,
+   "bytes": 446
+  },
+  {
+   "id": "git/ops/swap-two-files",
+   "tier": "git",
+   "title": "Two files exchange their contents: reported as two modifications",
+   "tags": [
+    "rename"
+   ],
+   "files": 2,
+   "bytes": 494
+  },
+  {
+   "id": "git/ops/swap-two-files-break-rewrites",
+   "tier": "git",
+   "title": "The same swap with -B -M: two crossing renames",
+   "tags": [
+    "rename",
+    "no-hunks"
+   ],
+   "files": 2,
+   "bytes": 194
+  },
+  {
+   "id": "git/ops/rewrite-with-dissimilarity",
+   "tier": "git",
+   "title": "A complete rewrite with -B: \"dissimilarity index\" and one all-minus, all-plus hunk",
+   "tags": [
+    "rewrite"
+   ],
+   "files": 1,
+   "bytes": 1834
+  },
+  {
+   "id": "git/ops/rename-chain",
+   "tier": "git",
+   "title": "Three files rotate their names",
+   "tags": [
+    "rename"
+   ],
+   "files": 3,
+   "bytes": 281
+  },
+  {
+   "id": "git/ops/copy-pure",
+   "tier": "git",
+   "title": "A copy (-C --find-copies-harder): \"copy from\"/\"copy to\", no hunks",
+   "tags": [
+    "copy",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 107
+  },
+  {
+   "id": "git/ops/copy-and-edit",
+   "tier": "git",
+   "title": "A copy with a change in the copy",
+   "tags": [
+    "copy"
+   ],
+   "files": 1,
+   "bytes": 240
+  },
+  {
+   "id": "git/ops/copy-and-rename-same-source",
+   "tier": "git",
+   "title": "One source, renamed once and copied once",
+   "tags": [
+    "copy",
+    "rename",
+    "no-hunks"
+   ],
+   "files": 2,
+   "bytes": 200
+  },
+  {
+   "id": "git/ops/mode-change-only",
+   "tier": "git",
+   "title": "chmod +x: \"old mode\"/\"new mode\" and nothing else",
+   "tags": [
+    "mode",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 61
+  },
+  {
+   "id": "git/ops/mode-change-and-edit",
+   "tier": "git",
+   "title": "chmod +x together with an edit: the index line carries no mode",
+   "tags": [
+    "mode"
+   ],
+   "files": 1,
+   "bytes": 158
+  },
+  {
+   "id": "git/ops/mode-removed",
+   "tier": "git",
+   "title": "chmod -x",
+   "tags": [
+    "mode",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 61
+  },
+  {
+   "id": "git/ops/new-executable",
+   "tier": "git",
+   "title": "A new executable file (\"new file mode 100755\")",
+   "tags": [
+    "mode",
+    "added"
+   ],
+   "files": 1,
+   "bytes": 129
+  },
+  {
+   "id": "git/ops/deleted-executable",
+   "tier": "git",
+   "title": "A deleted executable file (\"deleted file mode 100755\")",
+   "tags": [
+    "mode",
+    "deleted"
+   ],
+   "files": 1,
+   "bytes": 133
+  },
+  {
+   "id": "git/ops/empty-file-added",
+   "tier": "git",
+   "title": "A new empty file: a header, an index line and nothing else",
+   "tags": [
+    "empty-file",
+    "added",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 77
+  },
+  {
+   "id": "git/ops/empty-file-deleted",
+   "tier": "git",
+   "title": "A deleted empty file",
+   "tags": [
+    "empty-file",
+    "deleted",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 81
+  },
+  {
+   "id": "git/ops/empty-file-renamed",
+   "tier": "git",
+   "title": "An empty file \"renamed\": git pairs any deleted empty file with any added one",
+   "tags": [
+    "empty-file",
+    "rename",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 103
+  },
+  {
+   "id": "git/ops/empty-files-between-others",
+   "tier": "git",
+   "title": "Sections without hunks between sections with hunks",
+   "tags": [
+    "empty-file",
+    "added",
+    "deleted",
+    "no-hunks"
+   ],
+   "files": 5,
+   "bytes": 451
+  },
+  {
+   "id": "git/ops/symlink-added",
+   "tier": "git",
+   "title": "A new symbolic link (\"new file mode 120000\")",
+   "tags": [
+    "symlink",
+    "added",
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 156
+  },
+  {
+   "id": "git/ops/symlink-deleted",
+   "tier": "git",
+   "title": "A deleted symbolic link",
+   "tags": [
+    "symlink",
+    "deleted",
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 160
+  },
+  {
+   "id": "git/ops/file-becomes-symlink",
+   "tier": "git",
+   "title": "A regular file replaced by a symbolic link: two sections for one path",
+   "tags": [
+    "symlink",
+    "typechange",
+    "added",
+    "deleted"
+   ],
+   "files": 2,
+   "bytes": 287
+  },
+  {
+   "id": "git/ops/symlink-becomes-file",
+   "tier": "git",
+   "title": "A symbolic link replaced by a regular file",
+   "tags": [
+    "symlink",
+    "typechange",
+    "added",
+    "deleted"
+   ],
+   "files": 2,
+   "bytes": 287
+  },
+  {
+   "id": "git/ops/symlink-with-odd-target",
+   "tier": "git",
+   "title": "A symbolic link whose target contains a newline and looks like a header",
+   "tags": [
+    "symlink",
+    "content-lookalike",
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 166
+  },
+  {
+   "id": "git/ops/submodule-added",
+   "tier": "git",
+   "title": "A new submodule (\"new file mode 160000\")",
+   "tags": [
+    "submodule",
+    "added"
+   ],
+   "files": 1,
+   "bytes": 186
+  },
+  {
+   "id": "git/ops/submodule-updated",
+   "tier": "git",
+   "title": "A submodule moved to another commit: a one-line \"Subproject commit\" hunk",
+   "tags": [
+    "submodule"
+   ],
+   "files": 1,
+   "bytes": 233
+  },
+  {
+   "id": "git/ops/submodule-removed",
+   "tier": "git",
+   "title": "A removed submodule",
+   "tags": [
+    "submodule",
+    "deleted"
+   ],
+   "files": 1,
+   "bytes": 190
+  },
+  {
+   "id": "git/ops/directory-becomes-submodule",
+   "tier": "git",
+   "title": "A file replaced by a submodule at the same path",
+   "tags": [
+    "submodule",
+    "typechange",
+    "added",
+    "deleted"
+   ],
+   "files": 2,
+   "bytes": 305
+  },
+  {
+   "id": "git/ops/binary-modified",
+   "tier": "git",
+   "title": "A modified binary file: \"Binary files a/x and b/x differ\"",
+   "tags": [
+    "binary",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 109
+  },
+  {
+   "id": "git/ops/binary-added",
+   "tier": "git",
+   "title": "A new binary file: \"Binary files /dev/null and b/x differ\"",
+   "tags": [
+    "binary",
+    "added",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 122
+  },
+  {
+   "id": "git/ops/binary-deleted",
+   "tier": "git",
+   "title": "A deleted binary file",
+   "tags": [
+    "binary",
+    "deleted",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 126
+  },
+  {
+   "id": "git/ops/binary-with-space-and-and",
+   "tier": "git",
+   "title": "A binary file named \"salt and pepper.bin\"",
+   "tags": [
+    "binary",
+    "space-in-path",
+    "header-ambiguity",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 153
+  },
+  {
+   "id": "git/ops/binary-with-non-ascii-name",
+   "tier": "git",
+   "title": "A binary file with a non-ASCII name: quoted names inside the \"Binary files ... differ\" notice",
+   "tags": [
+    "binary",
+    "quoted-path",
+    "unicode",
+    "no-hunks"
+   ],
+   "files": 2,
+   "bytes": 426
+  },
+  {
+   "id": "git/ops/binary-patch-literal",
+   "tier": "git",
+   "title": "git diff --binary: a \"GIT binary patch\" with literal blocks",
+   "tags": [
+    "binary",
+    "binary-patch"
+   ],
+   "files": 1,
+   "bytes": 484
+  },
+  {
+   "id": "git/ops/binary-patch-delta",
+   "tier": "git",
+   "title": "git diff --binary: a small change in a large file gives delta blocks",
+   "tags": [
+    "binary",
+    "binary-patch"
+   ],
+   "files": 1,
+   "bytes": 230
+  },
+  {
+   "id": "git/ops/binary-patch-added-and-deleted",
+   "tier": "git",
+   "title": "git diff --binary: a binary file added and another deleted",
+   "tags": [
+    "binary",
+    "binary-patch",
+    "added",
+    "deleted"
+   ],
+   "files": 2,
+   "bytes": 704
+  },
+  {
+   "id": "git/ops/binary-between-text",
+   "tier": "git",
+   "title": "A binary change between two text changes",
+   "tags": [
+    "binary",
+    "no-hunks"
+   ],
+   "files": 3,
+   "bytes": 295
+  },
+  {
+   "id": "git/ops/binary-renamed-and-changed",
+   "tier": "git",
+   "title": "A binary file renamed and modified",
+   "tags": [
+    "binary",
+    "rename",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 176
+  },
+  {
+   "id": "git/ops/text-becomes-binary",
+   "tier": "git",
+   "title": "A text file that turns binary",
+   "tags": [
+    "binary",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 93
+  },
+  {
+   "id": "git/ops/irreversible-delete",
+   "tier": "git",
+   "title": "git diff -D: a deletion without its content",
+   "tags": [
+    "deleted",
+    "no-hunks"
+   ],
+   "files": 2,
+   "bytes": 192
+  },
+  {
+   "id": "git/ops/file-becomes-directory",
+   "tier": "git",
+   "title": "A file replaced by a directory of the same name",
+   "tags": [
+    "added",
+    "deleted"
+   ],
+   "files": 2,
+   "bytes": 286
+  },
+  {
+   "id": "git/ops/everything-at-once",
+   "tier": "git",
+   "title": "Added, deleted, modified, renamed, copied, chmod, symlink, submodule and binary in one diff",
+   "tags": [
+    "rename",
+    "copy",
+    "mode",
+    "symlink",
+    "submodule",
+    "binary",
+    "added",
+    "deleted"
+   ],
+   "files": 9,
+   "bytes": 1410
+  },
+  {
+   "id": "git-wrapped/show",
+   "tier": "git-wrapped",
+   "title": "git show: a commit header and message before the diff",
+   "tags": [
+    "prelude"
+   ],
+   "files": 1,
+   "bytes": 317
+  },
+  {
+   "id": "git-wrapped/show-root-commit",
+   "tier": "git-wrapped",
+   "title": "git show of the first commit: everything is an addition",
+   "tags": [
+    "prelude",
+    "added"
+   ],
+   "files": 2,
+   "bytes": 411
+  },
+  {
+   "id": "git-wrapped/log-three-commits",
+   "tier": "git-wrapped",
+   "title": "git log -p: three commits, each with its own diff",
+   "tags": [
+    "prelude",
+    "multiple-commits"
+   ],
+   "files": 5,
+   "bytes": 1161
+  },
+  {
+   "id": "git-wrapped/log-message-contains-a-diff",
+   "tier": "git-wrapped",
+   "title": "git log -p: a commit message that quotes a diff",
+   "tags": [
+    "prelude",
+    "multiple-commits",
+    "content-lookalike",
+    "fake-file-header"
+   ],
+   "files": 2,
+   "bytes": 841
+  },
+  {
+   "id": "git-wrapped/log-empty-commit-between",
+   "tier": "git-wrapped",
+   "title": "git log -p: a commit without changes between two commits with changes",
+   "tags": [
+    "prelude",
+    "multiple-commits"
+   ],
+   "files": 5,
+   "bytes": 1304
+  },
+  {
+   "id": "git-wrapped/log-context-then-commit-header",
+   "tier": "git-wrapped",
+   "title": "git log -p: the last hunk of a commit ends with context lines",
+   "tags": [
+    "prelude",
+    "multiple-commits"
+   ],
+   "files": 3,
+   "bytes": 784
+  },
+  {
+   "id": "git-wrapped/format-patch",
+   "tier": "git-wrapped",
+   "title": "git format-patch: mail headers, a \"---\" separator, a stat block and a \"-- \" signature",
+   "tags": [
+    "prelude",
+    "mbox",
+    "signature"
+   ],
+   "files": 1,
+   "bytes": 419
+  },
+  {
+   "id": "git-wrapped/format-patch-series",
+   "tier": "git-wrapped",
+   "title": "git format-patch: a series of two mails in one mbox",
+   "tags": [
+    "prelude",
+    "mbox",
+    "signature",
+    "multiple-commits"
+   ],
+   "files": 3,
+   "bytes": 1016
+  },
+  {
+   "id": "git-wrapped/format-patch-prose-with-keywords",
+   "tier": "git-wrapped",
+   "title": "git format-patch: message lines that start with words a parser looks for",
+   "tags": [
+    "prelude",
+    "mbox",
+    "signature",
+    "content-lookalike"
+   ],
+   "files": 1,
+   "bytes": 608
+  },
+  {
+   "id": "git-wrapped/format-patch-no-newline-then-signature",
+   "tier": "git-wrapped",
+   "title": "git format-patch: \"\\ No newline at end of file\" directly before the signature",
+   "tags": [
+    "prelude",
+    "mbox",
+    "signature",
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 409
+  },
+  {
+   "id": "git-wrapped/format-patch-deleted-dashes-then-signature",
+   "tier": "git-wrapped",
+   "title": "git format-patch: a deleted \"-- \" line as the last line of the patch, then the real signature",
+   "tags": [
+    "prelude",
+    "mbox",
+    "signature",
+    "content-lookalike"
+   ],
+   "files": 1,
+   "bytes": 347
+  },
+  {
+   "id": "git-wrapped/stat-and-patch",
+   "tier": "git-wrapped",
+   "title": "git diff --stat -p: a statistics block before the patch",
+   "tags": [
+    "prelude",
+    "stat"
+   ],
+   "files": 4,
+   "bytes": 636
+  },
+  {
+   "id": "git-wrapped/summary-and-patch",
+   "tier": "git-wrapped",
+   "title": "git diff --summary -p: \"create mode\", \"rename\" and \"mode change\" lines before the patch",
+   "tags": [
+    "prelude",
+    "stat"
+   ],
+   "files": 5,
+   "bytes": 655
+  },
+  {
+   "id": "git-wrapped/raw-and-patch",
+   "tier": "git-wrapped",
+   "title": "git diff --patch-with-raw: raw records (\":100644 100644 ...\") before the patch",
+   "tags": [
+    "prelude",
+    "stat"
+   ],
+   "files": 3,
+   "bytes": 473
+  },
+  {
+   "id": "git-wrapped/numstat-shortstat-and-patch",
+   "tier": "git-wrapped",
+   "title": "git diff --numstat --shortstat -p",
+   "tags": [
+    "prelude",
+    "stat"
+   ],
+   "files": 2,
+   "bytes": 283
+  },
+  {
+   "id": "git-wrapped/show-stat-patch",
+   "tier": "git-wrapped",
+   "title": "git show --stat -p: commit header, then \"---\", then statistics, then the patch",
+   "tags": [
+    "prelude",
+    "stat"
+   ],
+   "files": 1,
+   "bytes": 383
+  },
+  {
+   "id": "git-wrapped/log-oneline",
+   "tier": "git-wrapped",
+   "title": "git log -p --oneline: one-line commit headers between the diffs",
+   "tags": [
+    "prelude",
+    "multiple-commits"
+   ],
+   "files": 5,
+   "bytes": 757
+  },
+  {
+   "id": "git-config/noprefix/option",
+   "tier": "git-config",
+   "title": "git diff --no-prefix: no \"a/\" and \"b/\" at all",
+   "tags": [
+    "prefix",
+    "noprefix",
+    "added",
+    "deleted",
+    "rename",
+    "mode"
+   ],
+   "files": 5,
+   "bytes": 635
+  },
+  {
+   "id": "git-config/noprefix/config",
+   "tier": "git-config",
+   "title": "diff.noprefix=true in the configuration",
+   "tags": [
+    "prefix",
+    "noprefix"
+   ],
+   "files": 5,
+   "bytes": 635
+  },
+  {
+   "id": "git-config/noprefix/directories-named-a-and-b",
+   "tier": "git-config",
+   "title": "--no-prefix with real directories named \"a\" and \"b\"",
+   "tags": [
+    "prefix",
+    "noprefix"
+   ],
+   "files": 2,
+   "bytes": 246
+  },
+  {
+   "id": "git-config/noprefix/top-level-file",
+   "tier": "git-config",
+   "title": "--no-prefix with a file in the top-level directory",
+   "tags": [
+    "prefix",
+    "noprefix"
+   ],
+   "files": 1,
+   "bytes": 115
+  },
+  {
+   "id": "git-config/noprefix/space-and-quoting",
+   "tier": "git-config",
+   "title": "--no-prefix with a space in one name and a non-ASCII character in another",
+   "tags": [
+    "prefix",
+    "noprefix",
+    "space-in-path",
+    "quoted-path",
+    "unicode",
+    "header-ambiguity"
+   ],
+   "files": 3,
+   "bytes": 359
+  },
+  {
+   "id": "git-config/noprefix/dev-null-directory",
+   "tier": "git-config",
+   "title": "--no-prefix with a file at dev/null: \"--- dev/null\" next to a real \"--- /dev/null\"",
+   "tags": [
+    "prefix",
+    "noprefix",
+    "dev-null",
+    "added"
+   ],
+   "files": 2,
+   "bytes": 226
+  },
+  {
+   "id": "git-config/mnemonic/commit-and-index",
+   "tier": "git-config",
+   "title": "diff.mnemonicPrefix with --cached: \"c/\" (commit) and \"i/\" (index)",
+   "tags": [
+    "prefix",
+    "mnemonic",
+    "added",
+    "deleted",
+    "rename",
+    "mode"
+   ],
+   "files": 5,
+   "bytes": 667
+  },
+  {
+   "id": "git-config/mnemonic/index-and-worktree",
+   "tier": "git-config",
+   "title": "diff.mnemonicPrefix for unstaged changes: \"i/\" (index) and \"w/\" (work tree)",
+   "tags": [
+    "prefix",
+    "mnemonic",
+    "deleted",
+    "mode"
+   ],
+   "files": 3,
+   "bytes": 329
+  },
+  {
+   "id": "git-config/mnemonic/directory-named-like-prefix",
+   "tier": "git-config",
+   "title": "Mnemonic prefixes with directories named \"i\" and \"w\"",
+   "tags": [
+    "prefix",
+    "mnemonic"
+   ],
+   "files": 2,
+   "bytes": 238
+  },
+  {
+   "id": "git-config/prefix/custom",
+   "tier": "git-config",
+   "title": "--src-prefix=old/ --dst-prefix=new/",
+   "tags": [
+    "prefix",
+    "custom-prefix",
+    "added",
+    "deleted",
+    "rename",
+    "mode"
+   ],
+   "files": 5,
+   "bytes": 699
+  },
+  {
+   "id": "git-config/prefix/two-components",
+   "tier": "git-config",
+   "title": "Prefixes of two path components: --src-prefix=1/orig/ --dst-prefix=2/work/",
+   "tags": [
+    "prefix",
+    "custom-prefix"
+   ],
+   "files": 2,
+   "bytes": 282
+  },
+  {
+   "id": "git-config/prefix/without-slash",
+   "tier": "git-config",
+   "title": "Prefixes that are not directories: --src-prefix=OLD- --dst-prefix=NEW-",
+   "tags": [
+    "prefix",
+    "custom-prefix"
+   ],
+   "files": 1,
+   "bytes": 115
+  },
+  {
+   "id": "git-config/prefix/reversed",
+   "tier": "git-config",
+   "title": "git diff -R: the sides are swapped, and so are the prefixes (\"--- b/x\", \"+++ a/x\")",
+   "tags": [
+    "prefix",
+    "reverse",
+    "added",
+    "deleted"
+   ],
+   "files": 3,
+   "bytes": 390
+  },
+  {
+   "id": "git-config/prefix/relative",
+   "tier": "git-config",
+   "title": "git diff --relative=src/: paths are relative to a subdirectory",
+   "tags": [
+    "prefix",
+    "relative"
+   ],
+   "files": 1,
+   "bytes": 107
+  },
+  {
+   "id": "git-config/prefix/pinned-despite-config",
+   "tier": "git-config",
+   "title": "diff.noprefix and diff.mnemonicPrefix set, but --src-prefix=a/ --dst-prefix=b/ given: the classic format",
+   "tags": [
+    "prefix",
+    "recommended-invocation"
+   ],
+   "files": 5,
+   "bytes": 667
+  },
+  {
+   "id": "git-config/prefix/default-prefix-option",
+   "tier": "git-config",
+   "title": "diff.noprefix set, but --default-prefix given (git 2.41 and later)",
+   "tags": [
+    "prefix",
+    "recommended-invocation"
+   ],
+   "files": 5,
+   "bytes": 667
+  },
+  {
+   "id": "git-config/prefix/pinned-against-a-hostile-configuration",
+   "tier": "git-config",
+   "title": "A configuration that changes everything, and the options that pin the format anyway",
+   "tags": [
+    "prefix",
+    "recommended-invocation",
+    "submodule"
+   ],
+   "files": 6,
+   "bytes": 900
+  },
+  {
+   "id": "git-config/quotepath/off-unicode",
+   "tier": "git-config",
+   "title": "core.quotePath=false: non-ASCII names are written as they are",
+   "tags": [
+    "quotepath-off",
+    "unicode"
+   ],
+   "files": 3,
+   "bytes": 403
+  },
+  {
+   "id": "git-config/quotepath/off-still-quoted",
+   "tier": "git-config",
+   "title": "core.quotePath=false: quotes, backslashes and control characters are still escaped",
+   "tags": [
+    "quotepath-off",
+    "quoted-path",
+    "unicode",
+    "control-chars"
+   ],
+   "files": 2,
+   "bytes": 262
+  },
+  {
+   "id": "git-config/quotepath/off-rename-and-mode",
+   "tier": "git-config",
+   "title": "core.quotePath=false: a rename and a mode change with non-ASCII names",
+   "tags": [
+    "quotepath-off",
+    "unicode",
+    "rename",
+    "mode",
+    "no-hunks"
+   ],
+   "files": 2,
+   "bytes": 184
+  },
+  {
+   "id": "git-config/quotepath/off-latin1-name",
+   "tier": "git-config",
+   "title": "core.quotePath=false with a name that is not valid UTF-8: the diff itself is not valid UTF-8",
+   "tags": [
+    "quotepath-off",
+    "encoding"
+   ],
+   "files": 1,
+   "bytes": 115
+  },
+  {
+   "id": "combined/cc/conflict-resolved",
+   "tier": "combined",
+   "title": "git show of a merge that resolved a conflict by hand",
+   "tags": [
+    "combined"
+   ],
+   "files": 1,
+   "bytes": 162
+  },
+  {
+   "id": "combined/cc/markdown-bullets",
+   "tier": "combined",
+   "title": "A merge that drops \"- item\" bullets and adds \"+ item\" bullets: \"--- item\" and \"+++ item\"",
+   "tags": [
+    "combined",
+    "content-lookalike",
+    "fake-file-header"
+   ],
+   "files": 1,
+   "bytes": 177
+  },
+  {
+   "id": "combined/cc/file-added-by-merge",
+   "tier": "combined",
+   "title": "A file that exists in neither parent and is created by the merge",
+   "tags": [
+    "combined",
+    "added"
+   ],
+   "files": 1,
+   "bytes": 155
+  },
+  {
+   "id": "combined/cc/file-deleted-by-merge",
+   "tier": "combined",
+   "title": "A file that both parents have and the merge removes",
+   "tags": [
+    "combined",
+    "deleted"
+   ],
+   "files": 1,
+   "bytes": 144
+  },
+  {
+   "id": "combined/cc/octopus",
+   "tier": "combined",
+   "title": "A merge of three parents: four \"@\" and three marker columns",
+   "tags": [
+    "combined",
+    "octopus"
+   ],
+   "files": 1,
+   "bytes": 196
+  },
+  {
+   "id": "combined/cc/combined-format-c",
+   "tier": "combined",
+   "title": "git show -c: \"diff --combined\" instead of \"diff --cc\"",
+   "tags": [
+    "combined"
+   ],
+   "files": 1,
+   "bytes": 177
+  },
+  {
+   "id": "combined/cc/no-newline",
+   "tier": "combined",
+   "title": "A combined diff with \"\\ No newline at end of file\"",
+   "tags": [
+    "combined",
+    "no-newline"
+   ],
+   "files": 1,
+   "bytes": 94
+  },
+  {
+   "id": "combined/cc/binary",
+   "tier": "combined",
+   "title": "A binary file changed by the merge: \"Binary files differ\" without names",
+   "tags": [
+    "combined",
+    "binary"
+   ],
+   "files": 1,
+   "bytes": 67
+  },
+  {
+   "id": "combined/cc/mode-and-content",
+   "tier": "combined",
+   "title": "A merge that changes content and makes the file executable: \"mode 100644,100644..100755\"",
+   "tags": [
+    "combined",
+    "mode"
+   ],
+   "files": 1,
+   "bytes": 165
+  },
+  {
+   "id": "combined/cc/two-files-and-prose",
+   "tier": "combined",
+   "title": "Two files in one combined diff, plus an ordinary-looking commit header",
+   "tags": [
+    "combined",
+    "prelude"
+   ],
+   "files": 2,
+   "bytes": 478
+  },
+  {
+   "id": "gnu/single-file",
+   "tier": "gnu",
+   "title": "diff -u a/f.txt b/f.txt: names followed by a TAB and a timestamp",
+   "tags": [
+    "timestamp"
+   ],
+   "files": 1,
+   "bytes": 132
+  },
+  {
+   "id": "gnu/recursive",
+   "tier": "gnu",
+   "title": "diff -ruN a b: a \"diff -ruN a/x b/x\" line before each file",
+   "tags": [
+    "timestamp",
+    "command-line"
+   ],
+   "files": 2,
+   "bytes": 316
+  },
+  {
+   "id": "gnu/new-and-deleted-files",
+   "tier": "gnu",
+   "title": "diff -ruN with a new and a deleted file: no /dev/null, but a 1970 timestamp",
+   "tags": [
+    "timestamp",
+    "added",
+    "deleted",
+    "zero-count"
+   ],
+   "files": 3,
+   "bytes": 464
+  },
+  {
+   "id": "gnu/only-in",
+   "tier": "gnu",
+   "title": "diff -ru without -N: \"Only in a: gone.txt\" lines between the file diffs",
+   "tags": [
+    "only-in",
+    "prelude"
+   ],
+   "files": 2,
+   "bytes": 330
+  },
+  {
+   "id": "gnu/space-in-name",
+   "tier": "gnu",
+   "title": "A space in the name: GNU diff quotes it (\"a/my file.txt\"), git would not",
+   "tags": [
+    "quoted-path",
+    "space-in-path"
+   ],
+   "files": 1,
+   "bytes": 176
+  },
+  {
+   "id": "gnu/special-names",
+   "tier": "gnu",
+   "title": "Quotes, backslashes, TABs, newlines and non-ASCII bytes in names (C locale)",
+   "tags": [
+    "quoted-path",
+    "control-chars",
+    "unicode"
+   ],
+   "files": 5,
+   "bytes": 816
+  },
+  {
+   "id": "gnu/unicode-name-utf8-locale",
+   "tier": "gnu",
+   "title": "A non-ASCII name under a UTF-8 locale",
+   "tags": [
+    "unicode",
+    "locale"
+   ],
+   "files": 2,
+   "bytes": 376
+  },
+  {
+   "id": "gnu/no-newline",
+   "tier": "gnu",
+   "title": "\"\\ No newline at end of file\" in GNU diff output",
+   "tags": [
+    "no-newline"
+   ],
+   "files": 3,
+   "bytes": 558
+  },
+  {
+   "id": "gnu/binary",
+   "tier": "gnu",
+   "title": "Binary files: a bare \"Binary files a/x and b/x differ\" line without a header",
+   "tags": [
+    "binary"
+   ],
+   "files": 3,
+   "bytes": 324
+  },
+  {
+   "id": "gnu/labels",
+   "tier": "gnu",
+   "title": "diff -u --label: free-form names without timestamps",
+   "tags": [
+    "label"
+   ],
+   "files": 1,
+   "bytes": 65
+  },
+  {
+   "id": "gnu/u0",
+   "tier": "gnu",
+   "title": "diff -U0: zero-length ranges",
+   "tags": [
+    "hunk-header",
+    "zero-count",
+    "u0"
+   ],
+   "files": 1,
+   "bytes": 173
+  },
+  {
+   "id": "gnu/show-c-function",
+   "tier": "gnu",
+   "title": "diff -up: the enclosing C function after the hunk header",
+   "tags": [
+    "hunk-header"
+   ],
+   "files": 1,
+   "bytes": 194
+  },
+  {
+   "id": "gnu/fake-headers",
+   "tier": "gnu",
+   "title": "The \"--- x\" / \"+++ x\" trap in GNU diff output",
+   "tags": [
+    "content-lookalike",
+    "fake-file-header"
+   ],
+   "files": 2,
+   "bytes": 396
+  },
+  {
+   "id": "gnu/other-directory-names",
+   "tier": "gnu",
+   "title": "Directories with other names: diff -ruN project.orig project",
+   "tags": [
+    "prefix"
+   ],
+   "files": 1,
+   "bytes": 193
+  },
+  {
+   "id": "gnu/blank-lines",
+   "tier": "gnu",
+   "title": "Empty context, added and deleted lines",
+   "tags": [
+    "blank-lines"
+   ],
+   "files": 1,
+   "bytes": 158
+  },
+  {
+   "id": "gnu/crlf",
+   "tier": "gnu",
+   "title": "CRLF content in GNU diff output",
+   "tags": [
+    "line-endings",
+    "cr"
+   ],
+   "files": 1,
+   "bytes": 156
+  },
+  {
+   "id": "gnu/many-files",
+   "tier": "gnu",
+   "title": "Six files across nested directories",
+   "tags": [
+    "command-line"
+   ],
+   "files": 6,
+   "bytes": 896
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+diff --git a/f.txt b/f.txt
+index 1c99002..ecd9b43 100644
+--- a/f.txt
++++ b/f.txt
+@@ -4,0 +5 @@
++inserted
+@@ -17,3 +17,0 @@
+-17
+-18
+-19
+@@ -30 +28 @@
+-30
++thirty

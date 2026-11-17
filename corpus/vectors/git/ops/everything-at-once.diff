@@ -1,0 +1,66 @@
+diff --git a/a-modified.txt b/a-modified.txt
+index 624b469..bcd7259 100644
+--- a/a-modified.txt
++++ b/a-modified.txt
+@@ -2,7 +2,7 @@ line 1
+ line 2
+ line 3
+ line 4
+-line 5
++line five
+ line 6
+ line 7
+ line 8
+diff --git a/b-added.txt b/b-added.txt
+new file mode 100644
+index 0000000..ce01362
+--- /dev/null
++++ b/b-added.txt
+@@ -0,0 +1 @@
++hello
+diff --git a/b-deleted.txt b/b-deleted.txt
+deleted file mode 100644
+index b023018..0000000
+--- a/b-deleted.txt
++++ /dev/null
+@@ -1 +0,0 @@
+-bye
+diff --git a/c-renamed-from.txt b/c-renamed-to.txt
+similarity index 100%
+rename from c-renamed-from.txt
+rename to c-renamed-to.txt
+diff --git a/d-copied-from.txt b/d-copied-to.txt
+similarity index 83%
+copy from d-copied-from.txt
+copy to d-copied-to.txt
+index a8201b0..b1aad63 100644
+--- a/d-copied-from.txt
++++ b/d-copied-to.txt
+@@ -6,4 +6,4 @@ cp 5
+ cp 6
+ cp 7
+ cp 8
+-cp 9
++cp nine
+diff --git a/e-mode.sh b/e-mode.sh
+old mode 100644
+new mode 100755
+diff --git a/f-link b/f-link
+index 43dd47e..64c5e58 120000
+--- a/f-link
++++ b/f-link
+@@ -1 +1 @@
+-one
+\ No newline at end of file
++two
+\ No newline at end of file
+diff --git a/g-sub b/g-sub
+index 4444444..5555555 160000
+--- a/g-sub
++++ b/g-sub
+@@ -1 +1 @@
+-Subproject commit 4444444444444444444444444444444444444444
++Subproject commit 5555555555555555555555555555555555555555
+diff --git a/h-bin b/h-bin
+index 390ca19..d451767 100644
+Binary files a/h-bin and b/h-bin differ

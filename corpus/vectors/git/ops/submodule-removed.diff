@@ -1,0 +1,7 @@
+diff --git a/vendor/lib b/vendor/lib
+deleted file mode 160000
+index 1111111..0000000
+--- a/vendor/lib
++++ /dev/null
+@@ -1 +0,0 @@
+-Subproject commit 1111111111111111111111111111111111111111

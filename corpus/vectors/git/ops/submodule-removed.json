@@ -1,0 +1,76 @@
+{
+  "id": "git/ops/submodule-removed",
+  "title": "A removed submodule",
+  "description": null,
+  "tier": "git",
+  "tags": ["submodule","deleted"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "deleted",
+        "old_name": "a/vendor/lib",
+        "new_name": null,
+        "old_path": "vendor/lib",
+        "new_path": null,
+        "old_mode": "160000",
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 0,
+            "new_lines": 0,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"Subproject commit 1111111111111111111111111111111111111111","old_no":1,"new_no":null}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "skip": "a submodule is involved"
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"vendor/lib","content":"1111111111111111111111111111111111111111","mode":"160000"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": []
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

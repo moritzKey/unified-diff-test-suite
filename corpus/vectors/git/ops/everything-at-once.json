@@ -1,0 +1,276 @@
+{
+  "id": "git/ops/everything-at-once",
+  "title": "Added, deleted, modified, renamed, copied, chmod, symlink, submodule and binary in one diff",
+  "description": null,
+  "tier": "git",
+  "tags": ["rename","copy","mode","symlink","submodule","binary","added","deleted"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","-C","--find-copies-harder","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/a-modified.txt",
+        "new_name": "b/a-modified.txt",
+        "old_path": "a-modified.txt",
+        "new_path": "a-modified.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 2,
+            "old_lines": 7,
+            "new_start": 2,
+            "new_lines": 7,
+            "section": "line 1",
+            "lines": [
+              {"type":"context","text":"line 2","old_no":2,"new_no":2},
+              {"type":"context","text":"line 3","old_no":3,"new_no":3},
+              {"type":"context","text":"line 4","old_no":4,"new_no":4},
+              {"type":"delete","text":"line 5","old_no":5,"new_no":null},
+              {"type":"add","text":"line five","old_no":null,"new_no":5},
+              {"type":"context","text":"line 6","old_no":6,"new_no":6},
+              {"type":"context","text":"line 7","old_no":7,"new_no":7},
+              {"type":"context","text":"line 8","old_no":8,"new_no":8}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "added",
+        "old_name": null,
+        "new_name": "b/b-added.txt",
+        "old_path": null,
+        "new_path": "b-added.txt",
+        "old_mode": null,
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 0,
+        "hunks": [
+          {
+            "old_start": 0,
+            "old_lines": 0,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"add","text":"hello","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "deleted",
+        "old_name": "a/b-deleted.txt",
+        "new_name": null,
+        "old_path": "b-deleted.txt",
+        "new_path": null,
+        "old_mode": "100644",
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 0,
+            "new_lines": 0,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"bye","old_no":1,"new_no":null}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "renamed",
+        "old_name": "a/c-renamed-from.txt",
+        "new_name": "b/c-renamed-to.txt",
+        "old_path": "c-renamed-from.txt",
+        "new_path": "c-renamed-to.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": 100,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      },
+      {
+        "status": "copied",
+        "old_name": "a/d-copied-from.txt",
+        "new_name": "b/d-copied-to.txt",
+        "old_path": "d-copied-from.txt",
+        "new_path": "d-copied-to.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": 83,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 6,
+            "old_lines": 4,
+            "new_start": 6,
+            "new_lines": 4,
+            "section": "cp 5",
+            "lines": [
+              {"type":"context","text":"cp 6","old_no":6,"new_no":6},
+              {"type":"context","text":"cp 7","old_no":7,"new_no":7},
+              {"type":"context","text":"cp 8","old_no":8,"new_no":8},
+              {"type":"delete","text":"cp 9","old_no":9,"new_no":null},
+              {"type":"add","text":"cp nine","old_no":null,"new_no":9}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "modified",
+        "old_name": "a/e-mode.sh",
+        "new_name": "b/e-mode.sh",
+        "old_path": "e-mode.sh",
+        "new_path": "e-mode.sh",
+        "old_mode": "100644",
+        "new_mode": "100755",
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      },
+      {
+        "status": "modified",
+        "old_name": "a/f-link",
+        "new_name": "b/f-link",
+        "old_path": "f-link",
+        "new_path": "f-link",
+        "old_mode": "120000",
+        "new_mode": "120000",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"one","old_no":1,"new_no":null,"no_newline":true},
+              {"type":"add","text":"two","old_no":null,"new_no":1,"no_newline":true}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "modified",
+        "old_name": "a/g-sub",
+        "new_name": "b/g-sub",
+        "old_path": "g-sub",
+        "new_path": "g-sub",
+        "old_mode": "160000",
+        "new_mode": "160000",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"Subproject commit 4444444444444444444444444444444444444444","old_no":1,"new_no":null},
+              {"type":"add","text":"Subproject commit 5555555555555555555555555555555555555555","old_no":null,"new_no":1}
+            ]
+          }
+        ]
+      },
+      {
+        "status": "modified",
+        "old_name": "a/h-bin",
+        "new_name": "b/h-bin",
+        "old_path": "h-bin",
+        "new_path": "h-bin",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": "notice",
+        "additions": null,
+        "deletions": null,
+        "hunks": []
+      }
+    ]
+  },
+  "apply": {
+    "skip": "a submodule is involved"
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "-C",
+      "--find-copies-harder"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"a-modified.txt","content":"line 1\nline 2\nline 3\nline 4\nline 5\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\n"},
+          {"path":"b-deleted.txt","content":"bye\n"},
+          {"path":"c-renamed-from.txt","content":"ren 1\nren 2\nren 3\nren 4\nren 5\nren 6\nren 7\nren 8\nren 9\n"},
+          {"path":"d-copied-from.txt","content":"cp 1\ncp 2\ncp 3\ncp 4\ncp 5\ncp 6\ncp 7\ncp 8\ncp 9\n"},
+          {"path":"e-mode.sh","content":"#!/bin/sh\n"},
+          {"path":"f-link","content":"one","mode":"120000"},
+          {"path":"g-sub","content":"4444444444444444444444444444444444444444","mode":"160000"},
+          {"path":"h-bin","content":{"base64":"iVBORw0KGgoAAAANBwoNEBMWGRwfIiUoKy4xNDc6PUBDRklMT1JVWFteYWRnam1wc3Z5fH+ChYiLjpGUl5qdoKOmqayvsrW4u77BxMfKzdDT1tnc3+Ll6Ovu8fT3+v0AAwYJDA8SFRgbHiEk"}}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"a-modified.txt","content":"line 1\nline 2\nline 3\nline 4\nline five\nline 6\nline 7\nline 8\nline 9\nline 10\nline 11\nline 12\n"},
+          {"path":"b-added.txt","content":"hello\n"},
+          {"path":"c-renamed-to.txt","content":"ren 1\nren 2\nren 3\nren 4\nren 5\nren 6\nren 7\nren 8\nren 9\n"},
+          {"path":"d-copied-from.txt","content":"cp 1\ncp 2\ncp 3\ncp 4\ncp 5\ncp 6\ncp 7\ncp 8\ncp 9\n"},
+          {"path":"d-copied-to.txt","content":"cp 1\ncp 2\ncp 3\ncp 4\ncp 5\ncp 6\ncp 7\ncp 8\ncp nine\n"},
+          {"path":"e-mode.sh","content":"#!/bin/sh\n","mode":"100755"},
+          {"path":"f-link","content":"two","mode":"120000"},
+          {"path":"g-sub","content":"5555555555555555555555555555555555555555","mode":"160000"},
+          {"path":"h-bin","content":{"base64":"iVBORw0KGgoAAAANBwwRFhsgJSovNDk+Q0hNUldcYWZrcHV6f4SJjpOYnaKnrLG2u8DFys/U2d7j6O3y9/wBBgsQFRofJCkuMzg9QkdMUVZbYGVqb3R5foOIjZKXnKGmq7C1ur/Eyc7T2N3i"}}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

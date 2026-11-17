@@ -1,0 +1,27 @@
+ a.txt                        |   2 +-
+ bin                          | Bin 2 -> 2 bytes
+ old name.txt => new name.txt |   0
+ run.sh                       |   1 +
+ 4 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/a.txt b/a.txt
+index d00491f..0cfbf08 100644
+--- a/a.txt
++++ b/a.txt
+@@ -1 +1 @@
+-1
++2
+diff --git a/bin b/bin
+index bdc955b..8835708 100644
+Binary files a/bin and b/bin differ
+diff --git a/old name.txt b/new name.txt
+similarity index 100%
+rename from old name.txt
+rename to new name.txt
+diff --git a/run.sh b/run.sh
+new file mode 100755
+index 0000000..1a24852
+--- /dev/null
++++ b/run.sh
+@@ -0,0 +1 @@
++#!/bin/sh

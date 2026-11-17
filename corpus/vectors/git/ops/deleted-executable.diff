@@ -1,0 +1,8 @@
+diff --git a/tool b/tool
+deleted file mode 100755
+index 039e4d0..0000000
+--- a/tool
++++ /dev/null
+@@ -1,2 +0,0 @@
+-#!/bin/sh
+-exit 0

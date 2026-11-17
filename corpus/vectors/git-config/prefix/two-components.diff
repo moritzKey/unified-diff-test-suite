@@ -1,0 +1,14 @@
+diff --git 1/orig/made.txt 2/work/made.txt
+new file mode 100644
+index 0000000..45b983b
+--- /dev/null
++++ 2/work/made.txt
+@@ -0,0 +1 @@
++hi
+diff --git 1/orig/src/app.js 2/work/src/app.js
+index 5626abf..f719efd 100644
+--- 1/orig/src/app.js
++++ 2/work/src/app.js
+@@ -1 +1 @@
+-one
++two

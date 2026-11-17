@@ -1,0 +1,11 @@
+diff --git a/x.lua b/x.lua
+index 99c2983..987bf37 100644
+--- a/x.lua
++++ b/x.lua
+@@ -1,3 +1,3 @@
+--- one
+--- two
+--- three
++++ one
++++ two
++++ three

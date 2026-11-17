@@ -1,0 +1,85 @@
+{
+  "id": "git/bytes/nul-with-text-option",
+  "title": "NUL bytes shown as text (git diff --text)",
+  "description": null,
+  "tier": "git",
+  "tags": ["control-chars","nul"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","--text","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/rec.dat",
+        "new_name": "b/rec.dat",
+        "old_path": "rec.dat",
+        "new_path": "rec.dat",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 2,
+            "new_start": 1,
+            "new_lines": 2,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"key\u0000value","old_no":1,"new_no":null},
+              {"type":"add","text":"key\u0000VALUE","old_no":null,"new_no":1},
+              {"type":"context","text":"end","old_no":2,"new_no":2}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "--text"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"rec.dat","content":"key\u0000value\nend\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"rec.dat","content":"key\u0000VALUE\nend\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/45-bytes.js"
+}

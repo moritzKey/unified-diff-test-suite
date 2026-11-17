@@ -1,0 +1,6 @@
+diff --git a/f.txt b/f.txt
+index f00c965..d2395ff 100644
+--- a/f.txt
++++ b/f.txt
+@@ -5,0 +6 @@
++five and a half

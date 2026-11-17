@@ -1,0 +1,232 @@
+{
+  "adapters": [
+    {
+      "name": "reference-js",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "reference-js"],
+      "reference": true
+    },
+    {
+      "name": "reference-py",
+      "cwd": "python",
+      "cmd": [".venv/bin/python", "run.py", "reference_py"],
+      "reference": true
+    },
+    {
+      "name": "jsdiff",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "jsdiff"]
+    },
+    {
+      "name": "parse-diff",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "parse-diff"]
+    },
+    {
+      "name": "diff2html",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "diff2html"]
+    },
+    {
+      "name": "gitdiff-parser",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "gitdiff-parser"]
+    },
+    {
+      "name": "what-the-diff",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "what-the-diff"]
+    },
+    {
+      "name": "diffparser",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "diffparser"]
+    },
+    {
+      "name": "parse-git-diff",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "parse-git-diff"]
+    },
+    {
+      "name": "git-diff-view",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "git-diff-view"]
+    },
+    {
+      "name": "unidiff",
+      "cwd": "python",
+      "cmd": [".venv/bin/python", "run.py", "unidiff"]
+    },
+    {
+      "name": "whatthepatch",
+      "cwd": "python",
+      "cmd": [".venv/bin/python", "run.py", "whatthepatch"]
+    },
+    {
+      "name": "patch-ng",
+      "cwd": "python",
+      "cmd": [".venv/bin/python", "run.py", "patch-ng"]
+    },
+    {
+      "name": "libgit2",
+      "cwd": "python",
+      "cmd": [".venv/bin/python", "run.py", "pygit2"]
+    },
+    {
+      "name": "GitPython",
+      "cwd": "python",
+      "cmd": [".venv/bin/python", "run.py", "gitpython"],
+      "flavor": "full-index"
+    },
+    {
+      "name": "go-gitdiff",
+      "cwd": "go",
+      "cmd": ["./bin/udts-go", "go-gitdiff"]
+    },
+    {
+      "name": "gitleaks-go-gitdiff",
+      "cwd": "go",
+      "cmd": ["./bin/udts-go", "gitleaks-go-gitdiff"]
+    },
+    {
+      "name": "sourcegraph-go-diff",
+      "cwd": "go",
+      "cmd": ["./bin/udts-go", "sourcegraph-go-diff"]
+    },
+    {
+      "name": "reviewdog-diff",
+      "cwd": "go",
+      "cmd": ["./bin/udts-go", "reviewdog-diff"]
+    },
+    {
+      "name": "waigani-diffparser",
+      "cwd": "go",
+      "cmd": ["./bin/udts-go", "waigani-diffparser"]
+    },
+    {
+      "name": "diffy",
+      "cwd": "rust",
+      "cmd": ["./target/release/udts-rust", "diffy"]
+    },
+    {
+      "name": "diffy-unidiff",
+      "cwd": "rust",
+      "cmd": ["./target/release/udts-rust", "diffy-unidiff"]
+    },
+    {
+      "name": "patch-rs",
+      "cwd": "rust",
+      "cmd": ["./target/release/udts-rust", "patch"]
+    },
+    {
+      "name": "gitpatch",
+      "cwd": "rust",
+      "cmd": ["./target/release/udts-rust", "gitpatch"]
+    },
+    {
+      "name": "unidiff-rs",
+      "cwd": "rust",
+      "cmd": ["./target/release/udts-rust", "unidiff"]
+    },
+    {
+      "name": "jgit",
+      "cwd": "java",
+      "cmd": ["java", "-cp", "build:lib/*", "Host", "jgit"]
+    },
+    {
+      "name": "java-diff-utils",
+      "cwd": "java",
+      "cmd": ["java", "-cp", "build:lib/*", "Host", "java-diff-utils"]
+    },
+    {
+      "name": "reflectoring-diffparser",
+      "cwd": "java",
+      "cmd": ["java", "-cp", "build:lib/*", "Host", "diffparser"]
+    }
+  ],
+  "appliers": [
+    {
+      "name": "reference-js",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:reference-js"],
+      "reference": true
+    },
+    {
+      "name": "reference-file-js",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:reference-file-js"],
+      "reference": true
+    },
+    {
+      "name": "reference-file-py",
+      "cwd": "python",
+      "cmd": [".venv/bin/python", "run.py", "apply:reference_py"],
+      "reference": true
+    },
+    {
+      "name": "git-apply",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:git-apply"]
+    },
+    {
+      "name": "git-apply-unidiff-zero",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:git-apply-unidiff-zero"]
+    },
+    {
+      "name": "gnu-patch",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:gnu-patch"]
+    },
+    {
+      "name": "busybox-patch",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:busybox-patch"]
+    },
+    {
+      "name": "toybox-patch",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:toybox-patch"]
+    },
+    {
+      "name": "libgit2",
+      "cwd": "python",
+      "cmd": [".venv/bin/python", "run.py", "apply:pygit2"]
+    },
+    {
+      "name": "jgit",
+      "cwd": "java",
+      "cmd": ["java", "-cp", "build:lib/*", "Host", "apply:jgit"]
+    },
+    {
+      "name": "patch-ng",
+      "cwd": "python",
+      "cmd": [".venv/bin/python", "run.py", "apply:patch_ng"]
+    },
+    {
+      "name": "jsdiff",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:jsdiff"]
+    },
+    {
+      "name": "whatthepatch",
+      "cwd": "python",
+      "cmd": [".venv/bin/python", "run.py", "apply:whatthepatch"]
+    },
+    {
+      "name": "go-gitdiff",
+      "cwd": "go",
+      "cmd": ["./bin/udts-go", "apply:go-gitdiff"]
+    },
+    {
+      "name": "diffy",
+      "cwd": "rust",
+      "cmd": ["./target/release/udts-rust", "apply:diffy"]
+    },
+    {
+      "name": "java-diff-utils",
+      "cwd": "java",
+      "cmd": ["java", "-cp", "build:lib/*", "Host", "apply:java-diff-utils"]
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "id": "git/content/patch-file-deleted",
+  "title": "A deleted patch file: the inner \"--- a/x\" becomes \"---- a/x\", the inner \"-old\" becomes \"--old\"",
+  "description": null,
+  "tier": "git",
+  "tags": ["content-lookalike","deleted"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "deleted",
+        "old_name": "a/fix.patch",
+        "new_name": null,
+        "old_path": "fix.patch",
+        "new_path": null,
+        "old_mode": "100644",
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 0,
+        "deletions": 6,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 6,
+            "new_start": 0,
+            "new_lines": 0,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"--- a/x.txt","old_no":1,"new_no":null},
+              {"type":"delete","text":"+++ b/x.txt","old_no":2,"new_no":null},
+              {"type":"delete","text":"@@ -1 +1 @@","old_no":3,"new_no":null},
+              {"type":"delete","text":"-old","old_no":4,"new_no":null},
+              {"type":"delete","text":"+new","old_no":5,"new_no":null},
+              {"type":"delete","text":"\\ No newline at end of file","old_no":6,"new_no":null}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"fix.patch","content":"--- a/x.txt\n+++ b/x.txt\n@@ -1 +1 @@\n-old\n+new\n\\ No newline at end of file\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": []
+      }
+    ]
+  },
+  "source": "scenarios/30-content.js"
+}

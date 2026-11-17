@@ -1,0 +1,12 @@
+diff --git a/three.txt b/one.txt
+similarity index 100%
+rename from three.txt
+rename to one.txt
+diff --git a/two.txt b/three.txt
+similarity index 100%
+rename from two.txt
+rename to three.txt
+diff --git a/one.txt b/two.txt
+similarity index 100%
+rename from one.txt
+rename to two.txt

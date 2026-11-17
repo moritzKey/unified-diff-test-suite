@@ -1,0 +1,19 @@
+[package]
+name = "udts-rust"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Adapter host for Rust diff parsers and appliers (see adapters/PROTOCOL.md)"
+
+[dependencies]
+# the libraries under test, pinned
+diffy = { version = "=0.5.2", features = ["binary"] }
+patch = "=0.7.0"
+gitpatch = "=0.7.1"
+unidiff = "=0.4.1"
+# the host's own needs
+serde_json = "1"
+base64 = "0.22"
+
+[profile.release]
+debug = false

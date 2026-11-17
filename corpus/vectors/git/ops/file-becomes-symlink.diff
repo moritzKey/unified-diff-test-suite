@@ -1,0 +1,15 @@
+diff --git a/config b/config
+deleted file mode 100644
+index 0a979d4..0000000
+--- a/config
++++ /dev/null
+@@ -1 +0,0 @@
+-value = 1
+diff --git a/config b/config
+new file mode 120000
+index 0000000..5f3edcd
+--- /dev/null
++++ b/config
+@@ -0,0 +1 @@
++config.default
+\ No newline at end of file

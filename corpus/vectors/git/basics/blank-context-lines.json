@@ -1,0 +1,87 @@
+{
+  "id": "git/basics/blank-context-lines",
+  "title": "An empty context line is spelled as a single space",
+  "description": null,
+  "tier": "git",
+  "tags": ["basics","blank-lines"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/poem.txt",
+        "new_name": "b/poem.txt",
+        "old_path": "poem.txt",
+        "new_path": "poem.txt",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 2,
+            "old_lines": 6,
+            "new_start": 2,
+            "new_lines": 6,
+            "section": "one",
+            "lines": [
+              {"type":"context","text":"","old_no":2,"new_no":2},
+              {"type":"context","text":"two","old_no":3,"new_no":3},
+              {"type":"context","text":"","old_no":4,"new_no":4},
+              {"type":"delete","text":"three","old_no":5,"new_no":null},
+              {"type":"add","text":"THREE","old_no":null,"new_no":5},
+              {"type":"context","text":"","old_no":6,"new_no":6},
+              {"type":"context","text":"four","old_no":7,"new_no":7}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"poem.txt","content":"one\n\ntwo\n\nthree\n\nfour\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"poem.txt","content":"one\n\ntwo\n\nTHREE\n\nfour\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/10-basics.js"
+}

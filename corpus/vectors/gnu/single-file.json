@@ -1,0 +1,87 @@
+{
+  "id": "gnu/single-file",
+  "title": "diff -u a/f.txt b/f.txt: names followed by a TAB and a timestamp",
+  "description": null,
+  "tier": "gnu",
+  "tags": ["timestamp"],
+  "producer": {
+    "tool": "diff",
+    "version": "3.10",
+    "argv": ["diff","-u","a/f.txt","b/f.txt"],
+    "env": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": false,
+    "git_apply_numstat": false
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": null,
+        "old_name": "a/f.txt",
+        "new_name": "b/f.txt",
+        "old_path": "f.txt",
+        "new_path": "f.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 3,
+            "new_start": 1,
+            "new_lines": 3,
+            "section": "",
+            "lines": [
+              {"type":"context","text":"one","old_no":1,"new_no":1},
+              {"type":"delete","text":"two","old_no":2,"new_no":null},
+              {"type":"add","text":"2","old_no":null,"new_no":2},
+              {"type":"context","text":"three","old_no":3,"new_no":3}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": false
+  },
+  "recipe": {
+    "kind": "gnu-diff",
+    "args": [
+      "-u"
+    ],
+    "file": "f.txt",
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"f.txt","content":"one\ntwo\nthree\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"f.txt","content":"one\n2\nthree\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/90-gnu.js"
+}

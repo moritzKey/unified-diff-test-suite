@@ -1,0 +1,9 @@
+diff --git a/current b/current
+index 32af439..c035856 120000
+--- a/current
++++ b/current
+@@ -1 +1 @@
+-releases/v1
+\ No newline at end of file
++releases/v2
+\ No newline at end of file

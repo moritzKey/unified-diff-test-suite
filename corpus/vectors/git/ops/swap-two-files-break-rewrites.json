@@ -1,0 +1,89 @@
+{
+  "id": "git/ops/swap-two-files-break-rewrites",
+  "title": "The same swap with -B -M: two crossing renames",
+  "description": "Each file is the rename target of the other. Applying the sections one after the other, in place, destroys one of them.",
+  "tier": "git",
+  "tags": ["rename","no-hunks"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","-B","-M","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "renamed",
+        "old_name": "a/right.txt",
+        "new_name": "b/left.txt",
+        "old_path": "right.txt",
+        "new_path": "left.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": 100,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      },
+      {
+        "status": "renamed",
+        "old_name": "a/left.txt",
+        "new_name": "b/right.txt",
+        "old_path": "left.txt",
+        "new_path": "right.txt",
+        "old_mode": null,
+        "new_mode": null,
+        "similarity": 100,
+        "binary": false,
+        "additions": 0,
+        "deletions": 0,
+        "hunks": []
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [
+      "-B",
+      "-M"
+    ],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"left.txt","content":"left line 1\nleft line 2\nleft line 3\nleft line 4\nleft line 5\nleft line 6\nleft line 7\nleft line 8\nleft line 9\nleft line 10\nleft line 11\nleft line 12\nleft line 13\nleft line 14\nleft line 15\nleft line 16\nleft line 17\nleft line 18\nleft line 19\nleft line 20\nleft line 21\nleft line 22\nleft line 23\nleft line 24\nleft line 25\nleft line 26\nleft line 27\nleft line 28\nleft line 29\nleft line 30\nleft line 31\nleft line 32\nleft line 33\nleft line 34\nleft line 35\nleft line 36\nleft line 37\nleft line 38\nleft line 39\nleft line 40\nleft line 41\nleft line 42\nleft line 43\nleft line 44\nleft line 45\nleft line 46\nleft line 47\nleft line 48\nleft line 49\nleft line 50\nleft line 51\nleft line 52\nleft line 53\nleft line 54\nleft line 55\nleft line 56\nleft line 57\nleft line 58\nleft line 59\nleft line 60\n"},
+          {"path":"right.txt","content":"right line 1\nright line 2\nright line 3\nright line 4\nright line 5\nright line 6\nright line 7\nright line 8\nright line 9\nright line 10\nright line 11\nright line 12\nright line 13\nright line 14\nright line 15\nright line 16\nright line 17\nright line 18\nright line 19\nright line 20\nright line 21\nright line 22\nright line 23\nright line 24\nright line 25\nright line 26\nright line 27\nright line 28\nright line 29\nright line 30\nright line 31\nright line 32\nright line 33\nright line 34\nright line 35\nright line 36\nright line 37\nright line 38\nright line 39\nright line 40\nright line 41\nright line 42\nright line 43\nright line 44\nright line 45\nright line 46\nright line 47\nright line 48\nright line 49\nright line 50\nright line 51\nright line 52\nright line 53\nright line 54\nright line 55\nright line 56\nright line 57\nright line 58\nright line 59\nright line 60\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"left.txt","content":"right line 1\nright line 2\nright line 3\nright line 4\nright line 5\nright line 6\nright line 7\nright line 8\nright line 9\nright line 10\nright line 11\nright line 12\nright line 13\nright line 14\nright line 15\nright line 16\nright line 17\nright line 18\nright line 19\nright line 20\nright line 21\nright line 22\nright line 23\nright line 24\nright line 25\nright line 26\nright line 27\nright line 28\nright line 29\nright line 30\nright line 31\nright line 32\nright line 33\nright line 34\nright line 35\nright line 36\nright line 37\nright line 38\nright line 39\nright line 40\nright line 41\nright line 42\nright line 43\nright line 44\nright line 45\nright line 46\nright line 47\nright line 48\nright line 49\nright line 50\nright line 51\nright line 52\nright line 53\nright line 54\nright line 55\nright line 56\nright line 57\nright line 58\nright line 59\nright line 60\n"},
+          {"path":"right.txt","content":"left line 1\nleft line 2\nleft line 3\nleft line 4\nleft line 5\nleft line 6\nleft line 7\nleft line 8\nleft line 9\nleft line 10\nleft line 11\nleft line 12\nleft line 13\nleft line 14\nleft line 15\nleft line 16\nleft line 17\nleft line 18\nleft line 19\nleft line 20\nleft line 21\nleft line 22\nleft line 23\nleft line 24\nleft line 25\nleft line 26\nleft line 27\nleft line 28\nleft line 29\nleft line 30\nleft line 31\nleft line 32\nleft line 33\nleft line 34\nleft line 35\nleft line 36\nleft line 37\nleft line 38\nleft line 39\nleft line 40\nleft line 41\nleft line 42\nleft line 43\nleft line 44\nleft line 45\nleft line 46\nleft line 47\nleft line 48\nleft line 49\nleft line 50\nleft line 51\nleft line 52\nleft line 53\nleft line 54\nleft line 55\nleft line 56\nleft line 57\nleft line 58\nleft line 59\nleft line 60\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/60-operations.js"
+}

@@ -1,0 +1,12 @@
+diff --git a/indent.py b/indent.py
+index 802b804..c83a215 100644
+--- a/indent.py
++++ b/indent.py
+@@ -1,5 +1,5 @@
+ def f():
+-    return 1
++        return 1
+ 
+ def g():
+-	return 2   
++	return 2

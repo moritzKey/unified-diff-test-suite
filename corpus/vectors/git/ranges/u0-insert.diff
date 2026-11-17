@@ -1,0 +1,7 @@
+diff --git a/f.txt b/f.txt
+index f00c965..747debb 100644
+--- a/f.txt
++++ b/f.txt
+@@ -5,0 +6,2 @@
++five and a half
++five and three quarters

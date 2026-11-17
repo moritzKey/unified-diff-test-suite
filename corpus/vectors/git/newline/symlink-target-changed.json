@@ -1,0 +1,82 @@
+{
+  "id": "git/newline/symlink-target-changed",
+  "title": "A symbolic link retargeted: link targets never end with a newline",
+  "description": null,
+  "tier": "git",
+  "tags": ["no-newline","symlink"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/current",
+        "new_name": "b/current",
+        "old_path": "current",
+        "new_path": "current",
+        "old_mode": "120000",
+        "new_mode": "120000",
+        "similarity": null,
+        "binary": false,
+        "additions": 1,
+        "deletions": 1,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 1,
+            "new_start": 1,
+            "new_lines": 1,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"releases/v1","old_no":1,"new_no":null,"no_newline":true},
+              {"type":"add","text":"releases/v2","old_no":null,"new_no":1,"no_newline":true}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"current","content":"releases/v1","mode":"120000"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"current","content":"releases/v2","mode":"120000"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/40-newline.js"
+}

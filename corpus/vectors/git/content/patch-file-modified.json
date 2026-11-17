@@ -1,0 +1,96 @@
+{
+  "id": "git/content/patch-file-modified",
+  "title": "A diff of a patch file: every line of the inner patch is content",
+  "description": "Repositories that carry patches (distribution packaging, patch-package, vendored fixes) produce diffs of diffs every day.",
+  "tier": "git",
+  "tags": ["content-lookalike","fake-file-header","fake-hunk-header"],
+  "producer": {
+    "tool": "git",
+    "version": "2.43.0",
+    "argv": ["git","diff","<state0>","<state1>"],
+    "config": {}
+  },
+  "prefixes": {
+    "old": "a/",
+    "new": "b/"
+  },
+  "verified": {
+    "replay": true,
+    "git_raw_numstat": true,
+    "git_apply_numstat": true
+  },
+  "text": {
+    "diff_is_utf8": true,
+    "names_are_utf8": true,
+    "paths_inferable": true
+  },
+  "expected": {
+    "files": [
+      {
+        "status": "modified",
+        "old_name": "a/patches/fix.patch",
+        "new_name": "b/patches/fix.patch",
+        "old_path": "patches/fix.patch",
+        "new_path": "patches/fix.patch",
+        "old_mode": "100644",
+        "new_mode": "100644",
+        "similarity": null,
+        "binary": false,
+        "additions": 7,
+        "deletions": 6,
+        "hunks": [
+          {
+            "old_start": 1,
+            "old_lines": 9,
+            "new_start": 1,
+            "new_lines": 10,
+            "section": "",
+            "lines": [
+              {"type":"delete","text":"diff --git a/lib/x.js b/lib/x.js","old_no":1,"new_no":null},
+              {"type":"delete","text":"index 1111111..2222222 100644","old_no":2,"new_no":null},
+              {"type":"delete","text":"--- a/lib/x.js","old_no":3,"new_no":null},
+              {"type":"delete","text":"+++ b/lib/x.js","old_no":4,"new_no":null},
+              {"type":"delete","text":"@@ -1,3 +1,3 @@","old_no":5,"new_no":null},
+              {"type":"add","text":"diff --git a/lib/y.js b/lib/y.js","old_no":null,"new_no":1},
+              {"type":"add","text":"index 1111111..3333333 100644","old_no":null,"new_no":2},
+              {"type":"add","text":"--- a/lib/y.js","old_no":null,"new_no":3},
+              {"type":"add","text":"+++ b/lib/y.js","old_no":null,"new_no":4},
+              {"type":"add","text":"@@ -1,3 +1,4 @@","old_no":null,"new_no":5},
+              {"type":"context","text":" const a = 1;","old_no":6,"new_no":6},
+              {"type":"context","text":"-const b = 2;","old_no":7,"new_no":7},
+              {"type":"delete","text":"+const b = 3;","old_no":8,"new_no":null},
+              {"type":"add","text":"+const b = 5;","old_no":null,"new_no":8},
+              {"type":"add","text":"+const d = 6;","old_no":null,"new_no":9},
+              {"type":"context","text":" const c = 4;","old_no":9,"new_no":10}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "apply": {
+    "from": 0,
+    "to": 1,
+    "strip": 1,
+    "modes": true
+  },
+  "recipe": {
+    "kind": "git-diff",
+    "args": [],
+    "states": [
+      {
+        "message": "state 0",
+        "files": [
+          {"path":"patches/fix.patch","content":"diff --git a/lib/x.js b/lib/x.js\nindex 1111111..2222222 100644\n--- a/lib/x.js\n+++ b/lib/x.js\n@@ -1,3 +1,3 @@\n const a = 1;\n-const b = 2;\n+const b = 3;\n const c = 4;\n"}
+        ]
+      },
+      {
+        "message": "state 1",
+        "files": [
+          {"path":"patches/fix.patch","content":"diff --git a/lib/y.js b/lib/y.js\nindex 1111111..3333333 100644\n--- a/lib/y.js\n+++ b/lib/y.js\n@@ -1,3 +1,4 @@\n const a = 1;\n-const b = 2;\n+const b = 5;\n+const d = 6;\n const c = 4;\n"}
+        ]
+      }
+    ]
+  },
+  "source": "scenarios/30-content.js"
+}
