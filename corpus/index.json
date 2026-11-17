@@ -5,7 +5,7 @@
   "diffutils": "3.10",
   "patch": "2.7.6"
  },
- "count": 246,
+ "count": 248,
  "vectors": [
   {
    "id": "git/basics/modify-one-line",
@@ -805,6 +805,30 @@
    ],
    "files": 1,
    "bytes": 137
+  },
+  {
+   "id": "git/bytes/mixed-line-endings-change-elsewhere",
+   "tier": "git",
+   "title": "Mixed endings: only the first line ends with CRLF, and the change is near the end",
+   "tags": [
+    "line-endings",
+    "cr"
+   ],
+   "files": 1,
+   "bytes": 138
+  },
+  {
+   "id": "git/bytes/mixed-line-endings-renamed",
+   "tier": "git",
+   "title": "A file with mixed line endings renamed without a change: no hunks to see them in",
+   "tags": [
+    "line-endings",
+    "cr",
+    "rename",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 91
   },
   {
    "id": "git/bytes/lone-cr-inside-line",

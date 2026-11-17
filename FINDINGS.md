@@ -376,7 +376,7 @@ second case, as `--no-color` closes the first.
 ## 13. Applying
 
 Sections 1 to 12 are about reading a diff. This one is about acting on it.
-208 of the vectors are patches in the plain sense — the vector records the tree
+210 of the vectors are patches in the plain sense — the vector records the tree
 before and the tree after — and fourteen programs were asked to get from one to
 the other ([`APPLY.md`](APPLY.md) has every result; `node src/apply.js --adapter
 gnu-patch --show` repeats one). A program may refuse a patch. What matters here
@@ -480,8 +480,8 @@ errors tries to write the pending files once more, the same rename fails, and
 the handler is entered again. 2.7.6 applies the patch. I could not search the
 tracker of GNU patch either.
 
-Two things held without exception: jsdiff's `applyPatch` applied all 184
-patches it could be given and diffy's `apply_bytes` all 189, and
+Two things held without exception: jsdiff's `applyPatch` applied all 185
+patches it could be given and diffy's `apply_bytes` all 190, and
 `git apply --unidiff-zero` applied all but the one that git 2.43 cannot read
 (section 6).
 
@@ -493,9 +493,9 @@ through their adapters only — each adapter is a direct call of the library, an
 `node src/try.js <adapter> <vector-id> --raw` shows the answer as it came back.
 
 - **diffy 0.5.2** (Rust) reads git's format through `PatchSet` with
-  `ParseOptions::gitdiff()`: 217 of the 219 vectors in its scope agree, quoted
+  `ParseOptions::gitdiff()`: 219 of the 221 vectors in its scope agree, quoted
   names, binary patches, modes and mail signatures included, and as an applier
-  it turns all 189 patches it can be given into the right file. The two
+  it turns all 190 patches it can be given into the right file. The two
   differences: empty input is an error ("no valid patches found") rather than
   an empty list, and one mail fails — the signature of `git format-patch`
   directly after a hunk whose *deleted* last line carries `\ No newline at end
@@ -543,14 +543,14 @@ the command line, with the released binary and with a build of its current
 source.
 
 **JGit 7.8.1** — `org.eclipse.jgit.patch.Patch`, the parser behind
-`ApplyCommand` — reads 208 of the 224 vectors in its scope as git does: content that looks like a header, zero counts, binary patches, modes,
+`ApplyCommand` — reads 210 of the 226 vectors in its scope as git does: content that looks like a header, zero counts, binary patches, modes,
 mails and merges are all right. The sixteen differences are about names: the
 quoted name followed by a TAB (section 2), the name on the side where no file
 exists (section 5), and a binary file in a `diff --cc` section, which gets no
 name at all because only the `---`/`+++` lines are read for one there.
 
-As an applier, `Git.apply()` gets 182 of 208 patches right, refuses 21 and
-leaves one half-done. It applies four wrongly without an exception, in three
+As an applier, `Git.apply()` gets 182 of 210 patches right, refuses 21 and
+leaves one half-done. It applies six wrongly without an exception, in four
 ways:
 
 - **`@@ -1 +0,0 @@` empties the file.** That is what `git diff -U0` writes for
@@ -570,6 +570,17 @@ ways:
   unquote names at all.
 - A symbolic link that a patch adds becomes a regular file containing the
   target (two vectors); patches that change or delete a link are refused.
+- **A file with mixed line endings gets CR-LF on every line.** When one line
+  of a file ends with CR-LF and the hunks show no such line, `PatchApplier`
+  reads the file as CR-LF text and writes every line back with CR-LF: a
+  one-line change near the end of a file whose first line alone ends with
+  CR-LF adds a CR to nine lines it does not touch
+  (`git/bytes/mixed-line-endings-change-elsewhere`), and a rename without
+  changes does the same to the renamed file
+  (`git/bytes/mixed-line-endings-renamed`). The decision is
+  `RawText.isCrLfText()`, which is true for any text with one CR-LF and no
+  lone CR. No configuration is involved. The applier fuzzer
+  (`src/fuzz-apply.js`) found this; the two vectors were added for it.
 
 Two more results say something about the method. A hunk without context that
 deletes a single line (`@@ -8 +8,0 @@`) "cannot be applied": the position is
@@ -583,8 +594,8 @@ Upstream: nothing found in the issues of eclipse-jgit/jgit. The older Eclipse
 Bugzilla showed a "temporary shutdown" page when I looked.
 
 **toybox patch 0.8.15** is the `patch` of Android, and the ancestor of the
-BusyBox applet ("Adapted from toybox's patch implementation"). 136 of 208
-patches are right, 27 are refused, 38 are wrong with exit status 0.
+BusyBox applet ("Adapted from toybox's patch implementation"). 137 of 210
+patches are right, 27 are refused, 39 are wrong with exit status 0.
 
 - **`@@ -1 +0,0 @@` deletes the file** ("removing f.txt"). A first hunk whose
   new range is `+0,0` is taken to mean that the file is deleted — which is true
@@ -619,7 +630,7 @@ the files unchanged; on a Mac the adapter takes the installed one. I have not
 run it on a Mac. It is called the way the ports framework of FreeBSD calls it,
 with `-E` (see the last point).
 
-140 of 208 patches are right, 23 are refused, 24 are refused after writing a
+141 of 210 patches are right, 24 are refused, 24 are refused after writing a
 reject file, and 21 are wrong with exit status 0. With the content of a file it
 does as well as GNU patch: the no-newline marker, zero-length ranges from
 `-U0`, content that looks like a header and carriage returns are all right.
@@ -667,7 +678,7 @@ latest release. It patches tracked files only, in a working directory without
 changes, so the adapter commits the old tree first. Mercurial's patch code
 (`mercurial/patch.py`) is its own, and it reads git's extended headers.
 
-171 of 208 patches are right, 6 are refused, 22 are refused after a reject
+173 of 210 patches are right, 6 are refused, 22 are refused after a reject
 file was written or part of the change was made, and 9 are wrong with exit
 status 0. The content of files is handled well: zero-length ranges, the
 no-newline marker, binary patches, copies, empty files and symbolic links are
@@ -724,11 +735,11 @@ Issue 3723 (2012, closed) was about names with spaces in Mercurial's own diffs.
 
 - Eighteen of the twenty-five libraries get every "content that looks like a
   header" vector right; counting the lines of a hunk has become the norm.
-- diffy 0.5.2 differs from git on two of 219 vectors as a parser and on none
-  of 189 as an applier.
+- diffy 0.5.2 differs from git on two of 221 vectors as a parser and on none
+  of 190 as an applier.
 - GitPython, which only reads file headers and always asks git for one fixed
-  format, agreed on all 181 vectors of the `git` tier.
-- go-gitdiff 0.9.0, and the fork of it inside gitleaks, agreed on all 198
+  format, agreed on all 183 vectors of the `git` tier.
+- go-gitdiff 0.9.0, and the fork of it inside gitleaks, agreed on all 200
   vectors in their scope (`git` and `git-wrapped`) and on 23,182 random
   scenarios each — the only parsers without a single difference there.
 - trufflehog is unaffected by the git configuration of whoever runs it.
@@ -750,7 +761,7 @@ scenarios (47,215 scenarios were verified against ground truth in total).
 [`README.md`](README.md#why-trust-the-expectations) has the details.
 
 For applying, the expectation is not computed at all: it is the tree the diff
-was made to. The reference applier reaches it for all 208 patches, and
+was made to. The reference applier reaches it for all 210 patches, and
 `test/apply.test.js` damages trees in sixteen ways and requires each to be
 noticed.
 

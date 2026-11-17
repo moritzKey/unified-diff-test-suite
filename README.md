@@ -9,14 +9,14 @@ tools, patch appliers, and the harnesses that score coding agents. The format
 they read has no specification beyond a few paragraphs of documentation, and it
 is full of traps. This repository contains
 
-- **246 test vectors** — real output of `git` and GNU `diff` for carefully
+- **248 test vectors** — real output of `git` and GNU `diff` for carefully
   chosen changes, each with the parse it must produce, in plain JSON that any
   language can read ([`corpus/`](corpus/README.md));
 - **a harness** that runs any parser against them through a small adapter, and
   adapters for twenty-five widely used libraries in JavaScript, Python, Go,
   Rust, Java and C
   ([`RESULTS.md`](RESULTS.md), [`FINDINGS.md`](FINDINGS.md));
-- **the same for programs that apply patches**: 208 of the vectors come with
+- **the same for programs that apply patches**: 210 of the vectors come with
   the file tree before and after, and `git apply`, GNU patch, BusyBox patch,
   toybox patch, the BSD patch of FreeBSD and macOS, Mercurial, libgit2, JGit
   and six libraries are asked to get from one to the other
@@ -75,7 +75,7 @@ and carries a recipe from which it can be produced again.
 
 | tier | vectors | what it is |
 | --- | --- | --- |
-| `git` | 181 | `git diff` with git's default naming |
+| `git` | 183 | `git diff` with git's default naming |
 | `git-wrapped` | 17 | the same with something around it: `git show`, `git log -p`, `git format-patch`, `--stat` |
 | `git-config` | 21 | the same, named differently: `--no-prefix`, mnemonic prefixes, `-R`, `core.quotePath=false`, … |
 | `combined` | 10 | merge commits (`diff --cc`) |
@@ -135,21 +135,21 @@ one: it reported success and the files are not what they should be.
 
 | | patches | right | refused | left half-done | wrong, no error |
 | --- | --- | --- | --- | --- | --- |
-| `git apply` 2.43.0 | 208 | 197 | 9 | – | 2 |
-| `git apply --unidiff-zero` | 208 | 207 | 1 | – | – |
-| GNU patch 2.7.6 | 208 | 195 | 8 | 4 | 1 |
-| BusyBox patch 1.36.1 | 208 | 104 | 46 | 10 | 48 |
-| toybox patch 0.8.15 | 208 | 136 | 27 | 7 | 38 |
-| BSD patch (FreeBSD, = macOS) | 208 | 140 | 23 | 24 | 21 |
-| libgit2 1.9.7 (`git_apply`) | 194 | 161 | 29 | – | 4 |
-| JGit 7.8.1 (`Git.apply()`) | 208 | 182 | 21 | 1 | 4 |
-| Mercurial 7.2.4 (`hg import`) | 208 | 171 | 6 | 22 | 9 |
-| patch-ng 1.19.1 | 208 | 127 | 38 | 13 | 30 |
-| jsdiff 9.0.0 (`applyPatch`) | 184 | 184 | – | – | – |
-| whatthepatch 1.0.7 (`apply_diff`) | 184 | 173 | 6 | – | 5 |
-| go-gitdiff 0.9.0 (`Apply`) | 189 | 182 | 2 | – | 5 |
-| diffy 0.5.2 (`apply_bytes`) | 189 | 189 | – | – | – |
-| java-diff-utils 4.18 (`applyTo`) | 184 | 176 | 4 | – | 4 |
+| `git apply` 2.43.0 | 210 | 199 | 9 | – | 2 |
+| `git apply --unidiff-zero` | 210 | 209 | 1 | – | – |
+| GNU patch 2.7.6 | 210 | 197 | 8 | 4 | 1 |
+| BusyBox patch 1.36.1 | 210 | 105 | 46 | 10 | 49 |
+| toybox patch 0.8.15 | 210 | 137 | 27 | 7 | 39 |
+| BSD patch (FreeBSD, = macOS) | 210 | 141 | 24 | 24 | 21 |
+| libgit2 1.9.7 (`git_apply`) | 196 | 163 | 29 | – | 4 |
+| JGit 7.8.1 (`Git.apply()`) | 210 | 182 | 21 | 1 | 6 |
+| Mercurial 7.2.4 (`hg import`) | 210 | 173 | 6 | 22 | 9 |
+| patch-ng 1.19.1 | 210 | 129 | 38 | 13 | 30 |
+| jsdiff 9.0.0 (`applyPatch`) | 185 | 185 | – | – | – |
+| whatthepatch 1.0.7 (`apply_diff`) | 185 | 173 | 6 | – | 6 |
+| go-gitdiff 0.9.0 (`Apply`) | 190 | 183 | 2 | – | 5 |
+| diffy 0.5.2 (`apply_bytes`) | 190 | 190 | – | – | – |
+| java-diff-utils 4.18 (`applyTo`) | 185 | 176 | 4 | – | 5 |
 
 Three examples of the last column. A diff made with `-U0` that inserts a line
 after line 5 says `@@ -5,0 +6 @@`; plain `git apply` puts the line at the end
@@ -201,10 +201,11 @@ compared, because `git`, `patch`, `busybox` and `toybox` are whatever the
 machine has (BSD patch is built there from the pinned FreeBSD sources).
 
 The vectors were produced with git 2.43.0 and diffutils 3.10. git 2.56.1, the
-latest release at the time of writing, produced each of the first 245 byte for
+latest release at the time of writing, produced each of the first 246 byte for
 byte (apart from its own version number in the signature of `format-patch`
-mails), and all three oracles agreed there too; the one vector added later was
-not checked with it. With other versions the tools
+mails; the CI compares them on every push), and all three oracles agreed on the
+first 245 there too; the two vectors added last have not been run on a git
+other than 2.43.0. With other versions the tools
 may legitimately write something slightly different; `generate.js --check`
 shows where. GNU diffutils 3.12 is one example: it quotes fewer file names
 than 3.10 ([SPEC.md](SPEC.md#gnu-diff)), so the CI builds 3.10 for that

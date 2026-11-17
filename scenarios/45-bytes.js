@@ -29,6 +29,19 @@ export const scenarios = [
     before: { 'mixed.txt': 'a\r\nb\nc\r\nd\n' },
     after: { 'mixed.txt': 'a\nb\r\nc\r\nD\n' },
   }),
+  git('bytes/mixed-line-endings-change-elsewhere', {
+    title: 'Mixed endings: only the first line ends with CRLF, and the change is near the end',
+    tags: ['line-endings', 'cr'],
+    before: { 'notes.txt': 'title\r\n1\n2\n3\n4\n5\n6\n7\n8\n' },
+    after: { 'notes.txt': 'title\r\n1\n2\n3\n4\n5\n6\n7\neight\n' },
+  }),
+  git('bytes/mixed-line-endings-renamed', {
+    mustContain: ['similarity index 100%\nrename from old.txt\nrename to new.txt\n'],
+    title: 'A file with mixed line endings renamed without a change: no hunks to see them in',
+    tags: ['line-endings', 'cr', 'rename', 'no-hunks'],
+    before: { 'old.txt': 'a\nb\r\nc\n' },
+    after: { 'new.txt': 'a\nb\r\nc\n' },
+  }),
   git('bytes/lone-cr-inside-line', {
     title: 'A lone CR in the middle of a line is not a line break',
     tags: ['line-endings', 'cr', 'line-splitting'],

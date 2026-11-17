@@ -29,7 +29,7 @@ test('which vectors are patches', () => {
   assert.match(reason('gnu/labels'), /labels/);
   assert.match(reason('git/basics/empty-diff'), /empty/);
   const cases = all().map(({ vector }) => applyCase(vector)).filter((c) => !c.skip);
-  assert.equal(cases.length, 208);
+  assert.equal(cases.length, 210);
   // What a vector says about itself is what this module works out.
   for (const { vector } of all()) assert.deepEqual(vector.apply, applyInfo(vector), vector.id);
   assert.deepEqual(loadVector('git-wrapped/show-root-commit').vector.apply, { from: null, to: 0, strip: 1, modes: true });
@@ -55,7 +55,7 @@ test('the reference applier turns every old tree into the new tree', () => {
     assert.ok(c.old.every((e) => Buffer.isBuffer(e.content)));
     sections += vector.expected.files.length;
   }
-  assert.equal(trees, 208);
+  assert.equal(trees, 210);
   assert.ok(sections > 250);
 });
 
@@ -169,7 +169,7 @@ process.stdin.on('data', (data) => {
 
 test('the reference appliers pass every patch through the adapter protocol', async () => {
   const vectors = all();
-  for (const [name, patches] of [['reference-js', 208], ['reference-file-js', 189]]) {
+  for (const [name, patches] of [['reference-js', 210], ['reference-file-js', 190]]) {
     const spec = loadRegistry(undefined, 'appliers').find((a) => a.name === name);
     spec.cmd = [process.execPath, ...spec.cmd.slice(1)]; // the Node.js that runs this test
     const { results } = await runApplier(spec, vectors);
