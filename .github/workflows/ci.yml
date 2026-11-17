@@ -30,6 +30,20 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
+      # The corpus was made with GNU diffutils 3.10, and 3.12 quotes fewer
+      # file names (SPEC.md, "GNU diff"), so the comparison below uses 3.10.
+      - name: GNU diffutils 3.10
+        run: |
+          cd "$RUNNER_TEMP"
+          curl -fsSL --retry 3 -o diffutils.tar.xz https://ftpmirror.gnu.org/diffutils/diffutils-3.10.tar.xz \
+            || curl -fsSL --retry 3 -o diffutils.tar.xz https://ftp.gnu.org/gnu/diffutils/diffutils-3.10.tar.xz
+          echo "90e5e93cc724e4ebe12ede80df1634063c7a855692685919bfe60b556c9bd09e  diffutils.tar.xz" | sha256sum -c -
+          tar xJf diffutils.tar.xz
+          cd diffutils-3.10
+          ./configure --quiet --disable-nls --prefix="$RUNNER_TEMP/diffutils"
+          make -j4 >/dev/null
+          make install >/dev/null
+          echo "$RUNNER_TEMP/diffutils/bin" >> "$GITHUB_PATH"
       - name: Tool versions
         run: |
           node --version

@@ -354,6 +354,13 @@ diff -ruN a/one.txt b/one.txt
 - Names with spaces **are** quoted — `"a/my file.txt"` — as are names with
   special characters and non-ASCII bytes, in the same C style
   (`gnu/space-in-name`, `gnu/special-names`; observed with diffutils 3.10).
+- diffutils 3.12 quotes fewer names. A name with a backslash is written as it
+  is (`a/b\s.txt`, where 3.10 wrote `"a/b\\s.txt"`), and in a UTF-8 locale so
+  is a name with characters outside ASCII (`a/größe.txt` in raw UTF-8, where
+  3.10 wrote `"a/gr\303\266\303\237e.txt"`). Quotes, TABs, newlines and
+  spaces are still quoted, and so is everything outside ASCII in the C locale.
+  A backslash in a name that is not quoted is part of the name, never an
+  escape. The vectors are 3.10 output.
 - A file that exists on one side only is, with `-N`, compared with an empty
   file dated 1970-01-01; `/dev/null` is not used (`gnu/new-and-deleted-files`).
   Without `-N` it is only mentioned: `Only in a: gone.txt` (`gnu/only-in`).

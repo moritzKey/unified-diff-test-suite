@@ -199,7 +199,9 @@ byte (apart from its own version number in the signature of `format-patch`
 mails), and all three oracles agreed there too; the one vector added later was
 not checked with it. With other versions the tools
 may legitimately write something slightly different; `generate.js --check`
-shows where.
+shows where. GNU diffutils 3.12 is one example: it quotes fewer file names
+than 3.10 ([SPEC.md](SPEC.md#gnu-diff)), so the CI builds 3.10 for that
+comparison.
 
 ## Testing another parser
 
