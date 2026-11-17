@@ -201,11 +201,10 @@ compared, because `git`, `patch`, `busybox` and `toybox` are whatever the
 machine has (BSD patch is built there from the pinned FreeBSD sources).
 
 The vectors were produced with git 2.43.0 and diffutils 3.10. git 2.56.1, the
-latest release at the time of writing, produced each of the first 246 byte for
+latest release at the time of writing, produces every one of them byte for
 byte (apart from its own version number in the signature of `format-patch`
 mails; the CI compares them on every push), and all three oracles agreed on the
-first 245 there too; the two vectors added last have not been run on a git
-other than 2.43.0. With other versions the tools
+first 245 with it too. With other versions the tools
 may legitimately write something slightly different; `generate.js --check`
 shows where. GNU diffutils 3.12 is one example: it quotes fewer file names
 than 3.10 ([SPEC.md](SPEC.md#gnu-diff)), so the CI builds 3.10 for that
