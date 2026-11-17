@@ -189,6 +189,11 @@
       "cmd": ["node", "run.mjs", "apply:toybox-patch"]
     },
     {
+      "name": "bsd-patch",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:bsd-patch"]
+    },
+    {
       "name": "libgit2",
       "cwd": "python",
       "cmd": [".venv/bin/python", "run.py", "apply:pygit2"]

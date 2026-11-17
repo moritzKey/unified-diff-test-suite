@@ -18,8 +18,8 @@ is full of traps. This repository contains
   ([`RESULTS.md`](RESULTS.md), [`FINDINGS.md`](FINDINGS.md));
 - **the same for programs that apply patches**: 208 of the vectors come with
   the file tree before and after, and `git apply`, GNU patch, BusyBox patch,
-  toybox patch, libgit2, JGit and six libraries are asked to get from one to
-  the other
+  toybox patch, the BSD patch of FreeBSD and macOS, libgit2, JGit and six
+  libraries are asked to get from one to the other
   ([`APPLY.md`](APPLY.md));
 - **a description of the format** as the tools actually write it
   ([`SPEC.md`](SPEC.md));
@@ -140,6 +140,7 @@ one: it reported success and the files are not what they should be.
 | GNU patch 2.7.6 | 208 | 195 | 8 | 4 | 1 |
 | BusyBox patch 1.36.1 | 208 | 104 | 46 | 10 | 48 |
 | toybox patch 0.8.15 | 208 | 136 | 27 | 7 | 38 |
+| BSD patch (FreeBSD, = macOS) | 208 | 140 | 23 | 24 | 21 |
 | libgit2 1.9.7 (`git_apply`) | 194 | 161 | 29 | – | 4 |
 | JGit 7.8.1 (`Git.apply()`) | 208 | 182 | 21 | 1 | 4 |
 | patch-ng 1.19.1 | 208 | 127 | 38 | 13 | 30 |
@@ -156,7 +157,9 @@ made with `-U0` that removes the first line of a file says `@@ -1 +0,0 @@`;
 toybox patch deletes the file, and JGit and BusyBox patch leave it empty. A
 diff that removes the final newline of a file says so with `\ No newline at
 end of file`; BusyBox patch, toybox patch and patch-ng apply it and leave the
-newline in. [`FINDINGS.md`](FINDINGS.md#13-applying) has the rest.
+newline in. The `patch` of macOS gets all of those right, but cuts a line at a
+NUL byte and applies the change of a copied file to the original.
+[`FINDINGS.md`](FINDINGS.md#13-applying) has the rest.
 
 ## Running it
 
@@ -175,6 +178,7 @@ python3 -m venv adapters/python/.venv && adapters/python/.venv/bin/pip install -
 (cd adapters/go && go build -o bin/udts-go .)                                     # the Go libraries
 (cd adapters/rust && cargo build --release --locked)                              # the Rust libraries
 adapters/java/build.sh                                                            # the Java libraries
+adapters/bsd-patch/build.sh                       # FreeBSD's patch, on Linux (a Mac has it)
 
 node src/run.js                           # everything; writes results/*.json
 node src/run.js --adapter parse-diff --show
@@ -191,7 +195,7 @@ regeneration of every vector with the git of the day, the corpus as checked out
 on Linux, macOS and Windows, and all parsers — failing if `RESULTS.md` is not
 exactly what they produce. The appliers run there too; `APPLY.md` is not
 compared, because `git`, `patch`, `busybox` and `toybox` are whatever the
-machine has.
+machine has (BSD patch is built there from the pinned FreeBSD sources).
 
 The vectors were produced with git 2.43.0 and diffutils 3.10. git 2.56.1, the
 latest release at the time of writing, produced each of the first 245 byte for

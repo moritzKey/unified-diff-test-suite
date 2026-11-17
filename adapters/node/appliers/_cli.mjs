@@ -1,6 +1,6 @@
 // Helpers for appliers that are command-line tools.
 //
-// UDTS_GIT, UDTS_PATCH, UDTS_BUSYBOX and UDTS_TOYBOX name the program to run when it is not
+// UDTS_GIT, UDTS_PATCH, UDTS_BSD_PATCH, UDTS_BUSYBOX and UDTS_TOYBOX name the program to run when it is not
 // the one on the PATH - to test another version, or your own build.
 import { spawnSync } from 'node:child_process';
 import { dirname } from 'node:path';

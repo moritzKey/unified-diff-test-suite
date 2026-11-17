@@ -30,6 +30,7 @@ There are four ways this can end:
 | [GNU patch](#gnu-patch) | 2.7.6 | `patch -pN -f --no-backup-if-mismatch -i FILE` | 208 | 195 | 8 | 4 | **1** | – |
 | [BusyBox patch](#busybox-patch) | 1.36.1 | `busybox patch -pN -i FILE` | 208 | 104 | 46 | 10 | **48** | – |
 | [toybox patch](#toybox-patch) | 0.8.15 | `toybox patch -pN -i FILE` | 208 | 136 | 27 | 7 | **38** | – |
+| [BSD patch](#bsd-patch) | 2.0-12u11 FreeBSD | `patch -pN -f -s -E -V none -i FILE` | 208 | 140 | 23 | 24 | **21** | – |
 | [libgit2](#libgit2) | 1.9.7 (via pygit2 1.21.0) | `Diff.parse_diff, then Repository.apply (git_diff_from_buffer, git_apply)` | 194 | 161 | 29 | – | **4** | – |
 | [JGit](#jgit) | 7.8.1.202611041320-r | `Git.apply().setPatch(stream).call()` | 208 | 182 | 21 | 1 | **4** | – |
 | [patch-ng](#patch-ng) | 1.19.1 | `fromfile(path).apply(strip=N, root=directory)` | 208 | 127 | 38 | 13 | **30** | – |
@@ -50,6 +51,7 @@ What the wrong results are (a patch can show several):
 | GNU patch | 1 | 1 | – | – | – | – |
 | BusyBox patch | 48 | 14 | 23 | 15 | 1 | 10 |
 | toybox patch | 38 | 10 | 12 | 16 | 2 | 11 |
+| BSD patch | 21 | 2 | 13 | 15 | 2 | 10 |
 | libgit2 | 4 | 2 | – | 2 | – | – |
 | JGit | 4 | 1 | 1 | 1 | 2 | – |
 | patch-ng | 30 | 22 | 3 | 7 | 2 | 2 |
@@ -68,6 +70,7 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 | GNU patch | 155/166, **1 wrong** | 9/10 | 17/18 | 14/14 |
 | BusyBox patch | 82/166, **41 wrong** | 7/10, **2 wrong** | 7/18, **3 wrong** | 8/14, **2 wrong** |
 | toybox patch | 107/166, **34 wrong** | 8/10, **1 wrong** | 9/18, **3 wrong** | 12/14 |
+| BSD patch | 112/166, **13 wrong** | 9/10, **1 wrong** | 8/18, **7 wrong** | 11/14 |
 | libgit2 | 145/166, **4 wrong** | 9/10 | 7/18 | – |
 | JGit | 153/166, **4 wrong** | 10/10 | 10/18 | 9/14 |
 | patch-ng | 103/166, **24 wrong** | 8/10, **1 wrong** | 6/18, **3 wrong** | 10/14, **2 wrong** |
@@ -81,22 +84,22 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 
 Vectors of the `git` tier, grouped by tag; a vector can carry several. "12/14, **1**" reads: 14 patches given, 12 applied correctly, 1 applied wrongly without an error.
 
-| trap | git apply | git apply --unidiff-zero | GNU patch | BusyBox patch | toybox patch | libgit2 | JGit | patch-ng | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
-| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | 2/9, **4** | 1/9, **2** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
-| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 1/20, **7** | 4/20, **6** | 17/20 | 16/20, **1** | 6/20, **10** | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
-| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | **6/6** | **6/6** | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
-| carriage returns in content | **7/7** | **7/7** | **7/7** | 5/7 | 6/7 | **7/7** | **7/7** | 5/7, **1** | **7/7** | 1/7, **4** | **7/7** | **7/7** | 1/7, **3** |
-| spaces in file names | 20/21 | 20/21 | 16/21 | 13/21, **5** | 16/21, **4** | 15/21 | 19/21, **1** | 12/21, **1** | **17/17** | **17/17** | **17/17** | **17/17** | **17/17** |
-| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **2** | 16/19, **1** | 17/19, **2** | 15/19, **1** | 0/19, **1** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
-| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **4** | 3/10, **4** | 5/10 | **10/10** | 3/10 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
-| renames | **16/16** | **16/16** | 13/16, **1** | 1/16, **10** | 2/16, **9** | 14/16 | 14/16 | 7/16, **4** | **7/7** | **7/7** | **7/7** | **7/7** | **7/7** |
-| copies | **3/3** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 1/3, **2** | **3/3** | 0/3, **2** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
-| mode changes | 9/10 | 9/10 | 8/10 | 0/10, **9** | 1/10, **8** | 8/10 | **10/10** | 4/10 | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
-| empty files | **8/8** | **8/8** | 7/8 | 1/8, **5** | 2/8, **6** | 4/8 | **8/8** | 1/8, **2** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
-| binary patches | **3/3** | **3/3** | 0/3 | 0/3, **3** | 0/3, **3** | **3/3** | **3/3** | 0/3 | – | – | **3/3** | **3/3** | – |
-| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **1** | 2/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| trap | git apply | git apply --unidiff-zero | GNU patch | BusyBox patch | toybox patch | BSD patch | libgit2 | JGit | patch-ng | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
+| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | 2/9, **4** | 1/9, **2** | 8/9, **1** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
+| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 1/20, **7** | 4/20, **6** | 16/20, **1** | 17/20 | 16/20, **1** | 6/20, **10** | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
+| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
+| carriage returns in content | **7/7** | **7/7** | **7/7** | 5/7 | 6/7 | 6/7 | **7/7** | **7/7** | 5/7, **1** | **7/7** | 1/7, **4** | **7/7** | **7/7** | 1/7, **3** |
+| spaces in file names | 20/21 | 20/21 | 16/21 | 13/21, **5** | 16/21, **4** | 13/21, **2** | 15/21 | 19/21, **1** | 12/21, **1** | **17/17** | **17/17** | **17/17** | **17/17** | **17/17** |
+| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **2** | 16/19, **1** | 0/19, **2** | 17/19, **2** | 15/19, **1** | 0/19, **1** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
+| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **4** | 3/10, **4** | 3/10, **2** | 5/10 | **10/10** | 3/10 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| renames | **16/16** | **16/16** | 13/16, **1** | 1/16, **10** | 2/16, **9** | 2/16, **4** | 14/16 | 14/16 | 7/16, **4** | **7/7** | **7/7** | **7/7** | **7/7** | **7/7** |
+| copies | **3/3** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 1/3, **2** | **3/3** | 0/3, **2** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
+| mode changes | 9/10 | 9/10 | 8/10 | 0/10, **9** | 1/10, **8** | 1/10, **3** | 8/10 | **10/10** | 4/10 | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
+| empty files | **8/8** | **8/8** | 7/8 | 1/8, **5** | 2/8, **6** | 2/8, **2** | 4/8 | **8/8** | 1/8, **2** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
+| binary patches | **3/3** | **3/3** | 0/3 | 0/3, **3** | 0/3, **3** | 0/3 | **3/3** | **3/3** | 0/3 | – | – | **3/3** | **3/3** | – |
+| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **1** | 2/6, **2** | 0/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
 
 ## Per program
 
@@ -318,6 +321,54 @@ toybox patch 0.8.15 · C · <https://landley.net/toybox/>
 | exit N: patch: new FILE: No such file or directory | 1 | `git/paths/rename-with-spaces` |
 | exit N: patch: bin/FILE: No such file or directory | 1 | `git/ops/rename-edit-and-mode-change` |
 | exit N: patch: odd: No such file or directory | 1 | `git/ops/symlink-with-odd-target` |
+
+### bsd-patch
+
+BSD patch 2.0-12u11 FreeBSD · C · <https://cgit.freebsd.org/src/tree/usr.bin/patch>
+
+- Under test: `patch -pN -f -s -E -V none -i FILE` — on a directory
+- -f: never ask. -s: print only what went wrong. -E: remove a file that is empty after patching; without it a file the patch deletes is left as an empty file, and the ports framework of FreeBSD passes it too (Mk/bsd.port.mk, PATCH_ARGS). -V none: no FILE.orig next to every patched file (made unless --posix is given), so that only what patch did to the files themselves is compared. Rejects (.rej) are left where patch puts them.
+
+140 of 208 patches are applied correctly.
+
+**Wrong without an error (21):**
+
+| vector | what is in the directory afterwards |
+| --- | --- |
+| `git/ranges/emptied-file` | "notes.txt" does not exist |
+| `git/bytes/nul-with-text-option` | "rec.dat": 7 bytes, expected 14; first difference at byte 3 (line 1): expected "key\x00VALUE\nend\n", got "keyend\n" |
+| `git/paths/two-names-one-quoted` | "we\tird.txt" does not exist (and 1 more difference) |
+| `git/paths/rename-with-spaces` | "new name.txt" does not exist (and 1 more difference) |
+| `git/paths/quoted-name-with-space-added` | "Übersicht 2024.txt" does not exist (and 1 more difference) |
+| `git/ops/rename-and-edit` | "new.txt" does not exist (and 1 more difference) |
+| `git/ops/rename-edit-and-mode-change` | "bin/script.sh" does not exist (and 1 more difference) |
+| `git/ops/copy-and-edit` | "template.txt": 89 bytes, expected 87; first difference at byte 12 (line 2): expected "line 1\nline 2\nline 3\nline 4\nline 5\nl", got "line 1\nline two\nline 3\nline 4\nline 5" (and 1 more difference) |
+| `git/ops/mode-change-and-edit` | "run.sh" has mode 100644, expected 100755 |
+| `git/ops/new-executable` | "tool" has mode 100644, expected 100755 |
+| `git/ops/empty-files-between-others` | "d.empty" does not exist (and 1 more difference) |
+| `git/ops/symlink-added` | "latest" is a file, expected a symbolic link |
+| `git/ops/file-becomes-symlink` | "config" is a file, expected a symbolic link |
+| `git-wrapped/summary-and-patch` | "new name.txt" does not exist (and 2 more differences) |
+| `git-config/noprefix/option` | "tool.sh" has mode 100644, expected 100755 (and 2 more differences) |
+| `git-config/noprefix/config` | "tool.sh" has mode 100644, expected 100755 (and 2 more differences) |
+| `git-config/mnemonic/commit-and-index` | "tool.sh" has mode 100644, expected 100755 (and 2 more differences) |
+| `git-config/mnemonic/index-and-worktree` | "tool.sh" has mode 100644, expected 100755 |
+| `git-config/prefix/custom` | "tool.sh" has mode 100644, expected 100755 (and 2 more differences) |
+| `git-config/prefix/pinned-despite-config` | "tool.sh" has mode 100644, expected 100755 (and 2 more differences) |
+| `git-config/prefix/default-prefix-option` | "tool.sh" has mode 100644, expected 100755 (and 2 more differences) |
+
+**Left half-done (24):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| exit N: No file to patch.  Skipping... | 24 | `git/newline/symlink-target-changed` |
+
+**Refused (23):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| exit N: I can't seem to find a patch in there anywhere. | 22 | `git/paths/pure-rename-with-spaces` |
+| exit N: No file to patch.  Skipping... | 1 | `git/paths/cjk-quoted` |
 
 ### libgit2
 

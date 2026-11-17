@@ -108,6 +108,8 @@ jobs:
           java-version: '21'
       - name: Java parsers
         run: adapters/java/build.sh
+      - name: BSD patch, built from the pinned FreeBSD sources
+        run: adapters/bsd-patch/build.sh
       - name: Run every parser over every vector
         run: node src/run.js
       # git, patch, busybox and toybox are whatever this machine has, so

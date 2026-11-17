@@ -1,7 +1,7 @@
 # Findings
 
 What the corpus showed when it was first run, on 16 and 17 November 2026,
-against the latest release of twenty-five parsers, and against twelve programs
+against the latest release of twenty-five parsers, and against thirteen programs
 that apply patches. The numbers are in [`RESULTS.md`](RESULTS.md) and
 [`APPLY.md`](APPLY.md); this file explains them, one kind of problem at a
 time, and records what was already known to the projects.
@@ -39,7 +39,7 @@ Vector ids below (`git/paths/space`) are files under `corpus/vectors/`.
 | 10 | binary files are not recognised | gitdiff-parser, jsdiff, git-diff-view, parse-git-diff, patch-ng, patch and gitpatch (Rust), unidiff (Rust), diffparser (Java) |
 | 11 | names are damaged when the prefixes are not `a/` and `b/` | parse-diff, diff2html, unidiff, go-gitdiff |
 | 12 | a tool's result depends on the user's git configuration | gitleaks (not trufflehog) |
-| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, libgit2, JGit, patch-ng, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
+| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, libgit2, JGit, patch-ng, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
 
 No parser hung. Four programs end abnormally on valid input: the Rust crates
 patch and gitpatch panic (section 14), waigani/diffparser panics on GNU diffs,
@@ -374,14 +374,14 @@ second case, as `--no-color` closes the first.
 
 Sections 1 to 12 are about reading a diff. This one is about acting on it.
 208 of the vectors are patches in the plain sense — the vector records the tree
-before and the tree after — and twelve programs were asked to get from one to
+before and the tree after — and thirteen programs were asked to get from one to
 the other ([`APPLY.md`](APPLY.md) has every result; `node src/apply.js --adapter
 gnu-patch --show` repeats one). A program may refuse a patch. What matters here
 is the other outcome: it reports success, and a file is not what it should be.
 I reproduced the cases of `git apply`, GNU patch, BusyBox patch, toybox patch,
 libgit2, JGit and patch-ng by calling the program by hand, outside the harness;
 the go-gitdiff case is the one its own tracker describes. toybox patch and JGit
-were added a day later and have their own section, 15.
+were added a day later and have their own section, 15; BSD patch has section 16.
 
 **Zero context.** A hunk made with `-U0` that only inserts has an old range of
 length zero, `@@ -5,0 +6 @@`, and that range names the line *after which* the
@@ -601,6 +601,57 @@ patches are right, 27 are refused, 38 are wrong with exit status 0.
 Unlike BusyBox, toybox unquotes file names, so the patches for files with
 names outside ASCII apply. Upstream: nothing found in the GitHub issues of
 landley/toybox; I did not search the mailing list.
+
+## 16. BSD patch, the patch of FreeBSD and macOS
+
+Added on 17 November 2026. The `patch` of FreeBSD (`usr.bin/patch`, which came
+from OpenBSD) is also the `/usr/bin/patch` of macOS, where it calls itself
+`patch 2.0-12u11-Apple`. I built FreeBSD's current source (commit 5b95226 of
+17 November 2026) on Linux with `adapters/bsd-patch/build.sh`, which compiles
+the files unchanged; on a Mac the adapter takes the installed one. I have not
+run it on a Mac. It is called the way the ports framework of FreeBSD calls it,
+with `-E` (see the last point).
+
+140 of 208 patches are right, 23 are refused, 24 are refused after writing a
+reject file, and 21 are wrong with exit status 0. With the content of a file it
+does as well as GNU patch: the no-newline marker, zero-length ranges from
+`-U0`, content that looks like a header and carriage returns are all right.
+What goes wrong:
+
+- **A NUL byte ends the line, and the newline after it is lost.** `key\0VALUE`
+  in a hunk written by `git diff --text` comes out as `key`, and the next line
+  is joined to it: `key\0VALUE\nend\n` becomes `keyend\n`, with exit status 0
+  (`git/bytes/nul-with-text-option`). The same cut makes a line match a line of
+  the file that differs only after the NUL: a hunk that removes `a\0value` is
+  applied to a file containing `a\0OTHER` (GNU patch refuses it). The hunk
+  lines are copied with `strdup` and measured with `strlen` (`another_hunk()`
+  in `pch.c`), compared with `strncmp` and written with `fputs`. toybox patch
+  cuts at the NUL as well (section 15).
+- **git's extended headers are not read.** BSD patch makes no claim to read
+  them, but what it does instead is mostly silent. A rename or a copy with
+  changes is applied to the old name: for a copy, the *source* file gets the
+  change and no new file appears (`git/ops/copy-and-edit`). `new file mode
+  100755` and `old mode`/`new mode` are ignored. A symbolic link becomes a
+  regular file holding the target. A section without hunks — a pure rename, a
+  mode change, an empty file, a binary patch — is skipped: alone it gives "I
+  can't seem to find a patch in there anywhere", next to other sections it is
+  skipped without a word.
+- **Quoted names are not unquoted.** A change to `über.txt` is refused,
+  because there is no file `\303\274ber.txt"`, but a new file `Übersicht
+  2024.txt` is created as `\303\234bersicht 2024.txt"`, with exit status 0
+  (`git/paths/quoted-name-with-space-added`) — as by BusyBox patch, and by JGit
+  apart from the TAB (section 15).
+- **Removing a file needs `-E`, and `-E` removes too much.** Without it, a file
+  that the patch deletes is left behind, empty (11 patches); the ports
+  framework of FreeBSD passes `-E` (`PATCH_ARGS` in `Mk/bsd.port.mk`), and so
+  does the adapter. With it, a file that the patch empties but keeps is removed
+  as well (`git/ranges/emptied-file`). GNU patch tells the two apart by the
+  `deleted file mode` line and the `/dev/null` name.
+
+Upstream: FreeBSD's Bugzilla has nothing on NUL bytes or git's headers. The
+nearest are 238971 ("patch(1) modifies the wrong file", a mail made by
+`git format-patch` applied without `-p1`; closed for lack of feedback) and
+181272 (names with blanks; fixed in 2013).
 
 ## Smaller observations
 
