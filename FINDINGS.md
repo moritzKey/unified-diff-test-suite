@@ -218,7 +218,10 @@ both halves are the same path.
   these three cases. Two more headers stop it, not searched upstream: a binary
   notice whose names are quoted (`git/ops/binary-with-non-ascii-name`) and
   the `dissimilarity index` line of `git diff -B`
-  (`git/ops/rewrite-with-dissimilarity`).
+  (`git/ops/rewrite-with-dissimilarity`). Both binary notices are what libgit2
+  writes itself: `git_diff_to_buf()` of a change to `my logo.png` or
+  `größe.png` gives text that `git_diff_from_buffer()` refuses with `corrupt
+  git binary header`.
 - **unidiff 1.0.1** raises `Target without source` for a file below a
   directory named `a b` (`git/paths/space-then-b-slash`).
 - **git 2.43.0 itself** cannot read this back:
