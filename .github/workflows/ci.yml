@@ -1,0 +1,119 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # Mondays: has a new git on the runner changed what git writes?
+    - cron: '17 5 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  suite:
+    name: tests and corpus (Node.js ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22, 24, 26]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Tool versions
+        run: |
+          node --version
+          git --version
+          diff --version | head -n 1
+          python3 --version
+      - name: The suite's own tests
+        run: npm test
+      - name: Rebuild every vector with this machine's git and diff, and compare
+        run: node src/generate.js --check
+
+  portable:
+    name: corpus as checked out on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+      # Needs nothing but Python: parses all vectors with the reference parser,
+      # compares with the expectations and applies the hunks. Fails if a
+      # checkout has converted line endings in the test data.
+      - run: python reference/python/check_corpus.py
+
+  parsers:
+    name: every parser and applier; RESULTS.md is what the parsers produce
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: adapters/go/go.mod
+          cache-dependency-path: adapters/go/go.sum
+      - name: JavaScript parsers
+        run: npm ci --no-audit --no-fund
+        working-directory: adapters/node
+      - name: Python parsers
+        run: |
+          python -m venv adapters/python/.venv
+          adapters/python/.venv/bin/pip install --disable-pip-version-check -r adapters/python/requirements.txt
+      - name: Go parsers
+        run: go build -o bin/udts-go .
+        working-directory: adapters/go
+      - name: Rust parsers
+        run: cargo build --release --locked
+        working-directory: adapters/rust
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Java parsers
+        run: adapters/java/build.sh
+      - name: Run every parser over every vector
+        run: node src/run.js
+      # git, patch, busybox and toybox are whatever this machine has, so
+      # APPLY.md is produced and kept as an artifact, not compared. A tool that
+      # cannot be installed is skipped.
+      - name: Run every applier over every patch
+        run: |
+          for tool in busybox patch toybox; do
+            sudo apt-get install -y -qq --no-install-recommends "$tool" || true
+          done
+          node src/apply.js
+      - name: RESULTS.md is up to date
+        run: |
+          node src/report.js
+          git diff --exit-code -- RESULTS.md
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: results
+          path: |
+            RESULTS.md
+            APPLY.md
+            results/
