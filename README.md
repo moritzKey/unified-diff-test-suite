@@ -20,8 +20,8 @@ is full of traps. This repository contains
   the file tree before and after, and `git apply`, GNU patch, BusyBox patch,
   toybox patch, the BSD patch of FreeBSD and macOS, Bazel's native patch,
   Mercurial, Subversion, libgit2, JGit, Dulwich, the patching of
-  patch-package, pnpm, Yarn and Bun, nixpkgs' `fetchpatch` and `fetchpatch2`,
-  and
+  patch-package, pnpm, Yarn and Bun, rattler-build (conda packages), nixpkgs'
+  `fetchpatch` and `fetchpatch2`, and
   six libraries are asked to get from one to the other
   ([`APPLY.md`](APPLY.md));
 - **a description of the format** as the tools actually write it
@@ -157,6 +157,7 @@ one: it reported success and the files are not what they should be.
 | pnpm 11 (`@pnpm/patching.apply-patch`) | 180 | 134 | 32 | – | 14 |
 | Yarn 4 (`@yarnpkg/plugin-patch` 4.0.6) | 180 | 114 | 43 | – | 23 |
 | Bun 1.4.4 (`bun install`, `patchedDependencies`) | 176 | 140 | 30 | – | 6 |
+| rattler-build 0.80.2 (recipe `patches`) | 216 | 157 | 18 | – | 41 |
 | jsdiff 9.0.0 (`applyPatch`) | 189 | 189 | – | – | – |
 | whatthepatch 1.0.7 (`apply_diff`) | 189 | 177 | 6 | – | 6 |
 | go-gitdiff 0.9.0 (`Apply`) | 194 | 187 | 2 | – | 5 |
@@ -184,7 +185,9 @@ and turns a symbolic link into a file that its owner cannot read. When a patch
 adds a file whose name ends with a space, pnpm, Yarn, Bun and patch-ng write
 it over the file of the same name without the space. nixpkgs' `fetchpatch`
 drops the changes to `pages/[id].tsx` and to every file whose name git
-quotes, and the rest of the patch is applied.
+quotes, and the rest of the patch is applied. rattler-build, which builds
+conda packages, applies no mode change and turns a copy into a rename that
+deletes the file copied from.
 [`FINDINGS.md`](FINDINGS.md#13-applying) has the rest.
 
 ## Running it

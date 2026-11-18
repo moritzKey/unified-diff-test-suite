@@ -44,6 +44,7 @@ There are four ways this can end:
 | [pnpm](#pnpm) | 1100.0.12 | `applyPatchToDir({ patchFilePath, patchedDir })` | 180 | 134 | 32 | – | **14** | – |
 | [Yarn](#yarn) | 4.0.6 | `parsePatchFile() + applyPatchFile(), as PatchFetcher does` | 180 | 114 | 43 | – | **23** | – |
 | [Bun](#bun) | 1.4.4 | `bun install with "patchedDependencies" (src/patch: parse_patch_file() + PatchFile::apply())` | 176 | 140 | 30 | – | **6** | – |
+| [rattler-build](#rattler-build) | 0.80.2 | `rattler-build debug setup, with the diff as the only patch of a recipe whose source is the tree` | 216 | 157 | 18 | – | **41** | – |
 | [jsdiff](#jsdiff) | 9.0.0 | `applyPatch(source, patch)` | 189 | 189 | – | – | – | – |
 | [whatthepatch](#whatthepatch) | 1.0.7 | `apply_diff(diff, old_text)  with diff from parse_patch(text)` | 189 | 177 | 6 | – | **6** | – |
 | [go-gitdiff](#go-gitdiff) | v0.9.0 | `gitdiff.Parse, then gitdiff.Apply(dst, src, file)` | 194 | 187 | 2 | – | **5** | – |
@@ -75,6 +76,7 @@ What the wrong results are (a patch can show several):
 | pnpm | 14 | 11 | 1 | 4 | – | – |
 | Yarn | 23 | 14 | 1 | 5 | – | 7 |
 | Bun | 6 | 3 | 1 | 6 | – | – |
+| rattler-build | 41 | 10 | 8 | 7 | 3 | 20 |
 | whatthepatch | 6 | 6 | – | – | – | – |
 | go-gitdiff | 5 | 5 | – | – | – | – |
 | java-diff-utils | 5 | 5 | – | – | – | – |
@@ -104,6 +106,7 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 | pnpm | 130/174, **14 wrong** | – | 4/6 | – |
 | Yarn | 113/174, **21 wrong** | – | 1/6, **2 wrong** | – |
 | Bun | 135/170, **6 wrong** | – | 5/6 | – |
+| rattler-build | 130/174, **30 wrong** | 9/10, **1 wrong** | 7/18, **9 wrong** | 11/14, **1 wrong** |
 | jsdiff | 149/149 | 10/10 | 16/16 | 14/14 |
 | whatthepatch | 139/149, **5 wrong** | 10/10 | 16/16 | 12/14, **1 wrong** |
 | go-gitdiff | 147/153, **4 wrong** | 10/10 | 17/17 | 13/14, **1 wrong** |
@@ -114,22 +117,22 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 
 Vectors of the `git` tier, grouped by tag; a vector can carry several. "12/14, **1**" reads: 14 patches given, 12 applied correctly, 1 applied wrongly without an error.
 
-| trap | git apply | git apply --unidiff-zero | GNU patch | fetchpatch | fetchpatch2 | BusyBox patch | toybox patch | BSD patch | Bazel | libgit2 | JGit | patch-ng | Mercurial | Dulwich | Subversion | patch-package | pnpm | Yarn | Bun | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
-| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | **9/9** | **9/9** | 2/9, **4** | 1/9, **2** | 8/9, **1** | 5/9, **4** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | **9/9** | 4/9 | 5/9, **4** | 5/9, **4** | 3/9, **6** | **9/9** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
-| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 16/20, **1** | 19/20, **1** | 1/20, **7** | 4/20, **6** | 16/20, **1** | 4/20, **12** | 17/20 | 16/20, **1** | 6/20, **10** | 19/20 | 19/20 | 18/20, **2** | 16/20 | 16/20 | 15/20 | 16/17 | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
-| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | 3/6 | **6/6** | **6/6** | **6/6** | 5/6 | 3/6 | 3/6, **3** | **6/6** | **6/6** | 3/6 | **6/6** | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
-| carriage returns in content | **9/9** | **9/9** | **9/9** | 7/9 | 7/9 | 6/9, **1** | 7/9, **1** | 7/9 | 1/9, **4** | **9/9** | 7/9, **2** | 7/9, **1** | 7/9 | 6/9 | 5/9, **3** | 8/9 | 8/9 | 2/9, **3** | 8/9 | **8/8** | 1/8, **5** | **8/8** | **8/8** | 1/8, **4** |
-| spaces in file names | 22/23 | 22/23 | 16/23, **1** | 12/23, **2** | 13/23, **1** | 14/23, **6** | 17/23, **5** | 14/23, **2** | 13/23, **2** | 15/23 | 21/23, **1** | 12/23, **2** | 14/23, **2** | **23/23** | 20/23, **1** | 15/23, **2** | 16/23, **2** | 14/23, **4** | 16/23, **2** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
-| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **3** | 2/19, **1** | 0/19, **2** | 16/19, **1** | 0/19, **2** | 0/19, **2** | 17/19, **2** | 15/19, **1** | 0/19, **1** | 0/19, **3** | **19/19** | 0/19, **2** | 0/19 | 0/19 | 0/19 | 0/19 | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
-| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **3** | 6/10 | 3/10, **4** | 3/10, **4** | 3/10, **2** | 4/10, **1** | 5/10 | **10/10** | 3/10 | 5/10, **1** | **10/10** | 8/10 | 7/10 | 8/10 | 6/10, **2** | 8/10 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
-| renames | **20/20** | **20/20** | 16/20, **1** | 2/20, **7** | 8/20, **1** | 1/20, **13** | 2/20, **12** | 2/20, **6** | 12/20, **3** | 17/20, **1** | 15/20, **2** | 10/20, **5** | 15/20, **1** | 14/20, **2** | 10/20, **3** | 9/20, **3** | 14/20, **3** | 10/20, **3** | 14/20, **3** | **9/9** | **9/9** | **9/9** | **9/9** | **9/9** |
-| copies | **3/3** | **3/3** | **3/3** | 0/3, **1** | 1/3 | 0/3, **2** | 0/3, **2** | 0/3, **1** | 0/3, **3** | 1/3, **2** | **3/3** | 0/3, **2** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 0/3, **2** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
-| mode changes | 11/12 | 11/12 | 10/12 | 1/12, **4** | 4/12, **1** | 0/12, **10** | 1/12, **9** | 1/12, **4** | 9/12 | 9/12, **1** | 11/12, **1** | 6/12 | 11/12, **1** | 11/12, **1** | 9/12, **3** | 8/12 | 11/12 | 4/12, **5** | 11/12 | **5/5** | **5/5** | **5/5** | **5/5** | **5/5** |
-| empty files | **9/9** | **9/9** | 7/9, **1** | 3/9, **1** | 3/9, **1** | 1/9, **6** | 2/9, **7** | 2/9, **2** | 4/9, **1** | 4/9 | **9/9** | 1/9, **2** | 8/9, **1** | 8/9 | 8/9 | 8/9, **1** | 8/9, **1** | 6/9, **2** | 8/9, **1** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
-| binary patches | **3/3** | **3/3** | 0/3 | 0/3 | 0/3 | 0/3, **3** | 0/3, **3** | 0/3 | 0/3, **2** | **3/3** | **3/3** | 0/3 | **3/3** | **3/3** | 2/3, **1** | 0/3, **3** | 0/3, **3** | 0/3, **1** | 0/3 | – | – | **3/3** | **3/3** | – |
-| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **2** | 3/6, **1** | 0/6, **1** | 2/6, **2** | 0/6, **2** | 0/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | **6/6** | 5/6, **1** | 0/6 | 0/6 | 0/6 | 0/2 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| trap | git apply | git apply --unidiff-zero | GNU patch | fetchpatch | fetchpatch2 | BusyBox patch | toybox patch | BSD patch | Bazel | libgit2 | JGit | patch-ng | Mercurial | Dulwich | Subversion | patch-package | pnpm | Yarn | Bun | rattler-build | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
+| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | **9/9** | **9/9** | 2/9, **4** | 1/9, **2** | 8/9, **1** | 5/9, **4** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | **9/9** | 4/9 | 5/9, **4** | 5/9, **4** | 3/9, **6** | **9/9** | **9/9** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
+| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 16/20, **1** | 19/20, **1** | 1/20, **7** | 4/20, **6** | 16/20, **1** | 4/20, **12** | 17/20 | 16/20, **1** | 6/20, **10** | 19/20 | 19/20 | 18/20, **2** | 16/20 | 16/20 | 15/20 | 16/17 | 15/20, **3** | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
+| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | 3/6 | **6/6** | **6/6** | **6/6** | 5/6 | 3/6 | 3/6, **3** | **6/6** | **6/6** | 3/6 | **6/6** | 5/6, **1** | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
+| carriage returns in content | **9/9** | **9/9** | **9/9** | 7/9 | 7/9 | 6/9, **1** | 7/9, **1** | 7/9 | 1/9, **4** | **9/9** | 7/9, **2** | 7/9, **1** | 7/9 | 6/9 | 5/9, **3** | 8/9 | 8/9 | 2/9, **3** | 8/9 | 7/9, **2** | **8/8** | 1/8, **5** | **8/8** | **8/8** | 1/8, **4** |
+| spaces in file names | 22/23 | 22/23 | 16/23, **1** | 12/23, **2** | 13/23, **1** | 14/23, **6** | 17/23, **5** | 14/23, **2** | 13/23, **2** | 15/23 | 21/23, **1** | 12/23, **2** | 14/23, **2** | **23/23** | 20/23, **1** | 15/23, **2** | 16/23, **2** | 14/23, **4** | 16/23, **2** | 16/23, **3** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
+| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **3** | 2/19, **1** | 0/19, **2** | 16/19, **1** | 0/19, **2** | 0/19, **2** | 17/19, **2** | 15/19, **1** | 0/19, **1** | 0/19, **3** | **19/19** | 0/19, **2** | 0/19 | 0/19 | 0/19 | 0/19 | 7/19, **3** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
+| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **3** | 6/10 | 3/10, **4** | 3/10, **4** | 3/10, **2** | 4/10, **1** | 5/10 | **10/10** | 3/10 | 5/10, **1** | **10/10** | 8/10 | 7/10 | 8/10 | 6/10, **2** | 8/10 | 6/10, **4** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| renames | **20/20** | **20/20** | 16/20, **1** | 2/20, **7** | 8/20, **1** | 1/20, **13** | 2/20, **12** | 2/20, **6** | 12/20, **3** | 17/20, **1** | 15/20, **2** | 10/20, **5** | 15/20, **1** | 14/20, **2** | 10/20, **3** | 9/20, **3** | 14/20, **3** | 10/20, **3** | 14/20, **3** | 10/20, **9** | **9/9** | **9/9** | **9/9** | **9/9** | **9/9** |
+| copies | **3/3** | **3/3** | **3/3** | 0/3, **1** | 1/3 | 0/3, **2** | 0/3, **2** | 0/3, **1** | 0/3, **3** | 1/3, **2** | **3/3** | 0/3, **2** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 0/3, **2** | 0/3, **3** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
+| mode changes | 11/12 | 11/12 | 10/12 | 1/12, **4** | 4/12, **1** | 0/12, **10** | 1/12, **9** | 1/12, **4** | 9/12 | 9/12, **1** | 11/12, **1** | 6/12 | 11/12, **1** | 11/12, **1** | 9/12, **3** | 8/12 | 11/12 | 4/12, **5** | 11/12 | 1/12, **11** | **5/5** | **5/5** | **5/5** | **5/5** | **5/5** |
+| empty files | **9/9** | **9/9** | 7/9, **1** | 3/9, **1** | 3/9, **1** | 1/9, **6** | 2/9, **7** | 2/9, **2** | 4/9, **1** | 4/9 | **9/9** | 1/9, **2** | 8/9, **1** | 8/9 | 8/9 | 8/9, **1** | 8/9, **1** | 6/9, **2** | 8/9, **1** | 7/9, **2** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
+| binary patches | **3/3** | **3/3** | 0/3 | 0/3 | 0/3 | 0/3, **3** | 0/3, **3** | 0/3 | 0/3, **2** | **3/3** | **3/3** | 0/3 | **3/3** | **3/3** | 2/3, **1** | 0/3, **3** | 0/3, **3** | 0/3, **1** | 0/3 | 0/3, **3** | – | – | **3/3** | **3/3** | – |
+| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **2** | 3/6, **1** | 0/6, **1** | 2/6, **2** | 0/6, **2** | 0/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | **6/6** | 5/6, **1** | 0/6 | 0/6 | 0/6 | 0/2 | 0/6, **4** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
 
 ## Per program
 
@@ -1035,6 +1038,69 @@ Bun 1.4.4 · Rust · <https://bun.com/docs/pm/cli/patch>
 | error: failed to parse patchfile: bad_file_mode / error: failed to apply patchfile (patches/FILE) | 2 | `git/ops/symlink-added` |
 | error: failed applying patch file: EISDIR: thing: Is a directory (open()) / error: failed to apply patchfile (patches/FI | 1 | `git/ops/directory-becomes-file` |
 | error: failed applying patch file: EISDIR: FILE: Is a directory (rename()) / error: failed to apply patchfile (patches/F | 1 | `git/ops/rename-onto-directory-name` |
+
+### rattler-build
+
+rattler-build 0.80.2 · Rust · <https://github.com/prefix-dev/rattler-build>
+
+- Under test: `rattler-build debug setup, with the diff as the only patch of a recipe whose source is the tree` — on a directory
+- The patches of a recipe are applied by apply_patch_custom() (crates/rattler_build_core/src/source/patch.rs), on top of the flickzeug crate: fuzzy (max_fuzz 2, whitespace ignored), with a guessed strip level and a check for patches that are already applied. The adapter runs `rattler-build debug setup` on a recipe whose source is the tree and reads back the work directory, without the three files rattler-build writes there itself.
+
+157 of 216 patches are applied correctly.
+
+**Wrong without an error (41):**
+
+| vector | what is in the directory afterwards |
+| --- | --- |
+| `git/bytes/lf-to-crlf` | "conv.txt": 8 bytes, expected 10; first difference at byte 3 (line 1): expected "one\r\ntwo\r\n", got "one\ntwo\n" |
+| `git/bytes/classic-mac-file` | "old-mac.txt": 13 bytes, expected 14; first difference at byte 13 (line 1): expected "ne\rTWO\rthree\r", got "ne\rTWO\rthree" |
+| `git/paths/trailing-space-added` | "notes.txt": 4 bytes, expected 8; first difference at byte 0 (line 1): expected "keep me\n", got "new\n" (and 1 more difference) |
+| `git/paths/two-names-one-quoted` | "we\tird.txt" does not exist (and 1 more difference) |
+| `git/paths/two-names-first-quoted` | "plain.txt" does not exist |
+| `git/paths/mode-change-with-space` | "run me.sh" has mode 100644, expected 100755 |
+| `git/paths/mode-change-quoted` | "prüfen.sh" has mode 100644, expected 100755 (and 1 more difference) |
+| `git/paths/directory-ending-in-space-mode-change` | "dir /run.sh" has mode 100644, expected 100755 |
+| `git/ops/rename-and-mode-change` | "bin/script.sh" has mode 100644, expected 100755 |
+| `git/ops/rename-edit-and-mode-change` | "bin/script.sh" has mode 100644, expected 100755 |
+| `git/ops/rename-executable` | "make.sh" has mode 100644, expected 100755 |
+| `git/ops/rename-and-edit-executable` | "make.sh" has mode 100644, expected 100755 |
+| `git/ops/swap-two-files-break-rewrites` | "left.txt" does not exist (and 1 more difference) |
+| `git/ops/rename-chain` | "one.txt" does not exist (and 1 more difference) |
+| `git/ops/copy-pure` | "template.txt" does not exist |
+| `git/ops/copy-and-edit` | "template.txt" does not exist |
+| `git/ops/copy-and-rename-same-source` | "second.txt": 0 bytes, expected 87; first difference at byte 0 (line 1): expected "line 1\nline 2\nline 3\nlin", got "" |
+| `git/ops/mode-change-only` | "run.sh" has mode 100644, expected 100755 |
+| `git/ops/mode-change-and-edit` | "run.sh" has mode 100644, expected 100755 |
+| `git/ops/mode-removed` | "run.sh" has mode 100755, expected 100644 |
+| `git/ops/new-executable` | "tool" has mode 100644, expected 100755 |
+| `git/ops/empty-file-deleted` | ".gitkeep" exists and should not |
+| `git/ops/empty-files-between-others` | "b.empty" exists and should not |
+| `git/ops/symlink-added` | "latest" is a file, expected a symbolic link |
+| `git/ops/symlink-deleted` | "latest" exists and should not |
+| `git/ops/file-becomes-symlink` | "config" is a file, expected a symbolic link |
+| `git/ops/symlink-becomes-file` | "config" is a symbolic link, expected a file (and 1 more difference) |
+| `git/ops/binary-patch-literal` | "logo.png": 108 bytes, expected 108; first difference at byte 13 (line 3): expected "PNG\r\n\x1a\n\x00\x00\x00\r\x07\x0c\x11\x16\x1b %*/49>CHMRW\…", got "PNG\r\n\x1a\n\x00\x00\x00\r\x07\n\r\x10\x13\x16\x19\x1c\x1f"…" |
+| `git/ops/binary-patch-delta` | "blob.bin": 4004 bytes, expected 4004; first difference at byte 2004 (line 9): expected "\xb4\xd3\xf2\x111Po\x8e\xad\xcc\xeb\x0a\x01Ih\x87\xa6\xc5\xe…", got "\xb4\xd3\xf2\x111Po\x8e\xad\xcc\xeb\x0a*Ih\x87\xa6\xc5\xe4\x…" |
+| `git/ops/binary-patch-added-and-deleted` | "new.bin": 0 bytes, expected 108; first difference at byte 0 (line 1): expected "\x89PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x07\x0e\x15\x1c#*18?…", got "" (and 1 more difference) |
+| `git-wrapped/summary-and-patch` | "tool" has mode 100644, expected 100755 |
+| `git-config/noprefix/option` | "tool.sh" has mode 100644, expected 100755 |
+| `git-config/noprefix/config` | "tool.sh" has mode 100644, expected 100755 |
+| `git-config/mnemonic/commit-and-index` | "tool.sh" has mode 100644, expected 100755 |
+| `git-config/mnemonic/index-and-worktree` | "tool.sh" has mode 100644, expected 100755 |
+| `git-config/prefix/custom` | "tool.sh" has mode 100644, expected 100755 |
+| `git-config/prefix/pinned-despite-config` | "tool.sh" has mode 100644, expected 100755 |
+| `git-config/prefix/default-prefix-option` | "tool.sh" has mode 100644, expected 100755 |
+| `git-config/quotepath/off-rename-and-mode` | "süß.sh" has mode 100644, expected 100755 |
+| `git-config/quotepath/off-latin1-name` | "caf\xe9.txt": 4 bytes, expected 4; first difference at byte 0 (line 1): expected "new\n", got "old\n" |
+| `gnu/new-and-deleted-files` | "gone.txt" exists and should not |
+
+**Refused (18):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| Error:   × Failed to parse patch: /home/moritz/.tN-firma/scratch/N-N-N-ok-ich- | 12 | `git/paths/non-ascii-quoted` |
+| Error:   × Patch application error: error applying hunk #N: could not find context in | 4 | `git/newline/symlink-target-changed` |
+| Error:   × IO Error: failed to create file FILE | 2 | `git/ops/directory-becomes-file` |
 
 ### jsdiff
 

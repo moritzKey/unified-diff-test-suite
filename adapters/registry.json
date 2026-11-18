@@ -264,6 +264,11 @@
       "cmd": ["node", "run.mjs", "apply:bun"]
     },
     {
+      "name": "rattler-build",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:rattler-build"]
+    },
+    {
       "name": "jsdiff",
       "cwd": "node",
       "cmd": ["node", "run.mjs", "apply:jsdiff"]

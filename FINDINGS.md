@@ -1,7 +1,7 @@
 # Findings
 
 What the corpus showed when it was first run, on 16 and 17 November 2026,
-against the latest release of twenty-six parsers, against twenty-one programs
+against the latest release of twenty-six parsers, against twenty-two programs
 that apply patches, and against the patch normalization of nixpkgs. The numbers are in [`RESULTS.md`](RESULTS.md) and
 [`APPLY.md`](APPLY.md); this file explains them, one kind of problem at a
 time, and records what was already known to the projects.
@@ -39,7 +39,7 @@ Vector ids below (`git/paths/space`) are files under `corpus/vectors/`.
 | 10 | binary files are not recognised | gitdiff-parser, jsdiff, git-diff-view, parse-git-diff, patch-ng, patch and gitpatch (Rust), unidiff (Rust), diffparser (Java) |
 | 11 | names are damaged when the prefixes are not `a/` and `b/` | parse-diff, diff2html, unidiff, go-gitdiff |
 | 12 | a tool's result depends on the user's git configuration | gitleaks (not trufflehog) |
-| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, Bazel, libgit2, JGit, Mercurial, Subversion, Dulwich, patch-ng, patch-package, pnpm, Yarn, Bun, nixpkgs' fetchpatch, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
+| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, Bazel, libgit2, JGit, Mercurial, Subversion, Dulwich, patch-ng, patch-package, pnpm, Yarn, Bun, rattler-build, nixpkgs' fetchpatch, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
 
 No parser hung. Four programs end abnormally on valid input: the Rust crates
 patch and gitpatch panic (section 14), waigani/diffparser panics on GNU diffs,
@@ -377,7 +377,7 @@ second case, as `--no-color` closes the first.
 
 Sections 1 to 12 are about reading a diff. This one is about acting on it.
 216 of the vectors are patches in the plain sense — the vector records the tree
-before and the tree after — and twenty-one programs were asked to get from one to
+before and the tree after — and twenty-two programs were asked to get from one to
 the other ([`APPLY.md`](APPLY.md) has every result; `node src/apply.js --adapter
 gnu-patch --show` repeats one). A program may refuse a patch. What matters here
 is the other outcome: it reports success, and a file is not what it should be.
@@ -386,9 +386,9 @@ libgit2, JGit and patch-ng by calling the program by hand, outside the harness;
 the go-gitdiff case is the one its own tracker describes. toybox patch and JGit
 were added a day later and have their own section, 15; BSD patch and Mercurial
 have sections 16 and 17, patch-package, pnpm, Yarn and Bun section 18, Bazel
-section 19, Subversion section 20, and Dulwich section 21. Section 22 is about
-nixpkgs' `fetchpatch` and `fetchpatch2`, which change a patch before GNU patch
-applies it.
+section 19, Subversion section 20, Dulwich section 21, and rattler-build
+section 23. Section 22 is about nixpkgs' `fetchpatch` and `fetchpatch2`, which
+change a patch before GNU patch applies it.
 
 **Zero context.** A hunk made with `-U0` that only inserts has an old range of
 length zero, `@@ -5,0 +6 @@`, and that range names the line *after which* the
@@ -1140,6 +1140,52 @@ every patch that it now writes differently, which is why nixpkgs keeps the old
 `fetchpatch` and added `fetchpatch2` beside it. The escaping only changes
 patches that touch such names, and for those the current hash is the hash of
 an incomplete patch.
+
+## 23. rattler-build
+
+Added on 18 November 2026. rattler-build builds conda packages from recipes,
+and conda-forge is moving its recipes to it. It applies the `patches` of a
+recipe with its own code, `apply_patch_custom()`
+(`crates/rattler_build_core/src/source/patch.rs`), on top of the flickzeug
+crate, a fork of diffy. It matches fuzzily (two lines of fuzz, whitespace
+ignored), guesses the strip level from the files that exist, and skips a patch
+that looks applied already. The adapter writes a recipe whose source is the
+tree and whose only patch is the diff, and runs `rattler-build debug setup`.
+That command applies the patches as `rattler-build build` does (both call
+`apply_patch_custom()`) and then stops. It copies every old tree of the corpus
+unchanged. Of 216 patches, version 0.80.2 gets 157 right, refuses 18, and
+applies 41 wrongly without an error:
+
+- **No mode change is applied** (20 vectors). `old mode`/`new mode` lines and
+  the mode of a new file are ignored, so a script that a patch adds or makes
+  executable stays non-executable.
+- **A copy is applied as a rename**: the file copied from is deleted
+  (`git/ops/copy-pure`, `git/ops/copy-and-edit`).
+- **GIT binary patches are skipped**: the file stays as it was, a new binary
+  file is created empty, and a deleted one stays (3 vectors).
+- **Symbolic links.** A new link becomes a regular file holding its target. A
+  link whose target does not exist is not deleted, because `Path::exists()`
+  follows the link, and a file that replaces it is written through it
+  (`git/ops/symlink-becomes-file` creates `config.default`). An empty file that
+  a patch deletes stays too, since its section has no hunks.
+- **Line endings are kept from the old file** (`LineEndHandling::KeepOriginal`).
+  A patch that converts a file from LF to CR LF has no effect
+  (`git/bytes/lf-to-crlf`), and a file with CR line endings loses its last CR.
+- A file that a GNU diff deletes (dated 1970-01-01, without `/dev/null`) is left
+  empty. Quoted names are not decoded: most such patches fail to parse, but in
+  two a section is lost or a file is created under a name with its prefix. Swaps
+  and rotations of names lose a file, and a new file whose name ends with a
+  space is written over the file without it (section 13).
+
+One `git diff -C --find-copies-harder` shows the first, second and fourth point
+in a real `rattler-build debug setup`: after `chmod +x configure`, a new
+executable `build.sh`, `cp template.cfg site.cfg` and `ln -s template.cfg
+default.cfg`, the work directory has `build.sh` and `configure` without the
+execute bit, `default.cfg` as a regular file, and no `template.cfg`.
+
+Upstream: rattler-build's tracker has nothing on modes, copies or binary
+patches. The patch code is actively worked on: #2693 (a patch that only deletes
+lines was taken as applied already) was fixed by #2695.
 
 ## Smaller observations
 
