@@ -13,7 +13,7 @@ is full of traps. This repository contains
   chosen changes, each with the parse it must produce, in plain JSON that any
   language can read ([`corpus/`](corpus/README.md));
 - **a harness** that runs any parser against them through a small adapter, and
-  adapters for twenty-five widely used libraries in JavaScript, Python, Go,
+  adapters for twenty-six widely used libraries in JavaScript, Python, Go,
   Rust, Java and C
   ([`RESULTS.md`](RESULTS.md), [`FINDINGS.md`](FINDINGS.md));
 - **the same for programs that apply patches**: 214 of the vectors come with

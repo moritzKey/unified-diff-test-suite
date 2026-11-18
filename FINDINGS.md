@@ -1,7 +1,7 @@
 # Findings
 
 What the corpus showed when it was first run, on 16 and 17 November 2026,
-against the latest release of twenty-five parsers, and against twenty-one programs
+against the latest release of twenty-six parsers, and against twenty-one programs
 that apply patches. The numbers are in [`RESULTS.md`](RESULTS.md) and
 [`APPLY.md`](APPLY.md); this file explains them, one kind of problem at a
 time, and records what was already known to the projects.
@@ -59,7 +59,7 @@ diff --git "a/\303\274ber.txt" "b/\303\274ber.txt"
 +++ "b/\303\274ber.txt"
 ```
 
-That is `über.txt`. Thirteen of the twenty-five libraries return the escaped
+That is `über.txt`. Thirteen of the twenty-six libraries return the escaped
 text instead of the name, and two more decode only part of it
 (`git/paths/non-ascii-quoted` and the other vectors tagged `quoted-path`). For
 the JavaScript and Python libraries among them:
@@ -139,7 +139,7 @@ lookahead ([#54](https://github.com/sourcegraph/go-diff/issues/54),
 case.
 
 Everywhere else this, the classic diff-parsing mistake, has become rare:
-eighteen of the twenty-five libraries get all fourteen vectors of this kind
+nineteen of the twenty-six libraries get all fourteen vectors of this kind
 right. (Two Rust crates panic on them, and a Java library attaches the header
 of the next file to the hunk before it; see section 14.)
 
@@ -1048,6 +1048,14 @@ gets 187 right, refuses 25, and applies 2 wrongly without an error:
   `splitlines()` also ends a line at CR. A swap or rotation of names is
   refused ("already exists in working directory").
 
+As a parser, `patch.parse_unified_diff()` agrees with git on all 208 vectors
+of the `git` and `git-config` tiers. A rename or copy without `---`/`+++`
+lines has `None` for both paths and keeps the names, without prefixes, in
+`rename_from`/`rename_to` (or `copy_from`/`copy_to`); the adapter reports
+those. Given a `git format-patch` mail, which is outside its scope, it reads
+the signature as part of the last hunk, which is why `apply_patch` refuses
+such mails.
+
 Upstream: not found in Dulwich's issues.
 
 ## Smaller observations
@@ -1066,8 +1074,11 @@ Upstream: not found in Dulwich's issues.
 
 ## What held up
 
-- Eighteen of the twenty-five libraries get every "content that looks like a
+- Nineteen of the twenty-six libraries get every "content that looks like a
   header" vector right; counting the lines of a hunk has become the norm.
+- Dulwich's parser (`patch.parse_unified_diff`, added later) agreed with git on
+  all 208 vectors in its scope (`git` and `git-config`), quoted names, binary
+  patches, modes and names with spaces included.
 - diffy 0.5.2 differs from git on two of 225 vectors as a parser and on none
   of 192 as an applier.
 - GitPython, which only reads file headers and always asks git for one fixed

@@ -79,6 +79,11 @@
       "flavor": "full-index"
     },
     {
+      "name": "dulwich",
+      "cwd": "python",
+      "cmd": [".venv/bin/python", "run.py", "dulwich"]
+    },
+    {
       "name": "go-gitdiff",
       "cwd": "go",
       "cmd": ["./bin/udts-go", "go-gitdiff"]
