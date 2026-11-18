@@ -20,8 +20,8 @@ is full of traps. This repository contains
   the file tree before and after, and `git apply`, GNU patch, BusyBox patch,
   toybox patch, the BSD patch of FreeBSD and macOS, Bazel's native patch,
   Mercurial, Subversion, libgit2, JGit, Dulwich, the patching of
-  patch-package, pnpm, Yarn and Bun, rattler-build (conda packages), nixpkgs'
-  `fetchpatch` and `fetchpatch2`, and
+  patch-package, pnpm, Yarn and Bun, rattler-build (conda packages), Debian's
+  `dpkg-source`, nixpkgs' `fetchpatch` and `fetchpatch2`, and
   six libraries are asked to get from one to the other
   ([`APPLY.md`](APPLY.md));
 - **a description of the format** as the tools actually write it
@@ -143,6 +143,7 @@ one: it reported success and the files are not what they should be.
 | GNU patch 2.7.6 | 216 | 199 | 8 | 7 | 2 |
 | nixpkgs `fetchpatch` (patchutils 0.3.3), then GNU patch | 203 | 134 | 45 | 6 | 18 |
 | nixpkgs `fetchpatch2` (patchutils 0.4.2), then GNU patch | 203 | 145 | 45 | 4 | 9 |
+| Debian `dpkg-source` 1.22.6 (3.0 quilt) | 203 | 157 | 38 | 3 | 5 |
 | BusyBox patch 1.36.1 | 216 | 106 | 48 | 10 | 52 |
 | toybox patch 0.8.15 | 216 | 138 | 29 | 7 | 42 |
 | BSD patch (FreeBSD, = macOS) | 216 | 142 | 27 | 24 | 23 |

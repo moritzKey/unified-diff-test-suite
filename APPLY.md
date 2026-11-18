@@ -30,6 +30,7 @@ There are four ways this can end:
 | [GNU patch](#gnu-patch) | 2.7.6 | `patch -pN -f --no-backup-if-mismatch -i FILE` | 216 | 199 | 8 | 7 | **2** | – |
 | [fetchpatch](#nix-fetchpatch) | patchutils 0.3.3, nixpkgs 317fbe5e1a | `the postFetch of fetchpatch with its defaults (stripLen 0), then patch -p1 -f --no-backup-if-mismatch` | 203 | 134 | 45 | 6 | **18** | – |
 | [fetchpatch2](#nix-fetchpatch2) | patchutils 0.4.2, nixpkgs 317fbe5e1a | `the postFetch of fetchpatch2 with its defaults (stripLen 0), then patch -p1 -f --no-backup-if-mismatch` | 203 | 145 | 45 | 4 | **9** | – |
+| [dpkg-source (3.0 quilt)](#dpkg-source) | dpkg 1.22.6 | `Dpkg::Source::Patch->apply() with the options of Dpkg::Source::Quilt->push()` | 203 | 157 | 38 | 3 | **5** | – |
 | [BusyBox patch](#busybox-patch) | 1.36.1 | `busybox patch -pN -i FILE` | 216 | 106 | 48 | 10 | **52** | – |
 | [toybox patch](#toybox-patch) | 0.8.15 | `toybox patch -pN -i FILE` | 216 | 138 | 29 | 7 | **42** | – |
 | [BSD patch](#bsd-patch) | 2.0-12u11 FreeBSD | `patch -pN -f -s -E -V none -i FILE` | 216 | 142 | 27 | 24 | **23** | – |
@@ -62,6 +63,7 @@ What the wrong results are (a patch can show several):
 | GNU patch | 2 | 1 | 1 | 1 | – | – |
 | fetchpatch | 18 | 3 | 11 | 12 | 2 | 5 |
 | fetchpatch2 | 9 | 2 | 3 | 3 | 1 | 4 |
+| dpkg-source (3.0 quilt) | 5 | 1 | – | 4 | – | – |
 | BusyBox patch | 52 | 14 | 26 | 19 | 1 | 10 |
 | toybox patch | 42 | 10 | 15 | 20 | 2 | 11 |
 | BSD patch | 23 | 2 | 15 | 17 | 2 | 10 |
@@ -92,6 +94,7 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 | GNU patch | 159/174, **2 wrong** | 9/10 | 17/18 | 14/14 |
 | fetchpatch | 112/174, **14 wrong** | 9/10, **1 wrong** | 2/6, **2 wrong** | 11/13, **1 wrong** |
 | fetchpatch2 | 123/174, **5 wrong** | 9/10, **1 wrong** | 2/6, **2 wrong** | 11/13, **1 wrong** |
+| dpkg-source (3.0 quilt) | 133/174, **5 wrong** | 9/10 | 5/6 | 10/13 |
 | BusyBox patch | 84/174, **45 wrong** | 7/10, **2 wrong** | 7/18, **3 wrong** | 8/14, **2 wrong** |
 | toybox patch | 109/174, **38 wrong** | 8/10, **1 wrong** | 9/18, **3 wrong** | 12/14 |
 | BSD patch | 114/174, **15 wrong** | 9/10, **1 wrong** | 8/18, **7 wrong** | 11/14 |
@@ -117,22 +120,22 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 
 Vectors of the `git` tier, grouped by tag; a vector can carry several. "12/14, **1**" reads: 14 patches given, 12 applied correctly, 1 applied wrongly without an error.
 
-| trap | git apply | git apply --unidiff-zero | GNU patch | fetchpatch | fetchpatch2 | BusyBox patch | toybox patch | BSD patch | Bazel | libgit2 | JGit | patch-ng | Mercurial | Dulwich | Subversion | patch-package | pnpm | Yarn | Bun | rattler-build | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
-| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | **9/9** | **9/9** | 2/9, **4** | 1/9, **2** | 8/9, **1** | 5/9, **4** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | **9/9** | 4/9 | 5/9, **4** | 5/9, **4** | 3/9, **6** | **9/9** | **9/9** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
-| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 16/20, **1** | 19/20, **1** | 1/20, **7** | 4/20, **6** | 16/20, **1** | 4/20, **12** | 17/20 | 16/20, **1** | 6/20, **10** | 19/20 | 19/20 | 18/20, **2** | 16/20 | 16/20 | 15/20 | 16/17 | 15/20, **3** | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
-| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | 3/6 | **6/6** | **6/6** | **6/6** | 5/6 | 3/6 | 3/6, **3** | **6/6** | **6/6** | 3/6 | **6/6** | 5/6, **1** | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
-| carriage returns in content | **9/9** | **9/9** | **9/9** | 7/9 | 7/9 | 6/9, **1** | 7/9, **1** | 7/9 | 1/9, **4** | **9/9** | 7/9, **2** | 7/9, **1** | 7/9 | 6/9 | 5/9, **3** | 8/9 | 8/9 | 2/9, **3** | 8/9 | 7/9, **2** | **8/8** | 1/8, **5** | **8/8** | **8/8** | 1/8, **4** |
-| spaces in file names | 22/23 | 22/23 | 16/23, **1** | 12/23, **2** | 13/23, **1** | 14/23, **6** | 17/23, **5** | 14/23, **2** | 13/23, **2** | 15/23 | 21/23, **1** | 12/23, **2** | 14/23, **2** | **23/23** | 20/23, **1** | 15/23, **2** | 16/23, **2** | 14/23, **4** | 16/23, **2** | 16/23, **3** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
-| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **3** | 2/19, **1** | 0/19, **2** | 16/19, **1** | 0/19, **2** | 0/19, **2** | 17/19, **2** | 15/19, **1** | 0/19, **1** | 0/19, **3** | **19/19** | 0/19, **2** | 0/19 | 0/19 | 0/19 | 0/19 | 7/19, **3** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
-| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **3** | 6/10 | 3/10, **4** | 3/10, **4** | 3/10, **2** | 4/10, **1** | 5/10 | **10/10** | 3/10 | 5/10, **1** | **10/10** | 8/10 | 7/10 | 8/10 | 6/10, **2** | 8/10 | 6/10, **4** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
-| renames | **20/20** | **20/20** | 16/20, **1** | 2/20, **7** | 8/20, **1** | 1/20, **13** | 2/20, **12** | 2/20, **6** | 12/20, **3** | 17/20, **1** | 15/20, **2** | 10/20, **5** | 15/20, **1** | 14/20, **2** | 10/20, **3** | 9/20, **3** | 14/20, **3** | 10/20, **3** | 14/20, **3** | 10/20, **9** | **9/9** | **9/9** | **9/9** | **9/9** | **9/9** |
-| copies | **3/3** | **3/3** | **3/3** | 0/3, **1** | 1/3 | 0/3, **2** | 0/3, **2** | 0/3, **1** | 0/3, **3** | 1/3, **2** | **3/3** | 0/3, **2** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 0/3, **2** | 0/3, **3** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
-| mode changes | 11/12 | 11/12 | 10/12 | 1/12, **4** | 4/12, **1** | 0/12, **10** | 1/12, **9** | 1/12, **4** | 9/12 | 9/12, **1** | 11/12, **1** | 6/12 | 11/12, **1** | 11/12, **1** | 9/12, **3** | 8/12 | 11/12 | 4/12, **5** | 11/12 | 1/12, **11** | **5/5** | **5/5** | **5/5** | **5/5** | **5/5** |
-| empty files | **9/9** | **9/9** | 7/9, **1** | 3/9, **1** | 3/9, **1** | 1/9, **6** | 2/9, **7** | 2/9, **2** | 4/9, **1** | 4/9 | **9/9** | 1/9, **2** | 8/9, **1** | 8/9 | 8/9 | 8/9, **1** | 8/9, **1** | 6/9, **2** | 8/9, **1** | 7/9, **2** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
-| binary patches | **3/3** | **3/3** | 0/3 | 0/3 | 0/3 | 0/3, **3** | 0/3, **3** | 0/3 | 0/3, **2** | **3/3** | **3/3** | 0/3 | **3/3** | **3/3** | 2/3, **1** | 0/3, **3** | 0/3, **3** | 0/3, **1** | 0/3 | 0/3, **3** | – | – | **3/3** | **3/3** | – |
-| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **2** | 3/6, **1** | 0/6, **1** | 2/6, **2** | 0/6, **2** | 0/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | **6/6** | 5/6, **1** | 0/6 | 0/6 | 0/6 | 0/2 | 0/6, **4** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| trap | git apply | git apply --unidiff-zero | GNU patch | fetchpatch | fetchpatch2 | dpkg-source (3.0 quilt) | BusyBox patch | toybox patch | BSD patch | Bazel | libgit2 | JGit | patch-ng | Mercurial | Dulwich | Subversion | patch-package | pnpm | Yarn | Bun | rattler-build | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
+| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | **9/9** | **9/9** | 8/9, **1** | 2/9, **4** | 1/9, **2** | 8/9, **1** | 5/9, **4** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | **9/9** | 4/9 | 5/9, **4** | 5/9, **4** | 3/9, **6** | **9/9** | **9/9** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
+| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 16/20, **1** | 19/20, **1** | 17/20 | 1/20, **7** | 4/20, **6** | 16/20, **1** | 4/20, **12** | 17/20 | 16/20, **1** | 6/20, **10** | 19/20 | 19/20 | 18/20, **2** | 16/20 | 16/20 | 15/20 | 16/17 | 15/20, **3** | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
+| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | 3/6 | **6/6** | **6/6** | **6/6** | 5/6 | 3/6 | 3/6, **3** | **6/6** | **6/6** | 3/6 | **6/6** | 5/6, **1** | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
+| carriage returns in content | **9/9** | **9/9** | **9/9** | 7/9 | 7/9 | 8/9 | 6/9, **1** | 7/9, **1** | 7/9 | 1/9, **4** | **9/9** | 7/9, **2** | 7/9, **1** | 7/9 | 6/9 | 5/9, **3** | 8/9 | 8/9 | 2/9, **3** | 8/9 | 7/9, **2** | **8/8** | 1/8, **5** | **8/8** | **8/8** | 1/8, **4** |
+| spaces in file names | 22/23 | 22/23 | 16/23, **1** | 12/23, **2** | 13/23, **1** | 13/23, **1** | 14/23, **6** | 17/23, **5** | 14/23, **2** | 13/23, **2** | 15/23 | 21/23, **1** | 12/23, **2** | 14/23, **2** | **23/23** | 20/23, **1** | 15/23, **2** | 16/23, **2** | 14/23, **4** | 16/23, **2** | 16/23, **3** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
+| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **3** | 2/19, **1** | 1/19 | 0/19, **2** | 16/19, **1** | 0/19, **2** | 0/19, **2** | 17/19, **2** | 15/19, **1** | 0/19, **1** | 0/19, **3** | **19/19** | 0/19, **2** | 0/19 | 0/19 | 0/19 | 0/19 | 7/19, **3** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
+| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **3** | 6/10 | 4/10 | 3/10, **4** | 3/10, **4** | 3/10, **2** | 4/10, **1** | 5/10 | **10/10** | 3/10 | 5/10, **1** | **10/10** | 8/10 | 7/10 | 8/10 | 6/10, **2** | 8/10 | 6/10, **4** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| renames | **20/20** | **20/20** | 16/20, **1** | 2/20, **7** | 8/20, **1** | 13/20, **1** | 1/20, **13** | 2/20, **12** | 2/20, **6** | 12/20, **3** | 17/20, **1** | 15/20, **2** | 10/20, **5** | 15/20, **1** | 14/20, **2** | 10/20, **3** | 9/20, **3** | 14/20, **3** | 10/20, **3** | 14/20, **3** | 10/20, **9** | **9/9** | **9/9** | **9/9** | **9/9** | **9/9** |
+| copies | **3/3** | **3/3** | **3/3** | 0/3, **1** | 1/3 | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 0/3, **3** | 1/3, **2** | **3/3** | 0/3, **2** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 0/3, **2** | 0/3, **3** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
+| mode changes | 11/12 | 11/12 | 10/12 | 1/12, **4** | 4/12, **1** | 10/12 | 0/12, **10** | 1/12, **9** | 1/12, **4** | 9/12 | 9/12, **1** | 11/12, **1** | 6/12 | 11/12, **1** | 11/12, **1** | 9/12, **3** | 8/12 | 11/12 | 4/12, **5** | 11/12 | 1/12, **11** | **5/5** | **5/5** | **5/5** | **5/5** | **5/5** |
+| empty files | **9/9** | **9/9** | 7/9, **1** | 3/9, **1** | 3/9, **1** | 3/9, **4** | 1/9, **6** | 2/9, **7** | 2/9, **2** | 4/9, **1** | 4/9 | **9/9** | 1/9, **2** | 8/9, **1** | 8/9 | 8/9 | 8/9, **1** | 8/9, **1** | 6/9, **2** | 8/9, **1** | 7/9, **2** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
+| binary patches | **3/3** | **3/3** | 0/3 | 0/3 | 0/3 | 0/3 | 0/3, **3** | 0/3, **3** | 0/3 | 0/3, **2** | **3/3** | **3/3** | 0/3 | **3/3** | **3/3** | 2/3, **1** | 0/3, **3** | 0/3, **3** | 0/3, **1** | 0/3 | 0/3, **3** | – | – | **3/3** | **3/3** | – |
+| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **2** | 3/6, **1** | 2/6 | 0/6, **1** | 2/6, **2** | 0/6, **2** | 0/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | **6/6** | 5/6, **1** | 0/6 | 0/6 | 0/6 | 0/2 | 0/6, **4** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
 
 ## Per program
 
@@ -295,6 +298,41 @@ fetchpatch2 patchutils 0.4.2, nixpkgs 317fbe5e1a · shell and C (patchutils) · 
 | what it said | vectors | for example |
 | --- | --- | --- |
 | the fetch fails: error: Normalized patch FILE is empty (while the fetched file was not)! | 45 | `git/bytes/mixed-line-endings-renamed` |
+
+### dpkg-source
+
+dpkg-source (3.0 quilt) dpkg 1.22.6 · Perl (runs GNU patch) · <https://salsa.debian.org/dpkg-team/dpkg/-/blob/main/scripts/Dpkg/Source/Quilt.pm>
+
+- Under test: `Dpkg::Source::Patch->apply() with the options of Dpkg::Source::Quilt->push()` — on a directory
+- Dpkg::Source::Patch->analyze() checks the patch, then GNU patch runs with -t -F 0 -N -p1 -u -V never -E -b -B .pc/<patch>/ --reject-file=-, as dpkg-source -x and dpkg-source --before-build do for a 3.0 (quilt) package. -E removes a file that the patch leaves empty. Patches in debian/patches are applied with -p1.
+
+157 of 203 patches are applied correctly.
+
+**Wrong without an error (5):**
+
+| vector | what is in the directory afterwards |
+| --- | --- |
+| `git/ranges/emptied-file` | "notes.txt" does not exist |
+| `git/paths/trailing-space-empty-added` | "empty " does not exist |
+| `git/ops/swap-two-files-break-rewrites` | "left.txt": 771 bytes, expected 831; first difference at byte 0 (line 1): expected "right line 1\nright line ", got "left line 1\nleft line 2\n" (and 1 more difference) |
+| `git/ops/empty-file-added` | ".gitkeep" does not exist |
+| `git/ops/empty-files-between-others` | "d.empty" does not exist |
+
+**Left half-done (3):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| exit N: -e: error: LC_ALL=C patch -t -F N -N -pN -u -V never -E -b -B .pc/FILE/ --reject-file=- < /home/moritz/.tN-firma | 3 | `git/ops/rename-chain` |
+
+**Refused (38):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| exit N: -e: error: diff /home/moritz/.tN-firma/scratch/N-N-N-ok-ich-wei-nicht-was-N/unified-diff-test-suite/corpus/vecto | 26 | `git/newline/symlink-target-changed` |
+| exit N: -e: error: LC_ALL=C patch -t -F N -N -pN -u -V never -E -b -B .pc/FILE/ --reject-file=- < /home/moritz/.tN-firma | 9 | `git/paths/trailing-space` |
+| exit N: patch: **** Can't get file attributes of file b/.gitkeep : No such file or directory | 1 | `git/ops/empty-file-renamed` |
+| exit N: -e: error: cannot create directory FILE File exists | 1 | `git/ops/file-becomes-directory` |
+| exit N: -e: error: diff FILE patches something which is not a plain file | 1 | `git/ops/directory-becomes-file` |
 
 ### busybox-patch
 

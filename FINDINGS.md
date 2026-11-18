@@ -2,7 +2,7 @@
 
 What the corpus showed when it was first run, on 16 and 17 November 2026,
 against the latest release of twenty-six parsers, against twenty-two programs
-that apply patches, and against the patch normalization of nixpkgs. The numbers are in [`RESULTS.md`](RESULTS.md) and
+that apply patches, and against how nixpkgs and Debian prepare and apply them. The numbers are in [`RESULTS.md`](RESULTS.md) and
 [`APPLY.md`](APPLY.md); this file explains them, one kind of problem at a
 time, and records what was already known to the projects.
 
@@ -388,7 +388,8 @@ were added a day later and have their own section, 15; BSD patch and Mercurial
 have sections 16 and 17, patch-package, pnpm, Yarn and Bun section 18, Bazel
 section 19, Subversion section 20, Dulwich section 21, and rattler-build
 section 23. Section 22 is about nixpkgs' `fetchpatch` and `fetchpatch2`, which
-change a patch before GNU patch applies it.
+change a patch before GNU patch applies it, and section 24 about Debian's
+`dpkg-source`, which checks a patch and runs GNU patch with options of its own.
 
 **Zero context.** A hunk made with `-U0` that only inserts has an old range of
 length zero, `@@ -5,0 +6 @@`, and that range names the line *after which* the
@@ -1186,6 +1187,32 @@ execute bit, `default.cfg` as a regular file, and no `template.cfg`.
 Upstream: rattler-build's tracker has nothing on modes, copies or binary
 patches. The patch code is actively worked on: #2693 (a patch that only deletes
 lines was taken as applied already) was fixed by #2695.
+
+## 24. Debian's dpkg-source
+
+Added on 18 November 2026. A Debian source package of format 3.0 (quilt) keeps
+its patches in `debian/patches`, and `dpkg-source` applies them when the
+package is unpacked or built: `Dpkg::Source::Quilt` calls
+`Dpkg::Source::Patch->apply()`, which checks the patch (`analyze()`) and then
+runs GNU patch with `-t -F 0 -N -p1 -u -V never -E -b -B .pc/<patch>/
+--reject-file=-`. The adapter calls `apply()` with exactly those options (dpkg
+1.22.6, Ubuntu 24.04) and removes quilt's `.pc` directory before the tree is
+read. It is given the 203 vectors whose names carry `a/` and `b/`. GNU patch
+alone gets 187 of them right; `dpkg-source` gets 157, refuses 38, leaves 3
+half-done, and applies 5 wrongly with no error.
+
+- **`-E` removes every file that is empty after the patch.** A patch that
+  empties a file (`git/ranges/emptied-file`) therefore deletes it, and a new
+  empty file is not created at all (`git/ops/empty-file-added`, an empty
+  `.gitkeep` or `__init__.py`). This is quilt's convention, from a time when a
+  diff could not say "deleted" other than with an empty file. git's patches
+  say it explicitly, which is what `gbp pq` exports.
+- The refusals are checks that `analyze()` makes on purpose. A name that git
+  quotes is rejected ("patches file with C-style encoded filename"), so a
+  patch that git makes with its defaults cannot touch a file whose name is not
+  ASCII. A patch
+  through a symbolic link, or to something that is not a plain file, is
+  rejected as well.
 
 ## Smaller observations
 

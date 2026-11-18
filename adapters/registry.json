@@ -194,6 +194,11 @@
       "cmd": ["node", "run.mjs", "apply:nix-fetchpatch2"]
     },
     {
+      "name": "dpkg-source",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:dpkg-source"]
+    },
+    {
       "name": "busybox-patch",
       "cwd": "node",
       "cmd": ["node", "run.mjs", "apply:busybox-patch"]
