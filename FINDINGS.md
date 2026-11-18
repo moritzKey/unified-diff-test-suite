@@ -1,7 +1,7 @@
 # Findings
 
 What the corpus showed when it was first run, on 16 and 17 November 2026,
-against the latest release of twenty-five parsers, and against nineteen programs
+against the latest release of twenty-five parsers, and against twenty programs
 that apply patches. The numbers are in [`RESULTS.md`](RESULTS.md) and
 [`APPLY.md`](APPLY.md); this file explains them, one kind of problem at a
 time, and records what was already known to the projects.
@@ -39,7 +39,7 @@ Vector ids below (`git/paths/space`) are files under `corpus/vectors/`.
 | 10 | binary files are not recognised | gitdiff-parser, jsdiff, git-diff-view, parse-git-diff, patch-ng, patch and gitpatch (Rust), unidiff (Rust), diffparser (Java) |
 | 11 | names are damaged when the prefixes are not `a/` and `b/` | parse-diff, diff2html, unidiff, go-gitdiff |
 | 12 | a tool's result depends on the user's git configuration | gitleaks (not trufflehog) |
-| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, Bazel, libgit2, JGit, Mercurial, patch-ng, patch-package, pnpm, Yarn, Bun, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
+| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, Bazel, libgit2, JGit, Mercurial, Subversion, patch-ng, patch-package, pnpm, Yarn, Bun, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
 
 No parser hung. Four programs end abnormally on valid input: the Rust crates
 patch and gitpatch panic (section 14), waigani/diffparser panics on GNU diffs,
@@ -377,7 +377,7 @@ second case, as `--no-color` closes the first.
 
 Sections 1 to 12 are about reading a diff. This one is about acting on it.
 214 of the vectors are patches in the plain sense — the vector records the tree
-before and the tree after — and nineteen programs were asked to get from one to
+before and the tree after — and twenty programs were asked to get from one to
 the other ([`APPLY.md`](APPLY.md) has every result; `node src/apply.js --adapter
 gnu-patch --show` repeats one). A program may refuse a patch. What matters here
 is the other outcome: it reports success, and a file is not what it should be.
@@ -385,8 +385,8 @@ I reproduced the cases of `git apply`, GNU patch, BusyBox patch, toybox patch,
 libgit2, JGit and patch-ng by calling the program by hand, outside the harness;
 the go-gitdiff case is the one its own tracker describes. toybox patch and JGit
 were added a day later and have their own section, 15; BSD patch and Mercurial
-have sections 16 and 17, patch-package, pnpm, Yarn and Bun section 18, and
-Bazel section 19.
+have sections 16 and 17, patch-package, pnpm, Yarn and Bun section 18, Bazel
+section 19, and Subversion section 20.
 
 **Zero context.** A hunk made with `-U0` that only inserts has an old range of
 length zero, `@@ -5,0 +6 @@`, and that range names the line *after which* the
@@ -956,6 +956,68 @@ names on as bytes, and the stand-in cannot create a name that is not UTF-8.
 Upstream: #18610 (`-U0`) is open. The CRLF problem (#32510) and the
 no-newline line (#31034) were fixed this autumn. Bazel's tracker has nothing
 on renames, mode changes, symbolic links or empty files.
+
+## 20. Subversion
+
+Added on 18 November 2026. `svn patch` applies a diff to a Subversion working
+copy and reads git's extended headers: renames, copies, mode changes, symbolic
+links and binary patches. The adapter makes the directory a working copy whose
+last commit is the old tree (`svnadmin create` next to it, `svn checkout
+--force`, `svn add --force --no-ignore`, `svn commit`) and runs `svn patch`.
+Two things about calling it:
+
+- In a section that begins with `diff --git a/`, svn removes the `a/` and `b/`
+  itself, so a git diff is applied with no `--strip`. Other diffs get
+  `--strip` as `patch` gets `-p`.
+- `svn patch` exits with status 0 when it rejects a hunk or skips a file. It
+  says so in its output ("Summary of conflicts", and a `.svnpatch.rej` file
+  next to the file), and the adapter counts that as the failure it is. A
+  script that only looks at the exit status does not notice.
+
+The numbers are for 1.15.0, the latest release, built from source. 1.14.3 (the
+`subversion` of Ubuntu 24.04) gives the same result for every vector. Of 214
+patches, 162 are right, 15 are refused, 24 are refused after writing a reject
+file, and 13 are wrong with exit status 0. What goes wrong without a word:
+
+- **A rename or a copy that also changes the mode ends the patch.** git writes
+  `old mode` and `new mode` before `similarity index`. svn's header parser
+  takes the similarity line for the end of a header that has only tree
+  changes. That header has no file names yet, so it is discarded, and the
+  parser then reports that the file holds no more patches. Nothing is applied:
+  not the rename, and not any section after it. There is no output, and the
+  exit status is 0. `git mv a.sh b.sh`, `chmod +x b.sh` and a change to any
+  other file are enough (`git/ops/rename-and-mode-change`). `svn diff --git`
+  writes no similarity line, and svn's tests use that form.
+- **A rename into a directory that does not exist yet fails** ("Can't create
+  temporary file from template '…/svn-XXXXXX': No such file or directory").
+  The code has a `### Create missing parents.` note at that place. Together
+  with the first problem, this concerns 5 vectors. Neither was found in the
+  tracker.
+- **A GIT binary patch in delta form is skipped** without a message
+  (`git/ops/binary-patch-delta`). Only the `literal` form is read ("We don't
+  support GIT deltas (yet)", SVN-4702), and git uses the delta form whenever it
+  is smaller.
+- **A lone CR ends a line**, in the patch and in the file. A change to a line
+  with CRs inside it (`git/bytes/lone-cr-inside-line`) or to a file with
+  classic Mac line endings (`git/bytes/classic-mac-file`) loses lines, and a
+  hunk whose header has a CR in its section heading is dropped
+  (`git/content/section-heading-with-control-characters`). **A NUL byte ends a
+  line** as well (`git/bytes/nul-with-text-option`), and the rest of the line
+  is lost.
+- **Quoted names are not decoded** (the parser has an `### Add handling of
+  escaped paths` note). A change to such a file is rejected, but a mode change
+  is ignored, and a new file is created under the quoted text: `Übersicht
+  2024.txt` becomes a file named `\303\234bersicht 2024.txt"`.
+- A copy without changes is ignored and a copy with changes is rejected
+  (SVN-4648). A symbolic link whose target contains a newline gets the target
+  cut at the newline. With other prefixes than `a/` and `b/` the git headers
+  are not recognised, so the mode change of `git diff` with
+  `diff.mnemonicPrefix` is lost.
+
+Refused, or refused after a reject file was written: hunks without context
+that only insert (5 vectors and `gnu/u0`), quoted names, swaps and rotations of
+names ("Skipped"), and trees with names that svn cannot version (a control
+character, or bytes that are not UTF-8).
 
 ## Smaller observations
 

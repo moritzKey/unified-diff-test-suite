@@ -36,6 +36,7 @@ There are four ways this can end:
 | [JGit](#jgit) | 7.8.1.202611041320-r | `Git.apply().setPatch(stream).call()` | 214 | 185 | 21 | 1 | **7** | – |
 | [patch-ng](#patch-ng) | 1.19.1 | `fromfile(path).apply(strip=N, root=directory)` | 214 | 131 | 39 | 13 | **31** | – |
 | [Mercurial](#mercurial) | 7.2.4 | `hg import --no-commit -pN FILE` | 214 | 175 | 6 | 23 | **10** | – |
+| [Subversion](#svn) | 1.15.0 | `svn patch [--strip N] FILE` | 214 | 162 | 15 | 24 | **13** | – |
 | [patch-package](#patch-package) | 8.0.1 | `parsePatchFile() + executeEffects(), as applyPatch() calls them` | 178 | 127 | 37 | – | **14** | – |
 | [pnpm](#pnpm) | 1100.0.12 | `applyPatchToDir({ patchFilePath, patchedDir })` | 178 | 134 | 30 | – | **14** | – |
 | [Yarn](#yarn) | 4.0.6 | `parsePatchFile() + applyPatchFile(), as PatchFetcher does` | 178 | 114 | 41 | – | **23** | – |
@@ -63,6 +64,7 @@ What the wrong results are (a patch can show several):
 | JGit | 7 | 3 | 1 | 1 | 2 | 1 |
 | patch-ng | 31 | 23 | 3 | 8 | 2 | 2 |
 | Mercurial | 10 | – | 8 | 7 | – | 6 |
+| Subversion | 13 | 6 | 3 | 5 | – | 2 |
 | patch-package | 14 | 10 | 1 | 4 | – | – |
 | pnpm | 14 | 11 | 1 | 4 | – | – |
 | Yarn | 23 | 14 | 1 | 5 | – | 7 |
@@ -88,6 +90,7 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 | JGit | 156/172, **7 wrong** | 10/10 | 10/18 | 9/14 |
 | patch-ng | 107/172, **25 wrong** | 8/10, **1 wrong** | 6/18, **3 wrong** | 10/14, **2 wrong** |
 | Mercurial | 144/172, **4 wrong** | 10/10 | 11/18, **5 wrong** | 10/14, **1 wrong** |
+| Subversion | 133/172, **12 wrong** | 10/10 | 9/18, **1 wrong** | 10/14 |
 | patch-package | 125/172, **14 wrong** | – | 2/6 | – |
 | pnpm | 130/172, **14 wrong** | – | 4/6 | – |
 | Yarn | 113/172, **21 wrong** | – | 1/6, **2 wrong** | – |
@@ -102,22 +105,22 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 
 Vectors of the `git` tier, grouped by tag; a vector can carry several. "12/14, **1**" reads: 14 patches given, 12 applied correctly, 1 applied wrongly without an error.
 
-| trap | git apply | git apply --unidiff-zero | GNU patch | BusyBox patch | toybox patch | BSD patch | Bazel | libgit2 | JGit | patch-ng | Mercurial | patch-package | pnpm | Yarn | Bun | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
-| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | 2/9, **4** | 1/9, **2** | 8/9, **1** | 5/9, **4** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | 5/9, **4** | 5/9, **4** | 3/9, **6** | **9/9** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
-| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 1/20, **7** | 4/20, **6** | 16/20, **1** | 4/20, **12** | 17/20 | 16/20, **1** | 6/20, **10** | 19/20 | 16/20 | 16/20 | 15/20 | 16/17 | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
-| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | 3/6 | **6/6** | **6/6** | **6/6** | 5/6 | **6/6** | **6/6** | 3/6 | **6/6** | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
-| carriage returns in content | **9/9** | **9/9** | **9/9** | 6/9, **1** | 7/9, **1** | 7/9 | 1/9, **4** | **9/9** | 7/9, **2** | 7/9, **1** | 7/9 | 8/9 | 8/9 | 2/9, **3** | 8/9 | **8/8** | 1/8, **5** | **8/8** | **8/8** | 1/8, **4** |
-| spaces in file names | 22/23 | 22/23 | 16/23, **1** | 14/23, **6** | 17/23, **5** | 14/23, **2** | 13/23, **2** | 15/23 | 21/23, **1** | 12/23, **2** | 14/23, **2** | 15/23, **2** | 16/23, **2** | 14/23, **4** | 16/23, **2** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
-| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **2** | 16/19, **1** | 0/19, **2** | 0/19, **2** | 17/19, **2** | 15/19, **1** | 0/19, **1** | 0/19, **3** | 0/19 | 0/19 | 0/19 | 0/19 | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
-| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **4** | 3/10, **4** | 3/10, **2** | 4/10, **1** | 5/10 | **10/10** | 3/10 | 5/10, **1** | 7/10 | 8/10 | 6/10, **2** | 8/10 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
-| renames | **19/19** | **19/19** | 16/19, **1** | 1/19, **12** | 2/19, **11** | 2/19, **5** | 12/19, **3** | 16/19, **1** | 15/19, **2** | 10/19, **4** | 15/19, **1** | 9/19, **3** | 14/19, **3** | 10/19, **3** | 14/19, **3** | **8/8** | **8/8** | **8/8** | **8/8** | **8/8** |
-| copies | **3/3** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 0/3, **3** | 1/3, **2** | **3/3** | 0/3, **2** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 0/3, **2** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
-| mode changes | 11/12 | 11/12 | 10/12 | 0/12, **10** | 1/12, **9** | 1/12, **4** | 9/12 | 9/12, **1** | 11/12, **1** | 6/12 | 11/12, **1** | 8/12 | 11/12 | 4/12, **5** | 11/12 | **5/5** | **5/5** | **5/5** | **5/5** | **5/5** |
-| empty files | **9/9** | **9/9** | 7/9, **1** | 1/9, **6** | 2/9, **7** | 2/9, **2** | 4/9, **1** | 4/9 | **9/9** | 1/9, **2** | 8/9, **1** | 8/9, **1** | 8/9, **1** | 6/9, **2** | 8/9, **1** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
-| binary patches | **3/3** | **3/3** | 0/3 | 0/3, **3** | 0/3, **3** | 0/3 | 0/3, **2** | **3/3** | **3/3** | 0/3 | **3/3** | 0/3, **3** | 0/3, **3** | 0/3, **1** | 0/3 | – | – | **3/3** | **3/3** | – |
-| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **1** | 2/6, **2** | 0/6, **2** | 0/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | 0/6 | 0/6 | 0/6 | 0/2 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| trap | git apply | git apply --unidiff-zero | GNU patch | BusyBox patch | toybox patch | BSD patch | Bazel | libgit2 | JGit | patch-ng | Mercurial | Subversion | patch-package | pnpm | Yarn | Bun | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
+| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | 2/9, **4** | 1/9, **2** | 8/9, **1** | 5/9, **4** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | 4/9 | 5/9, **4** | 5/9, **4** | 3/9, **6** | **9/9** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
+| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 1/20, **7** | 4/20, **6** | 16/20, **1** | 4/20, **12** | 17/20 | 16/20, **1** | 6/20, **10** | 19/20 | 18/20, **2** | 16/20 | 16/20 | 15/20 | 16/17 | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
+| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | 3/6 | **6/6** | **6/6** | **6/6** | 5/6 | 3/6, **3** | **6/6** | **6/6** | 3/6 | **6/6** | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
+| carriage returns in content | **9/9** | **9/9** | **9/9** | 6/9, **1** | 7/9, **1** | 7/9 | 1/9, **4** | **9/9** | 7/9, **2** | 7/9, **1** | 7/9 | 5/9, **3** | 8/9 | 8/9 | 2/9, **3** | 8/9 | **8/8** | 1/8, **5** | **8/8** | **8/8** | 1/8, **4** |
+| spaces in file names | 22/23 | 22/23 | 16/23, **1** | 14/23, **6** | 17/23, **5** | 14/23, **2** | 13/23, **2** | 15/23 | 21/23, **1** | 12/23, **2** | 14/23, **2** | 20/23, **1** | 15/23, **2** | 16/23, **2** | 14/23, **4** | 16/23, **2** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
+| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **2** | 16/19, **1** | 0/19, **2** | 0/19, **2** | 17/19, **2** | 15/19, **1** | 0/19, **1** | 0/19, **3** | 0/19, **2** | 0/19 | 0/19 | 0/19 | 0/19 | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
+| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **4** | 3/10, **4** | 3/10, **2** | 4/10, **1** | 5/10 | **10/10** | 3/10 | 5/10, **1** | 8/10 | 7/10 | 8/10 | 6/10, **2** | 8/10 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| renames | **19/19** | **19/19** | 16/19, **1** | 1/19, **12** | 2/19, **11** | 2/19, **5** | 12/19, **3** | 16/19, **1** | 15/19, **2** | 10/19, **4** | 15/19, **1** | 10/19, **3** | 9/19, **3** | 14/19, **3** | 10/19, **3** | 14/19, **3** | **8/8** | **8/8** | **8/8** | **8/8** | **8/8** |
+| copies | **3/3** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 0/3, **3** | 1/3, **2** | **3/3** | 0/3, **2** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 0/3, **2** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
+| mode changes | 11/12 | 11/12 | 10/12 | 0/12, **10** | 1/12, **9** | 1/12, **4** | 9/12 | 9/12, **1** | 11/12, **1** | 6/12 | 11/12, **1** | 9/12, **3** | 8/12 | 11/12 | 4/12, **5** | 11/12 | **5/5** | **5/5** | **5/5** | **5/5** | **5/5** |
+| empty files | **9/9** | **9/9** | 7/9, **1** | 1/9, **6** | 2/9, **7** | 2/9, **2** | 4/9, **1** | 4/9 | **9/9** | 1/9, **2** | 8/9, **1** | 8/9 | 8/9, **1** | 8/9, **1** | 6/9, **2** | 8/9, **1** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
+| binary patches | **3/3** | **3/3** | 0/3 | 0/3, **3** | 0/3, **3** | 0/3 | 0/3, **2** | **3/3** | **3/3** | 0/3 | **3/3** | 2/3, **1** | 0/3, **3** | 0/3, **3** | 0/3, **1** | 0/3 | – | – | **3/3** | **3/3** | – |
+| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **1** | 2/6, **2** | 0/6, **2** | 0/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | 5/6, **1** | 0/6 | 0/6 | 0/6 | 0/2 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
 
 ## Per program
 
@@ -671,6 +674,61 @@ Mercurial 7.2.4 · Python · <https://www.mercurial-scm.org/>
 | RuntimeError: hg import: exit N: abort: failed to synchronize metadata for FILE | 3 | `git/paths/space-then-b-slash` |
 | RuntimeError: hg commit: exit N: abort: FILE and FILE disallowed in filenames: FILE | 2 | `git/paths/newline` |
 | RuntimeError: hg commit: exit N: warning: filename contains FILE, which is invalid on Windows: FILE | 1 | `gnu/special-names` |
+
+### svn
+
+Subversion 1.15.0 · C · <https://subversion.apache.org/>
+
+- Under test: `svn patch [--strip N] FILE` — on a directory
+- svn patch works on a working copy, so the directory is made one first: a repository next to it (svnadmin create), svn checkout --force into it, svn add --force --no-ignore, svn commit. A name that Subversion cannot version (not valid UTF-8, a control character) makes that step fail, and the patch counts as refused. svn patch exits with status 0 when it rejects a hunk or skips a file, and says so in a "Summary of conflicts"; the adapter takes that as the failure it reports. LC_ALL=C.UTF-8, so that names outside ASCII can be versioned, and a configuration directory of its own, so that no auto-props or global-ignores take part. In a section that begins with "diff --git a/", svn removes the a/ and b/ itself (git_start(), git_minus() and git_plus() in libsvn_diff/parse-diff.c), so a git diff is applied with one component less to strip: `svn patch x.diff` for the usual prefixes, as a user would. Other diffs get the --strip of patch -pN.
+
+162 of 214 patches are applied correctly.
+
+**Wrong without an error (13):**
+
+| vector | what is in the directory afterwards |
+| --- | --- |
+| `git/content/section-heading-with-control-characters` | "log.txt": 36 bytes, expected 38; first difference at byte 30 (line 7): expected "e\n1\n2\n3\n4\n5\nsix\n7\n8\n", got "e\n1\n2\n3\n4\n5\n6\n7\n8\n" |
+| `git/bytes/lone-cr-inside-line` | "progress.log": 17 bytes, expected 31; first difference at byte 5 (line 1): expected "step 1\rstep 2\rstep 3\rdone\nnex", got "step 2\rdone\nnext\n" |
+| `git/bytes/classic-mac-file` | "old-mac.txt": 10 bytes, expected 14; first difference at byte 0 (line 1): expected "one\rTWO\rthree\r", got "two\rthree\r" |
+| `git/bytes/nul-with-text-option` | "rec.dat": 8 bytes, expected 14; first difference at byte 3 (line 1): expected "key\x00VALUE\nend\n", got "key\nend\n" |
+| `git/paths/mode-change-quoted` | "prüfen.sh" has mode 100644, expected 100755 |
+| `git/paths/quoted-name-with-space-added` | "Übersicht 2024.txt" does not exist (and 1 more difference) |
+| `git/ops/rename-and-mode-change` | "bin/script.sh" does not exist (and 1 more difference) |
+| `git/ops/rename-edit-and-mode-change` | "bin/script.sh" does not exist (and 1 more difference) |
+| `git/ops/copy-pure` | "instance.txt" does not exist |
+| `git/ops/copy-and-rename-same-source` | "first.txt" does not exist |
+| `git/ops/symlink-with-odd-target` | "odd": 6 bytes, expected 13; first difference at byte 6 (line 1): expected "-- a/x\n++ b/x", got "-- a/x" |
+| `git/ops/binary-patch-delta` | "blob.bin": 4004 bytes, expected 4004; first difference at byte 2004 (line 9): expected "\xb4\xd3\xf2\x111Po\x8e\xad\xcc\xeb\x0a\x01Ih\x87\xa6\xc5\xe…", got "\xb4\xd3\xf2\x111Po\x8e\xad\xcc\xeb\x0a*Ih\x87\xa6\xc5\xe4\x…" |
+| `git-config/mnemonic/index-and-worktree` | "tool.sh" has mode 100644, expected 100755 |
+
+**Left half-done (24):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| svn patch reported conflicts (exit N): C         FILE | 8 | `git/ranges/u0-insert` |
+| svn patch reported conflicts (exit N): C         new FILE | 4 | `git-config/noprefix/option` |
+| svn patch reported conflicts (exit N): C         \N\FILE" | 1 | `git/paths/non-ascii-quoted` |
+| svn patch reported conflicts (exit N): C         \N\N\N\N\N\N/\N\N\N\N\N\FILE" | 1 | `git/paths/cjk-quoted` |
+| svn patch reported conflicts (exit N): C         emoji \N\N\N\FILE" | 1 | `git/paths/emoji-and-space-quoted` |
+| svn patch reported conflicts (exit N): C         say \FILE | 1 | `git/paths/double-quote` |
+| svn patch reported conflicts (exit N): C         \FILE | 1 | `git/paths/starts-with-double-quote` |
+| svn patch reported conflicts (exit N): C         back\\FILE" | 1 | `git/paths/backslash` |
+| svn patch reported conflicts (exit N): C         nbsp\N\FILE" | 1 | `git/paths/no-break-space` |
+| svn patch reported conflicts (exit N): C         e\N\FILE" | 1 | `git/paths/combining-accent` |
+| svn patch reported conflicts (exit N): C         \\N\\FILE" | 1 | `git/paths/literal-backslash-digits` |
+| svn patch reported conflicts (exit N): C         a/FILE | 1 | `git/paths/two-names-one-quoted` |
+| svn patch reported conflicts (exit N): C         my FILE" | 1 | `gnu/space-in-name` |
+| svn patch reported conflicts (exit N): C         gr\N\N\N\FILE" | 1 | `gnu/unicode-name-utf8-locale` |
+
+**Refused (15):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| add: exit N: svn: EN: Invalid control character FILE in path FILE | 8 | `git/paths/tab` |
+| patch: exit N: svn: EN: Can't create temporary file from template FILE No such file or directory | 3 | `git/ops/rename-into-directory` |
+| checkout: exit N: svn: EN: Error converting entry in directory FILE to UTF-N | 2 | `git/paths/latin1-name` |
+| svn patch reported conflicts (exit N): Skipped FILE | 2 | `git/ops/swap-two-files-break-rewrites` |
 
 ### patch-package
 

@@ -13,7 +13,7 @@ import { MODE } from './tree.js';
 const SLASH = Buffer.from('/');
 
 /**
- * Scan a directory. A `.git` or `.hg` at the top (the repository an applier works in) is not part of the tree.
+ * Scan a directory. A `.git`, `.hg` or `.svn` at the top (the repository or working copy an applier works in) is not part of the tree.
  * A file or directory that the program left without read permission for its owner is made readable to be
  * scanned, and the file's entry says what it was left with (`unreadable`, the permission bits in octal).
  */
@@ -23,7 +23,7 @@ export function scanTree(dir) {
   const walk = (rel) => {
     const full = rel.length ? Buffer.concat([root, SLASH, rel]) : root;
     for (const name of readdirSync(full, { encoding: 'buffer' })) {
-      if (rel.length === 0 && (name.toString('latin1') === '.git' || name.toString('latin1') === '.hg')) continue;
+      if (rel.length === 0 && ['.git', '.hg', '.svn'].includes(name.toString('latin1'))) continue;
       const path = rel.length ? Buffer.concat([rel, SLASH, name]) : name;
       const abs = Buffer.concat([root, SLASH, path]);
       const st = lstatSync(abs);

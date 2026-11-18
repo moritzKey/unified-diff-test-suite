@@ -19,7 +19,8 @@ is full of traps. This repository contains
 - **the same for programs that apply patches**: 214 of the vectors come with
   the file tree before and after, and `git apply`, GNU patch, BusyBox patch,
   toybox patch, the BSD patch of FreeBSD and macOS, Bazel's native patch,
-  Mercurial, libgit2, JGit, the patching of patch-package, pnpm, Yarn and Bun, and
+  Mercurial, Subversion, libgit2, JGit, the patching of patch-package, pnpm,
+  Yarn and Bun, and
   six libraries are asked to get from one to the other
   ([`APPLY.md`](APPLY.md));
 - **a description of the format** as the tools actually write it
@@ -146,6 +147,7 @@ one: it reported success and the files are not what they should be.
 | libgit2 1.9.7 (`git_apply`) | 200 | 164 | 31 | – | 5 |
 | JGit 7.8.1 (`Git.apply()`) | 214 | 185 | 21 | 1 | 7 |
 | Mercurial 7.2.4 (`hg import`) | 214 | 175 | 6 | 23 | 10 |
+| Subversion 1.15.0 (`svn patch`) | 214 | 162 | 15 | 24 | 13 |
 | patch-ng 1.19.1 | 214 | 131 | 39 | 13 | 31 |
 | patch-package 8.0.1 | 178 | 127 | 37 | – | 14 |
 | pnpm 11 (`@pnpm/patching.apply-patch`) | 178 | 134 | 30 | – | 14 |
@@ -167,6 +169,8 @@ end of file`; BusyBox patch, toybox patch and patch-ng apply it and leave the
 newline in. The `patch` of macOS gets all of those right, but cuts a line at a
 NUL byte and applies the change of a copied file to the original. Mercurial
 drops the renames of a patch that Mercurial itself wrote with `diff.noprefix`.
+`svn patch` stops reading a patch at a rename that also changes the mode, as
+git writes it, and applies nothing at all, with exit status 0.
 Yarn never applies a mode change, and when a patch fills an empty file with
 content that has no final newline, Yarn leaves the file empty. Bazel rewrites
 a file that a patch only renames or makes executable, which breaks binaries,
@@ -210,8 +214,8 @@ every push and once a week: the tests on four versions of Node.js, the
 regeneration of every vector with the git of the day, the corpus as checked out
 on Linux, macOS and Windows, and all parsers — failing if `RESULTS.md` is not
 exactly what they produce. The appliers run there too; `APPLY.md` is not
-compared, because `git`, `patch`, `busybox` and `toybox` are whatever the
-machine has (BSD patch is built there from the pinned FreeBSD sources).
+compared, because `git`, `patch`, `busybox`, `toybox` and `svn` are whatever
+the machine has (BSD patch is built there from the pinned FreeBSD sources).
 
 The vectors were produced with git 2.43.0 and diffutils 3.10. git 2.56.1, the
 latest release at the time of writing, produces every one of them byte for

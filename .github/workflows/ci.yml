@@ -114,12 +114,12 @@ jobs:
         run: adapters/bazel-patch/build.sh
       - name: Run every parser over every vector
         run: node src/run.js
-      # git, patch, busybox and toybox are whatever this machine has, so
+      # git, patch, busybox, toybox and svn are whatever this machine has, so
       # APPLY.md is produced and kept as an artifact, not compared. A tool that
       # cannot be installed is skipped.
       - name: Run every applier over every patch
         run: |
-          for tool in busybox patch toybox; do
+          for tool in busybox patch toybox subversion; do
             sudo apt-get install -y -qq --no-install-recommends "$tool" || true
           done
           node src/apply.js

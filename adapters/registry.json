@@ -219,6 +219,11 @@
       "cmd": [".venv/bin/python", "run.py", "apply:mercurial"]
     },
     {
+      "name": "svn",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:svn"]
+    },
+    {
       "name": "patch-package",
       "cwd": "node",
       "cmd": ["node", "run.mjs", "apply:patch-package"]
