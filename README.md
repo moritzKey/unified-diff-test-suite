@@ -209,6 +209,9 @@ python3 -m venv adapters/python/.venv && adapters/python/.venv/bin/pip install -
 adapters/java/build.sh                                                            # the Java libraries
 adapters/bsd-patch/build.sh                       # FreeBSD's patch, on Linux (a Mac has it)
 adapters/bazel-patch/build.sh                     # Bazel's native patch (needs a JDK)
+adapters/nix-fetchpatch/build.sh                  # the patchutils of nixpkgs' fetchpatch and fetchpatch2
+adapters/rattler-build/fetch.sh                   # rattler-build, the released Linux x86_64 binary
+# git, GNU patch, svn/svnadmin, busybox and toybox are taken from the PATH.
 
 node src/run.js                           # everything; writes results/*.json
 node src/run.js --adapter parse-diff --show
