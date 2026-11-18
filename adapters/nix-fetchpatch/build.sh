@@ -7,7 +7,7 @@ cd "$(dirname "$0")"
 NIXPKGS=317fbe5e1a29c7ec3d11744d78637c424aa9d3d0
 mkdir -p upstream build
 fetch() { # url file sha256
-  [ -f "upstream/$2" ] || curl -fsSL --retry 3 --connect-timeout 20 --max-time 300 -o "upstream/$2" "$1"
+  [ -f "upstream/$2" ] || curl -fsSL --retry 5 --connect-timeout 20 --max-time 300 -o "upstream/$2" "$1"
   echo "$3  upstream/$2" | sha256sum -c --quiet -
 }
 fetch https://cyberelk.net/tim/data/patchutils/stable/patchutils-0.3.3.tar.xz patchutils-0.3.3.tar.xz \

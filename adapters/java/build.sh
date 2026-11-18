@@ -6,7 +6,7 @@ cd "$(dirname "$0")"
 mkdir -p lib build
 fetch() { # path-below-maven2 sha256
   file="lib/$(basename "$1")"
-  [ -f "$file" ] || curl -fsS -m 120 -o "$file" "https://repo1.maven.org/maven2/$1"
+  [ -f "$file" ] || curl -fsS --retry 5 -m 120 -o "$file" "https://repo1.maven.org/maven2/$1"
   echo "$2  $file" | sha256sum -c - >/dev/null || { echo "checksum mismatch: $file" >&2; rm -f "$file"; exit 1; }
 }
 fetch io/github/java-diff-utils/java-diff-utils/4.18/java-diff-utils-4.18.jar a20d8f538a1254dde49370cc06466aff7df7e8cbc75d1077e14f5c951d2f8bfa

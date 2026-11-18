@@ -9,7 +9,7 @@ cd "$(dirname "$0")"
 COMMIT=5b952262d3e223c033849441320bb12796bc52e4 # main, 2026-11-17
 mkdir -p src build
 fetch() { # file sha256
-  [ -f "src/$1" ] || curl -fsS -m 60 -o "src/$1" "https://raw.githubusercontent.com/freebsd/freebsd-src/$COMMIT/usr.bin/patch/$1"
+  [ -f "src/$1" ] || curl -fsS --retry 5 -m 60 -o "src/$1" "https://raw.githubusercontent.com/freebsd/freebsd-src/$COMMIT/usr.bin/patch/$1"
   echo "$2  src/$1" | sha256sum -c - >/dev/null || { echo "checksum mismatch: src/$1" >&2; rm -f "src/$1"; exit 1; }
 }
 fetch backupfile.c 3aa676ff1fb2b6d74326ae2837105c900466d9b478676d5a963842bdb4ff87f0

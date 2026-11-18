@@ -9,7 +9,7 @@ COMMIT=e66a6922a0fb950e7394e78bb18159078ad359df   # "Keep CRLF line endings when
 mkdir -p lib upstream build
 check() { echo "$2  $1" | sha256sum -c - >/dev/null || { echo "checksum mismatch: $1" >&2; rm -f "$1"; exit 1; }; }
 fetch() { # url file sha256
-  [ -f "$2" ] || curl -fsS -m 120 -o "$2" "$1"
+  [ -f "$2" ] || curl -fsS --retry 5 -m 120 -o "$2" "$1"
   check "$2" "$3"
 }
 fetch "https://raw.githubusercontent.com/bazelbuild/bazel/$COMMIT/src/main/java/com/google/devtools/build/lib/bazel/repository/decompressor/PatchUtil.java" \
