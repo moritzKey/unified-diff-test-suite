@@ -9,17 +9,17 @@ tools, patch appliers, and the harnesses that score coding agents. The format
 they read has no specification beyond a few paragraphs of documentation, and it
 is full of traps. This repository contains
 
-- **250 test vectors** — real output of `git` and GNU `diff` for carefully
+- **252 test vectors** — real output of `git` and GNU `diff` for carefully
   chosen changes, each with the parse it must produce, in plain JSON that any
   language can read ([`corpus/`](corpus/README.md));
 - **a harness** that runs any parser against them through a small adapter, and
   adapters for twenty-five widely used libraries in JavaScript, Python, Go,
   Rust, Java and C
   ([`RESULTS.md`](RESULTS.md), [`FINDINGS.md`](FINDINGS.md));
-- **the same for programs that apply patches**: 212 of the vectors come with
+- **the same for programs that apply patches**: 214 of the vectors come with
   the file tree before and after, and `git apply`, GNU patch, BusyBox patch,
   toybox patch, the BSD patch of FreeBSD and macOS, Bazel's native patch,
-  Mercurial, libgit2, JGit, the patching of patch-package, pnpm and Yarn, and
+  Mercurial, libgit2, JGit, the patching of patch-package, pnpm, Yarn and Bun, and
   six libraries are asked to get from one to the other
   ([`APPLY.md`](APPLY.md));
 - **a description of the format** as the tools actually write it
@@ -76,7 +76,7 @@ and carries a recipe from which it can be produced again.
 
 | tier | vectors | what it is |
 | --- | --- | --- |
-| `git` | 185 | `git diff` with git's default naming |
+| `git` | 187 | `git diff` with git's default naming |
 | `git-wrapped` | 17 | the same with something around it: `git show`, `git log -p`, `git format-patch`, `--stat` |
 | `git-config` | 21 | the same, named differently: `--no-prefix`, mnemonic prefixes, `-R`, `core.quotePath=false`, … |
 | `combined` | 10 | merge commits (`diff --cc`) |
@@ -136,25 +136,26 @@ one: it reported success and the files are not what they should be.
 
 | | patches | right | refused | left half-done | wrong, no error |
 | --- | --- | --- | --- | --- | --- |
-| `git apply` 2.43.0 | 212 | 201 | 9 | – | 2 |
-| `git apply --unidiff-zero` | 212 | 211 | 1 | – | – |
-| GNU patch 2.7.6 | 212 | 199 | 8 | 4 | 1 |
-| BusyBox patch 1.36.1 | 212 | 105 | 47 | 10 | 50 |
-| toybox patch 0.8.15 | 212 | 137 | 28 | 7 | 40 |
-| BSD patch (FreeBSD, = macOS) | 212 | 141 | 25 | 24 | 22 |
-| Bazel (`repository_ctx.patch`, master) | 212 | 138 | 38 | 3 | 33 |
-| libgit2 1.9.7 (`git_apply`) | 198 | 164 | 29 | – | 5 |
-| JGit 7.8.1 (`Git.apply()`) | 212 | 183 | 21 | 1 | 7 |
-| Mercurial 7.2.4 (`hg import`) | 212 | 175 | 6 | 22 | 9 |
-| patch-ng 1.19.1 | 212 | 131 | 38 | 13 | 30 |
-| patch-package 8.0.1 | 176 | 127 | 37 | – | 12 |
-| pnpm 11 (`@pnpm/patching.apply-patch`) | 176 | 134 | 30 | – | 12 |
-| Yarn 4 (`@yarnpkg/plugin-patch` 4.0.6) | 176 | 114 | 41 | – | 21 |
-| jsdiff 9.0.0 (`applyPatch`) | 186 | 186 | – | – | – |
-| whatthepatch 1.0.7 (`apply_diff`) | 186 | 174 | 6 | – | 6 |
-| go-gitdiff 0.9.0 (`Apply`) | 191 | 184 | 2 | – | 5 |
-| diffy 0.5.2 (`apply_bytes`) | 191 | 191 | – | – | – |
-| java-diff-utils 4.18 (`applyTo`) | 186 | 177 | 4 | – | 5 |
+| `git apply` 2.43.0 | 214 | 203 | 9 | – | 2 |
+| `git apply --unidiff-zero` | 214 | 213 | 1 | – | – |
+| GNU patch 2.7.6 | 214 | 199 | 8 | 5 | 2 |
+| BusyBox patch 1.36.1 | 214 | 106 | 47 | 10 | 51 |
+| toybox patch 0.8.15 | 214 | 138 | 28 | 7 | 41 |
+| BSD patch (FreeBSD, = macOS) | 214 | 142 | 26 | 24 | 22 |
+| Bazel (`repository_ctx.patch`, master) | 214 | 138 | 39 | 3 | 34 |
+| libgit2 1.9.7 (`git_apply`) | 200 | 164 | 31 | – | 5 |
+| JGit 7.8.1 (`Git.apply()`) | 214 | 185 | 21 | 1 | 7 |
+| Mercurial 7.2.4 (`hg import`) | 214 | 175 | 6 | 23 | 10 |
+| patch-ng 1.19.1 | 214 | 131 | 39 | 13 | 31 |
+| patch-package 8.0.1 | 178 | 127 | 37 | – | 14 |
+| pnpm 11 (`@pnpm/patching.apply-patch`) | 178 | 134 | 30 | – | 14 |
+| Yarn 4 (`@yarnpkg/plugin-patch` 4.0.6) | 178 | 114 | 41 | – | 23 |
+| Bun 1.4.4 (`bun install`, `patchedDependencies`) | 174 | 140 | 28 | – | 6 |
+| jsdiff 9.0.0 (`applyPatch`) | 187 | 187 | – | – | – |
+| whatthepatch 1.0.7 (`apply_diff`) | 187 | 175 | 6 | – | 6 |
+| go-gitdiff 0.9.0 (`Apply`) | 192 | 185 | 2 | – | 5 |
+| diffy 0.5.2 (`apply_bytes`) | 192 | 192 | – | – | – |
+| java-diff-utils 4.18 (`applyTo`) | 187 | 178 | 4 | – | 5 |
 
 Three examples of the last column. A diff made with `-U0` that inserts a line
 after line 5 says `@@ -5,0 +6 @@`; plain `git apply` puts the line at the end
@@ -169,7 +170,9 @@ drops the renames of a patch that Mercurial itself wrote with `diff.noprefix`.
 Yarn never applies a mode change, and when a patch fills an empty file with
 content that has no final newline, Yarn leaves the file empty. Bazel rewrites
 a file that a patch only renames or makes executable, which breaks binaries,
-and turns a symbolic link into a file that its owner cannot read.
+and turns a symbolic link into a file that its owner cannot read. When a patch
+adds a file whose name ends with a space, pnpm, Yarn, Bun and patch-ng write
+it over the file of the same name without the space.
 [`FINDINGS.md`](FINDINGS.md#13-applying) has the rest.
 
 ## Running it
@@ -181,10 +184,10 @@ check and the runs of all parsers and appliers give identical results with
 Node.js 20, 22, 24 and 26.
 
 ```sh
-npm test                                  # the suite's own tests (49)
+npm test                                  # the suite's own tests (50)
 node src/generate.js --check              # rebuild every vector and compare
 
-cd adapters/node && npm ci && cd ../..    # the JavaScript libraries under test
+cd adapters/node && npm ci && cd ../..    # the JavaScript libraries under test, and Bun (Linux x64)
 python3 -m venv adapters/python/.venv && adapters/python/.venv/bin/pip install -r adapters/python/requirements.txt
 (cd adapters/go && go build -o bin/udts-go .)                                     # the Go libraries
 (cd adapters/rust && cargo build --release --locked)                              # the Rust libraries

@@ -106,7 +106,8 @@ it works:
 | `binary` | (`file` kind) `true` if it applies `GIT binary patch` sections; otherwise it is not given them. |
 | `eofNewline` | `false` if its answer cannot say whether the last line ends with a newline (a list of lines). That is then not compared. |
 | `scope` | optional: the tiers it sets out to read. Other vectors are not given to it. |
-| `prefixes` | optional: `["a/", "b/"]` for a program that always removes those two prefixes and takes no `-p` (patch-package, pnpm, Yarn). Vectors with other prefixes are not given to it, and it may ignore `strip`. |
+| `prefixes` | optional: `["a/", "b/"]` for a program that always removes those two prefixes and takes no `-p` (patch-package, pnpm, Yarn, Bun). Vectors with other prefixes are not given to it, and it may ignore `strip`. |
+| `symlinks` | optional: `false` for a program that patches installed packages, which cannot hold a symbolic link (Bun drops them when it unpacks a package). Vectors whose old tree has one are not given to it. |
 
 and it answers two more requests:
 

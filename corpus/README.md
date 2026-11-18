@@ -78,7 +78,7 @@ parent), `new_start`, `new_lines` and lines of the form
 
 ## Applying
 
-212 of the vectors are patches in the plain sense, and say so:
+214 of the vectors are patches in the plain sense, and say so:
 
 ```jsonc
 "apply": { "from": 0, "to": 1, "strip": 1, "modes": true }
@@ -126,7 +126,7 @@ if "skip" not in how:
     # read the directory back and compare it with `after`
 ```
 
-[`APPLY.md`](../APPLY.md) shows what eighteen programs make of them.
+[`APPLY.md`](../APPLY.md) shows what nineteen programs make of them.
 
 ## Tiers
 

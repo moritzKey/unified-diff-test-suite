@@ -25,5 +25,8 @@
     "@yarnpkg/core": {
       "got": "11.8.6"
     }
+  },
+  "optionalDependencies": {
+    "@oven/bun-linux-x64": "1.4.4"
   }
 }

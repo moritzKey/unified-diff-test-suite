@@ -1,7 +1,7 @@
 # Findings
 
 What the corpus showed when it was first run, on 16 and 17 November 2026,
-against the latest release of twenty-five parsers, and against eighteen programs
+against the latest release of twenty-five parsers, and against nineteen programs
 that apply patches. The numbers are in [`RESULTS.md`](RESULTS.md) and
 [`APPLY.md`](APPLY.md); this file explains them, one kind of problem at a
 time, and records what was already known to the projects.
@@ -39,7 +39,7 @@ Vector ids below (`git/paths/space`) are files under `corpus/vectors/`.
 | 10 | binary files are not recognised | gitdiff-parser, jsdiff, git-diff-view, parse-git-diff, patch-ng, patch and gitpatch (Rust), unidiff (Rust), diffparser (Java) |
 | 11 | names are damaged when the prefixes are not `a/` and `b/` | parse-diff, diff2html, unidiff, go-gitdiff |
 | 12 | a tool's result depends on the user's git configuration | gitleaks (not trufflehog) |
-| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, Bazel, libgit2, JGit, Mercurial, patch-ng, patch-package, pnpm, Yarn, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
+| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, Bazel, libgit2, JGit, Mercurial, patch-ng, patch-package, pnpm, Yarn, Bun, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
 
 No parser hung. Four programs end abnormally on valid input: the Rust crates
 patch and gitpatch panic (section 14), waigani/diffparser panics on GNU diffs,
@@ -376,8 +376,8 @@ second case, as `--no-color` closes the first.
 ## 13. Applying
 
 Sections 1 to 12 are about reading a diff. This one is about acting on it.
-212 of the vectors are patches in the plain sense — the vector records the tree
-before and the tree after — and eighteen programs were asked to get from one to
+214 of the vectors are patches in the plain sense — the vector records the tree
+before and the tree after — and nineteen programs were asked to get from one to
 the other ([`APPLY.md`](APPLY.md) has every result; `node src/apply.js --adapter
 gnu-patch --show` repeats one). A program may refuse a patch. What matters here
 is the other outcome: it reports success, and a file is not what it should be.
@@ -385,8 +385,8 @@ I reproduced the cases of `git apply`, GNU patch, BusyBox patch, toybox patch,
 libgit2, JGit and patch-ng by calling the program by hand, outside the harness;
 the go-gitdiff case is the one its own tracker describes. toybox patch and JGit
 were added a day later and have their own section, 15; BSD patch and Mercurial
-have sections 16 and 17, patch-package, pnpm and Yarn section 18, and Bazel
-section 19.
+have sections 16 and 17, patch-package, pnpm, Yarn and Bun section 18, and
+Bazel section 19.
 
 **Zero context.** A hunk made with `-U0` that only inserts has an old range of
 length zero, `@@ -5,0 +6 @@`, and that range names the line *after which* the
@@ -487,8 +487,25 @@ errors tries to write the pending files once more, the same rename fails, and
 the handler is entered again. 2.7.6 applies the patch. I could not search the
 tracker of GNU patch either.
 
-Two things held without exception: jsdiff's `applyPatch` applied all 186
-patches it could be given and diffy's `apply_bytes` all 191, and
+**A new file whose name ends with a space.** git does not quote a space, so in
+`diff --git a/notes.txt  b/notes.txt ` and in the `+++` line, which ends with a
+TAB after the name, the TAB or the end of the line is all that shows where the
+name ends (`git/paths/trailing-space-added`; section 6 is about reading such
+names). A program that trims the name creates `notes.txt` instead, and when a
+file of that name exists already, it is written over: pnpm, Yarn, Bun and
+patch-ng replace its content, and Bazel inserts the new file's line at the top
+of it, all with no error. patch-package reports success and changes nothing.
+GNU patch and Mercurial notice that `notes.txt` exists and stop with a reject
+file. An empty new file is named only by the `diff --git` line
+(`git/paths/trailing-space-empty-added`): GNU patch, Mercurial, patch-package,
+pnpm, Yarn and Bun create it without the space, BusyBox and toybox patch create
+nothing, and Bazel, BSD patch, patch-ng and libgit2 refuse. `git apply` and
+JGit get both right. The applier fuzzer found the empty case in Bun. I checked
+the other one with Bun itself: `bun patch --commit` writes the patch correctly,
+and the next `bun install` puts the new content into `notes.txt`.
+
+Two things held without exception: jsdiff's `applyPatch` applied all 187
+patches it could be given and diffy's `apply_bytes` all 192, and
 `git apply --unidiff-zero` applied all but the one that git 2.43 cannot read
 (section 6).
 
@@ -500,9 +517,9 @@ through their adapters only — each adapter is a direct call of the library, an
 `node src/try.js <adapter> <vector-id> --raw` shows the answer as it came back.
 
 - **diffy 0.5.2** (Rust) reads git's format through `PatchSet` with
-  `ParseOptions::gitdiff()`: 219 of the 221 vectors in its scope agree, quoted
+  `ParseOptions::gitdiff()`: 223 of the 225 vectors in its scope agree, quoted
   names, binary patches, modes and mail signatures included, and as an applier
-  it turns all 191 patches it can be given into the right file. The two
+  it turns all 192 patches it can be given into the right file. The two
   differences: empty input is an error ("no valid patches found") rather than
   an empty list, and one mail fails — the signature of `git format-patch`
   directly after a hunk whose *deleted* last line carries `\ No newline at end
@@ -550,13 +567,13 @@ the command line, with the released binary and with a build of its current
 source.
 
 **JGit 7.8.1** — `org.eclipse.jgit.patch.Patch`, the parser behind
-`ApplyCommand` — reads 212 of the 228 vectors in its scope as git does: content that looks like a header, zero counts, binary patches, modes,
-mails and merges are all right. The sixteen differences are about names: the
+`ApplyCommand` — reads 213 of the 230 vectors in its scope as git does: content that looks like a header, zero counts, binary patches, modes,
+mails and merges are all right. The seventeen differences are about names: the
 quoted name followed by a TAB (section 2), the name on the side where no file
 exists (section 5), and a binary file in a `diff --cc` section, which gets no
 name at all because only the `---`/`+++` lines are read for one there.
 
-As an applier, `Git.apply()` gets 183 of 212 patches right, refuses 21 and
+As an applier, `Git.apply()` gets 185 of 214 patches right, refuses 21 and
 leaves one half-done. It applies seven wrongly without an exception, in five
 ways:
 
@@ -608,8 +625,10 @@ Upstream: nothing found in the issues of eclipse-jgit/jgit. The older Eclipse
 Bugzilla showed a "temporary shutdown" page when I looked.
 
 **toybox patch 0.8.15** is the `patch` of Android, and the ancestor of the
-BusyBox applet ("Adapted from toybox's patch implementation"). 137 of 212
-patches are right, 28 are refused, 40 are wrong with exit status 0.
+BusyBox applet ("Adapted from toybox's patch implementation"). 138 of 214
+patches are right, 28 are refused, 7 are left half-done, and 41 are wrong with
+exit status 0 (one of them is the empty file of section 13 whose name ends with
+a space).
 
 - **`@@ -1 +0,0 @@` deletes the file** ("removing f.txt"). A first hunk whose
   new range is `+0,0` is taken to mean that the file is deleted — which is true
@@ -644,7 +663,7 @@ the files unchanged; on a Mac the adapter takes the installed one. I have not
 run it on a Mac. It is called the way the ports framework of FreeBSD calls it,
 with `-E` (see the last point).
 
-141 of 212 patches are right, 25 are refused, 24 are refused after writing a
+142 of 214 patches are right, 26 are refused, 24 are refused after writing a
 reject file, and 22 are wrong with exit status 0. With the content of a file it
 does as well as GNU patch: the no-newline marker, zero-length ranges from
 `-U0`, content that looks like a header and carriage returns are all right.
@@ -692,9 +711,9 @@ latest release. It patches tracked files only, in a working directory without
 changes, so the adapter commits the old tree first. Mercurial's patch code
 (`mercurial/patch.py`) is its own, and it reads git's extended headers.
 
-175 of 212 patches are right, 6 are refused, 22 are refused after a reject
-file was written or part of the change was made, and 9 are wrong with exit
-status 0. The content of files is handled well: zero-length ranges, the
+175 of 214 patches are right, 6 are refused, 23 are refused after a reject
+file was written or part of the change was made, and 10 are wrong with exit
+status 0 (one of each is a new file whose name ends with a space, section 13). The content of files is handled well: zero-length ranges, the
 no-newline marker, binary patches, copies, empty files and symbolic links are
 all right. A file with classic Mac line endings (CR only) is refused.
 
@@ -731,7 +750,7 @@ Upstream: nothing in Mercurial's tracker (foss.heptapod.net, which holds the
 old Bugzilla too) on git's quoting or on importing a patch without prefixes.
 Issue 3723 (2012, closed) was about names with spaces in Mercurial's own diffs.
 
-## 18. patch-package, pnpm and Yarn
+## 18. patch-package, pnpm, Yarn and Bun
 
 Added on 18 November 2026. These three tools apply the patches that JavaScript
 projects keep for their dependencies. patch-package (8.0.1, about eight million
@@ -743,23 +762,28 @@ protocol for the patches it ships for TypeScript, fsevents and resolve. None of
 the three calls git or patch: pnpm's and Yarn's code are ports of
 patch-package's parser and applier. Each tool writes its patches with
 `git diff --src-prefix=a/ --dst-prefix=b/` and always removes those two
-prefixes, with no `-p`. Each was therefore given the 176 vectors of the `git`
+prefixes, with no `-p`. Each was therefore given the 178 vectors of the `git`
 and `git-config` tiers whose names carry them. The adapters call the parser and
 the applier the way each tool does. patch-package does a dry run first. Yarn
 applies to a copy of the package and discards the copy when a hunk fails. pnpm
 applies in place.
 
-| | right | refused | wrong |
-| --- | --- | --- | --- |
-| patch-package | 127 | 37 | 12 |
-| pnpm | 134 | 30 | 12 |
-| Yarn | 114 | 41 | 21 |
+| | patches | right | refused | wrong |
+| --- | --- | --- | --- | --- |
+| patch-package | 178 | 127 | 37 | 14 |
+| pnpm | 178 | 134 | 30 | 14 |
+| Yarn | 178 | 114 | 41 | 23 |
+| Bun | 174 | 140 | 28 | 6 |
+
+Bun has its own part below.
 
 Common to all three:
 
 - **Quoted names are refused** ("Bad diff line", 20 vectors). **Names are
-  trimmed**, so a name that begins or ends with a space is not found. Both
-  failures are safe. There is one consequence for patch-package: it runs git
+  trimmed**, so a change to a file whose name begins or ends with a space is
+  refused, because the file is not found. A new file whose name ends with a
+  space is created without it, and pnpm and Yarn write it over a file of that
+  name if there is one (section 13). There is one consequence for patch-package: it runs git
   with the default `core.quotePath`, so a package file whose name is not ASCII
   gives a patch that patch-package cannot read. It parses the patch right after
   making it and stops ("unable to read the patch-file made by git"). Yarn passes
@@ -831,6 +855,45 @@ corpus covers and Yarn gets right. patch-package's tracker has the binary files
 (#193, closed in 2019), the rename with changes (#518, open) and copies (#530,
 open). pnpm's tracker was not searched.
 
+**Bun** 1.4.4 applies `patchedDependencies` during `bun install` with a parser
+and an applier of its own (`src/patch` in its repository, now in Rust). They
+began as a port of patch-package's, and the comments still quote the regular
+expressions of `@pnpm/patch-package`. Bun has no command that only applies a
+patch, so the adapter makes the tree into a local tarball dependency and runs
+`bun install` with the diff as its patch, under the key that `bun patch
+--commit` writes for such a dependency. A package that Bun installs never
+contains a symbolic link, because the extraction leaves them out. The four
+vectors whose old tree has one were therefore not given, which leaves 174.
+
+Bun is far ahead of the other three. It reads the patch and the files as bytes,
+puts a zero-context hunk after the line its header names, applies mode
+changes, renames with changes and the filling of an empty file, and keeps CR
+LF and lone CRs. It refuses a GIT binary patch. A section it cannot act on,
+such as a copy or a `Binary files … differ` line, is skipped with a warning
+("skipping instance.txt: no applicable changes"). What remains:
+
+- **Names are trimmed**, as in the other three. A change to a file whose name
+  begins or ends with a space is refused (ENOENT). A new file whose name ends
+  with a space is created without the space, over a file of that name if there
+  is one (section 13). This one reaches users: `bun patch --commit` writes such
+  a patch correctly, and `bun install` then applies it that way.
+- **Quoted names are refused** ("failed to parse patchfile: bad_diff_line").
+  `bun patch --commit` runs git with `core.quotepath=false`, so a patch of
+  Bun's own has quotes only for a name with a double quote, a backslash or a
+  control character.
+- **Renames are made one after the other**, so when two files are swapped or
+  three rotate their names (`-B`), one of them is lost. A copy is skipped (with
+  the warning), so `git/ops/copy-pure` and `git/ops/copy-and-rename-same-source`
+  lack a file. `bun patch --commit` passes neither `-B` nor `-C`, so it does
+  not write such patches itself.
+- **A new symbolic link is refused** ("bad_file_mode"). When one is added to a
+  package, `bun patch --commit` writes a patch with it, finds that it cannot
+  read that patch, and stops without changing anything.
+
+The applier fuzzer gave Bun 709 random scenarios, and its only wrong result was
+the name that ends with a space. Upstream: I found nothing about names with
+spaces in Bun's tracker.
+
 ## 19. Bazel's native patch
 
 Added on 18 November 2026. Bazel applies patches with its own code,
@@ -845,8 +908,9 @@ bullets below were also run through a repository rule with Bazel 9.3.2, the
 latest release. The release differs from master in one way: it reads and
 writes files as UTF-8, so a byte that is not valid UTF-8 also becomes U+FFFD.
 
-Of 212 patches, 138 are right, 38 are refused, 3 are left half-done, and 33 are
-wrong with no error. One of the refusals belongs to the stand-in: Bazel passes
+Of 214 patches, 138 are right, 39 are refused, 3 are left half-done, and 34 are
+wrong with no error (one of them is a new file whose name ends with a space,
+section 13). One of the refusals belongs to the stand-in: Bazel passes
 names on as bytes, and the stand-in cannot create a name that is not UTF-8.
 
 - **A section without hunks rewrites the file.** For a rename (`similarity
@@ -911,11 +975,11 @@ on renames, mode changes, symbolic links or empty files.
 
 - Eighteen of the twenty-five libraries get every "content that looks like a
   header" vector right; counting the lines of a hunk has become the norm.
-- diffy 0.5.2 differs from git on two of 223 vectors as a parser and on none
-  of 191 as an applier.
+- diffy 0.5.2 differs from git on two of 225 vectors as a parser and on none
+  of 192 as an applier.
 - GitPython, which only reads file headers and always asks git for one fixed
-  format, agreed on all 185 vectors of the `git` tier.
-- go-gitdiff 0.9.0, and the fork of it inside gitleaks, agreed on all 202
+  format, agreed on all 187 vectors of the `git` tier.
+- go-gitdiff 0.9.0, and the fork of it inside gitleaks, agreed on all 204
   vectors in their scope (`git` and `git-wrapped`) and on 23,182 random
   scenarios each — the only parsers without a single difference there.
 - trufflehog is unaffected by the git configuration of whoever runs it.
@@ -937,7 +1001,7 @@ scenarios (47,215 scenarios were verified against ground truth in total).
 [`README.md`](README.md#why-trust-the-expectations) has the details.
 
 For applying, the expectation is not computed at all: it is the tree the diff
-was made to. The reference applier reaches it for all 212 patches, and
+was made to. The reference applier reaches it for all 214 patches, and
 `test/apply.test.js` damages trees in sixteen ways and requires each to be
 noticed.
 

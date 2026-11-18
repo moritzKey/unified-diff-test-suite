@@ -29,7 +29,7 @@ test('which vectors are patches', () => {
   assert.match(reason('gnu/labels'), /labels/);
   assert.match(reason('git/basics/empty-diff'), /empty/);
   const cases = all().map(({ vector }) => applyCase(vector)).filter((c) => !c.skip);
-  assert.equal(cases.length, 212);
+  assert.equal(cases.length, 214);
   // What a vector says about itself is what this module works out.
   for (const { vector } of all()) assert.deepEqual(vector.apply, applyInfo(vector), vector.id);
   assert.deepEqual(loadVector('git-wrapped/show-root-commit').vector.apply, { from: null, to: 0, strip: 1, modes: true });
@@ -43,7 +43,7 @@ test('which vectors are patches', () => {
 });
 
 test('a program that always removes a/ and b/ is given only the vectors with those prefixes', () => {
-  // patch-package, pnpm and Yarn take no -p.
+  // patch-package, pnpm, Yarn and Bun take no -p.
   const meta = { scope: ['git', 'git-config'], prefixes: ['a/', 'b/'] };
   const out = (id) => {
     const { vector } = loadVector(id);
@@ -57,7 +57,25 @@ test('a program that always removes a/ and b/ is given only the vectors with tho
     const c = applyCase(vector);
     return !c.skip && !outOfScope(meta, vector, c);
   });
-  assert.equal(given.length, 176);
+  assert.equal(given.length, 178);
+});
+
+test('a program whose packages hold no symbolic links is not given an old tree with one', () => {
+  // Bun drops symbolic links when it unpacks a package, so a patch never meets one there.
+  const meta = { scope: ['git', 'git-config'], prefixes: ['a/', 'b/'], symlinks: false };
+  const out = (id) => {
+    const { vector } = loadVector(id);
+    return outOfScope(meta, vector, applyCase(vector));
+  };
+  assert.match(out('git/ops/symlink-deleted'), /symbolic link/);
+  assert.match(out('git/ops/symlink-becomes-file'), /symbolic link/);
+  assert.equal(out('git/ops/symlink-added'), null); // only the new tree has one: the program may refuse it
+  assert.equal(out('git/basics/modify-one-line'), null);
+  const given = all().filter(({ vector }) => {
+    const c = applyCase(vector);
+    return !c.skip && !outOfScope(meta, vector, c);
+  });
+  assert.equal(given.length, 174);
 });
 
 test('the reference applier turns every old tree into the new tree', () => {
@@ -73,7 +91,7 @@ test('the reference applier turns every old tree into the new tree', () => {
     assert.ok(c.old.every((e) => Buffer.isBuffer(e.content)));
     sections += vector.expected.files.length;
   }
-  assert.equal(trees, 212);
+  assert.equal(trees, 214);
   assert.ok(sections > 250);
 });
 
@@ -199,7 +217,7 @@ process.stdin.on('data', (data) => {
 
 test('the reference appliers pass every patch through the adapter protocol', async () => {
   const vectors = all();
-  for (const [name, patches] of [['reference-js', 212], ['reference-file-js', 191]]) {
+  for (const [name, patches] of [['reference-js', 214], ['reference-file-js', 192]]) {
     const spec = loadRegistry(undefined, 'appliers').find((a) => a.name === name);
     spec.cmd = [process.execPath, ...spec.cmd.slice(1)]; // the Node.js that runs this test
     const { results } = await runApplier(spec, vectors);

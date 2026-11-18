@@ -5,7 +5,7 @@
   "diffutils": "3.10",
   "patch": "2.7.6"
  },
- "count": 250,
+ "count": 252,
  "vectors": [
   {
    "id": "git/basics/modify-one-line",
@@ -1014,6 +1014,32 @@
    ],
    "files": 1,
    "bytes": 137
+  },
+  {
+   "id": "git/paths/trailing-space-added",
+   "tier": "git",
+   "title": "A new file whose name ends with a space, next to the same name without it",
+   "tags": [
+    "paths",
+    "space-in-path",
+    "added"
+   ],
+   "files": 1,
+   "bytes": 132
+  },
+  {
+   "id": "git/paths/trailing-space-empty-added",
+   "tier": "git",
+   "title": "A new empty file whose name ends with a space: only \"diff --git\" names it",
+   "tags": [
+    "paths",
+    "space-in-path",
+    "added",
+    "empty-file",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 73
   },
   {
    "id": "git/paths/double-space",

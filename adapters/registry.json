@@ -234,6 +234,11 @@
       "cmd": ["node", "run.mjs", "apply:yarn"]
     },
     {
+      "name": "bun",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:bun"]
+    },
+    {
       "name": "jsdiff",
       "cwd": "node",
       "cmd": ["node", "run.mjs", "apply:jsdiff"]

@@ -29,7 +29,7 @@ import { bytesFromJson, show, splitLines } from './bytes.js';
 import { loadIndex, loadVector } from './corpus.js';
 import { makeTempDir } from './git.js';
 import { parseDiff } from './refparse.js';
-import { materialize } from './tree.js';
+import { MODE, materialize } from './tree.js';
 import { compareTrees, scanTree, treeOf } from './treecmp.js';
 
 export const VERDICTS = ['ok', 'refused', 'partial', 'wrong', 'crash', 'hang'];
@@ -140,6 +140,8 @@ export function outOfScope(meta, vector, c) {
   if (meta.prefixes && (c.prefixes[0] !== meta.prefixes[0] || c.prefixes[1] !== meta.prefixes[1])) {
     return `the names carry other prefixes than ${meta.prefixes.join(' and ')}, the only ones this program removes`;
   }
+  // A program that patches installed packages, which never hold a symbolic link (Bun drops them when it unpacks one).
+  if (meta.symlinks === false && c.old.some((e) => e.mode === MODE.LINK)) return 'the old tree has a symbolic link, which this program\'s packages cannot hold';
   return null;
 }
 
