@@ -41,6 +41,20 @@ export const scenarios = [
     before: { 'script': text },
     after: { 'bin/script.sh': x(text.replace('line 3', 'line three')) },
   }),
+  git('ops/rename-executable', {
+    title: 'An executable file renamed, its mode unchanged',
+    why: 'A rename that keeps the mode has no mode line: the new file is executable because the old one was.',
+    mustContain: ["similarity index 100%\nrename from build.sh\nrename to make.sh\n"],
+    tags: ['rename', 'mode', 'no-hunks'],
+    before: { 'build.sh': x(text) },
+    after: { 'make.sh': x(text) },
+  }),
+  git('ops/rename-and-edit-executable', {
+    title: 'An executable file renamed and edited, its mode unchanged',
+    tags: ['rename', 'mode'],
+    before: { 'build.sh': x(text) },
+    after: { 'make.sh': x(text.replace('line 3', 'line three')) },
+  }),
   git('ops/renames-disabled', {
     title: 'The same rename with --no-renames: a deletion and an addition',
     tags: ['rename', 'added', 'deleted'],

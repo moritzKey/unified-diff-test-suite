@@ -5,7 +5,7 @@
   "diffutils": "3.10",
   "patch": "2.7.6"
  },
- "count": 248,
+ "count": 250,
  "vectors": [
   {
    "id": "git/basics/modify-one-line",
@@ -1604,6 +1604,29 @@
    ],
    "files": 1,
    "bytes": 264
+  },
+  {
+   "id": "git/ops/rename-executable",
+   "tier": "git",
+   "title": "An executable file renamed, its mode unchanged",
+   "tags": [
+    "rename",
+    "mode",
+    "no-hunks"
+   ],
+   "files": 1,
+   "bytes": 93
+  },
+  {
+   "id": "git/ops/rename-and-edit-executable",
+   "tier": "git",
+   "title": "An executable file renamed and edited, its mode unchanged",
+   "tags": [
+    "rename",
+    "mode"
+   ],
+   "files": 1,
+   "bytes": 227
   },
   {
    "id": "git/ops/renames-disabled",

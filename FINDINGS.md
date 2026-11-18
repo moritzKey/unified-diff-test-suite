@@ -376,7 +376,7 @@ second case, as `--no-color` closes the first.
 ## 13. Applying
 
 Sections 1 to 12 are about reading a diff. This one is about acting on it.
-210 of the vectors are patches in the plain sense — the vector records the tree
+212 of the vectors are patches in the plain sense — the vector records the tree
 before and the tree after — and eighteen programs were asked to get from one to
 the other ([`APPLY.md`](APPLY.md) has every result; `node src/apply.js --adapter
 gnu-patch --show` repeats one). A program may refuse a patch. What matters here
@@ -447,6 +447,12 @@ the tree as it was before the patch.
   for the iterators is still derived from them as from pathspecs, which removes
   the backslash. Any such checkout misses such a file; also on `main`. Not
   found in the tracker.
+- libgit2, once more: an executable file that is renamed without changes
+  loses its executable bit (`git/ops/rename-executable`). An exact rename has
+  no `index` line, so the parsed delta has no mode, and `git_apply__patch()`
+  then takes `GIT_FILEMODE_BLOB`. The mode of the preimage, which `apply_one()`
+  has read, is not used. Checked with pygit2: the renamed file is 644. JGit
+  does the same (section 15).
 - patch-ng loses the source or the target of four renames and two copies, and
   writes a regular file where the patch creates a symbolic link.
 
@@ -481,8 +487,8 @@ errors tries to write the pending files once more, the same rename fails, and
 the handler is entered again. 2.7.6 applies the patch. I could not search the
 tracker of GNU patch either.
 
-Two things held without exception: jsdiff's `applyPatch` applied all 185
-patches it could be given and diffy's `apply_bytes` all 190, and
+Two things held without exception: jsdiff's `applyPatch` applied all 186
+patches it could be given and diffy's `apply_bytes` all 191, and
 `git apply --unidiff-zero` applied all but the one that git 2.43 cannot read
 (section 6).
 
@@ -496,7 +502,7 @@ through their adapters only — each adapter is a direct call of the library, an
 - **diffy 0.5.2** (Rust) reads git's format through `PatchSet` with
   `ParseOptions::gitdiff()`: 219 of the 221 vectors in its scope agree, quoted
   names, binary patches, modes and mail signatures included, and as an applier
-  it turns all 190 patches it can be given into the right file. The two
+  it turns all 191 patches it can be given into the right file. The two
   differences: empty input is an error ("no valid patches found") rather than
   an empty list, and one mail fails — the signature of `git format-patch`
   directly after a hunk whose *deleted* last line carries `\ No newline at end
@@ -544,14 +550,14 @@ the command line, with the released binary and with a build of its current
 source.
 
 **JGit 7.8.1** — `org.eclipse.jgit.patch.Patch`, the parser behind
-`ApplyCommand` — reads 210 of the 226 vectors in its scope as git does: content that looks like a header, zero counts, binary patches, modes,
+`ApplyCommand` — reads 212 of the 228 vectors in its scope as git does: content that looks like a header, zero counts, binary patches, modes,
 mails and merges are all right. The sixteen differences are about names: the
 quoted name followed by a TAB (section 2), the name on the side where no file
 exists (section 5), and a binary file in a `diff --cc` section, which gets no
 name at all because only the `---`/`+++` lines are read for one there.
 
-As an applier, `Git.apply()` gets 182 of 210 patches right, refuses 21 and
-leaves one half-done. It applies six wrongly without an exception, in four
+As an applier, `Git.apply()` gets 183 of 212 patches right, refuses 21 and
+leaves one half-done. It applies seven wrongly without an exception, in five
 ways:
 
 - **`@@ -1 +0,0 @@` empties the file.** That is what `git diff -U0` writes for
@@ -582,6 +588,13 @@ ways:
   `RawText.isCrLfText()`, which is true for any text with one CR-LF and no
   lone CR. No configuration is involved. The applier fuzzer
   (`src/fuzz-apply.js`) found this; the two vectors were added for it.
+- **An executable file that is renamed without changes loses its executable
+  bit** (`git/ops/rename-executable`). git writes no mode for a rename that
+  keeps the mode: an exact rename has no `index` line. `PatchApplier` takes
+  `FileMode.REGULAR_FILE` when the patch states no new mode. libgit2 does the
+  same (section 13). A rename with changes is right, because its `index` line
+  carries the mode. The applier fuzzer found this too, and the two
+  `rename-*executable` vectors were added for it.
 
 Two more results say something about the method. A hunk without context that
 deletes a single line (`@@ -8 +8,0 @@`) "cannot be applied": the position is
@@ -595,8 +608,8 @@ Upstream: nothing found in the issues of eclipse-jgit/jgit. The older Eclipse
 Bugzilla showed a "temporary shutdown" page when I looked.
 
 **toybox patch 0.8.15** is the `patch` of Android, and the ancestor of the
-BusyBox applet ("Adapted from toybox's patch implementation"). 137 of 210
-patches are right, 27 are refused, 39 are wrong with exit status 0.
+BusyBox applet ("Adapted from toybox's patch implementation"). 137 of 212
+patches are right, 28 are refused, 40 are wrong with exit status 0.
 
 - **`@@ -1 +0,0 @@` deletes the file** ("removing f.txt"). A first hunk whose
   new range is `+0,0` is taken to mean that the file is deleted — which is true
@@ -631,8 +644,8 @@ the files unchanged; on a Mac the adapter takes the installed one. I have not
 run it on a Mac. It is called the way the ports framework of FreeBSD calls it,
 with `-E` (see the last point).
 
-141 of 210 patches are right, 24 are refused, 24 are refused after writing a
-reject file, and 21 are wrong with exit status 0. With the content of a file it
+141 of 212 patches are right, 25 are refused, 24 are refused after writing a
+reject file, and 22 are wrong with exit status 0. With the content of a file it
 does as well as GNU patch: the no-newline marker, zero-length ranges from
 `-U0`, content that looks like a header and carriage returns are all right.
 What goes wrong:
@@ -679,7 +692,7 @@ latest release. It patches tracked files only, in a working directory without
 changes, so the adapter commits the old tree first. Mercurial's patch code
 (`mercurial/patch.py`) is its own, and it reads git's extended headers.
 
-173 of 210 patches are right, 6 are refused, 22 are refused after a reject
+175 of 212 patches are right, 6 are refused, 22 are refused after a reject
 file was written or part of the change was made, and 9 are wrong with exit
 status 0. The content of files is handled well: zero-length ranges, the
 no-newline marker, binary patches, copies, empty files and symbolic links are
@@ -730,7 +743,7 @@ protocol for the patches it ships for TypeScript, fsevents and resolve. None of
 the three calls git or patch: pnpm's and Yarn's code are ports of
 patch-package's parser and applier. Each tool writes its patches with
 `git diff --src-prefix=a/ --dst-prefix=b/` and always removes those two
-prefixes, with no `-p`. Each was therefore given the 174 vectors of the `git`
+prefixes, with no `-p`. Each was therefore given the 176 vectors of the `git`
 and `git-config` tiers whose names carry them. The adapters call the parser and
 the applier the way each tool does. patch-package does a dry run first. Yarn
 applies to a copy of the package and discards the copy when a hunk fails. pnpm
@@ -738,9 +751,9 @@ applies in place.
 
 | | right | refused | wrong |
 | --- | --- | --- | --- |
-| patch-package | 126 | 36 | 12 |
-| pnpm | 132 | 30 | 12 |
-| Yarn | 112 | 41 | 21 |
+| patch-package | 127 | 37 | 12 |
+| pnpm | 134 | 30 | 12 |
+| Yarn | 114 | 41 | 21 |
 
 Common to all three:
 
@@ -832,7 +845,7 @@ bullets below were also run through a repository rule with Bazel 9.3.2, the
 latest release. The release differs from master in one way: it reads and
 writes files as UTF-8, so a byte that is not valid UTF-8 also becomes U+FFFD.
 
-Of 210 patches, 136 are right, 38 are refused, 3 are left half-done, and 33 are
+Of 212 patches, 138 are right, 38 are refused, 3 are left half-done, and 33 are
 wrong with no error. One of the refusals belongs to the stand-in: Bazel passes
 names on as bytes, and the stand-in cannot create a name that is not UTF-8.
 
@@ -898,11 +911,11 @@ on renames, mode changes, symbolic links or empty files.
 
 - Eighteen of the twenty-five libraries get every "content that looks like a
   header" vector right; counting the lines of a hunk has become the norm.
-- diffy 0.5.2 differs from git on two of 221 vectors as a parser and on none
-  of 190 as an applier.
+- diffy 0.5.2 differs from git on two of 223 vectors as a parser and on none
+  of 191 as an applier.
 - GitPython, which only reads file headers and always asks git for one fixed
-  format, agreed on all 183 vectors of the `git` tier.
-- go-gitdiff 0.9.0, and the fork of it inside gitleaks, agreed on all 200
+  format, agreed on all 185 vectors of the `git` tier.
+- go-gitdiff 0.9.0, and the fork of it inside gitleaks, agreed on all 202
   vectors in their scope (`git` and `git-wrapped`) and on 23,182 random
   scenarios each — the only parsers without a single difference there.
 - trufflehog is unaffected by the git configuration of whoever runs it.
@@ -924,7 +937,7 @@ scenarios (47,215 scenarios were verified against ground truth in total).
 [`README.md`](README.md#why-trust-the-expectations) has the details.
 
 For applying, the expectation is not computed at all: it is the tree the diff
-was made to. The reference applier reaches it for all 210 patches, and
+was made to. The reference applier reaches it for all 212 patches, and
 `test/apply.test.js` damages trees in sixteen ways and requires each to be
 noticed.
 

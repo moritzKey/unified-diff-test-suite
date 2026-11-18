@@ -1,0 +1,4 @@
+diff --git a/build.sh b/make.sh
+similarity index 100%
+rename from build.sh
+rename to make.sh
