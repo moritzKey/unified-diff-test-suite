@@ -184,6 +184,16 @@
       "cmd": ["node", "run.mjs", "apply:gnu-patch"]
     },
     {
+      "name": "nix-fetchpatch",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:nix-fetchpatch"]
+    },
+    {
+      "name": "nix-fetchpatch2",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:nix-fetchpatch2"]
+    },
+    {
       "name": "busybox-patch",
       "cwd": "node",
       "cmd": ["node", "run.mjs", "apply:busybox-patch"]

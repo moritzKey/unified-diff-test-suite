@@ -118,6 +118,8 @@ jobs:
         run: adapters/bsd-patch/build.sh
       - name: Bazel's native patch, PatchUtil.java at a pinned commit
         run: adapters/bazel-patch/build.sh
+      - name: The patchutils of nixpkgs' fetchpatch and fetchpatch2, from pinned sources
+        run: adapters/nix-fetchpatch/build.sh
       - name: Run every parser over every vector
         run: node src/run.js
       # git, patch, busybox, toybox and svn are whatever this machine has, so

@@ -1,8 +1,8 @@
 # Findings
 
 What the corpus showed when it was first run, on 16 and 17 November 2026,
-against the latest release of twenty-six parsers, and against twenty-one programs
-that apply patches. The numbers are in [`RESULTS.md`](RESULTS.md) and
+against the latest release of twenty-six parsers, against twenty-one programs
+that apply patches, and against the patch normalization of nixpkgs. The numbers are in [`RESULTS.md`](RESULTS.md) and
 [`APPLY.md`](APPLY.md); this file explains them, one kind of problem at a
 time, and records what was already known to the projects.
 
@@ -39,7 +39,7 @@ Vector ids below (`git/paths/space`) are files under `corpus/vectors/`.
 | 10 | binary files are not recognised | gitdiff-parser, jsdiff, git-diff-view, parse-git-diff, patch-ng, patch and gitpatch (Rust), unidiff (Rust), diffparser (Java) |
 | 11 | names are damaged when the prefixes are not `a/` and `b/` | parse-diff, diff2html, unidiff, go-gitdiff |
 | 12 | a tool's result depends on the user's git configuration | gitleaks (not trufflehog) |
-| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, Bazel, libgit2, JGit, Mercurial, Subversion, Dulwich, patch-ng, patch-package, pnpm, Yarn, Bun, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
+| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, Bazel, libgit2, JGit, Mercurial, Subversion, Dulwich, patch-ng, patch-package, pnpm, Yarn, Bun, nixpkgs' fetchpatch, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
 
 No parser hung. Four programs end abnormally on valid input: the Rust crates
 patch and gitpatch panic (section 14), waigani/diffparser panics on GNU diffs,
@@ -386,7 +386,9 @@ libgit2, JGit and patch-ng by calling the program by hand, outside the harness;
 the go-gitdiff case is the one its own tracker describes. toybox patch and JGit
 were added a day later and have their own section, 15; BSD patch and Mercurial
 have sections 16 and 17, patch-package, pnpm, Yarn and Bun section 18, Bazel
-section 19, Subversion section 20, and Dulwich section 21.
+section 19, Subversion section 20, and Dulwich section 21. Section 22 is about
+nixpkgs' `fetchpatch` and `fetchpatch2`, which change a patch before GNU patch
+applies it.
 
 **Zero context.** A hunk made with `-U0` that only inserts has an old range of
 length zero, `@@ -5,0 +6 @@`, and that range names the line *after which* the
@@ -1079,6 +1081,65 @@ the signature as part of the last hunk, which is why `apply_patch` refuses
 such mails.
 
 Upstream: not found in Dulwich's issues.
+
+## 22. nixpkgs' fetchpatch and fetchpatch2
+
+Added on 18 November 2026. Nix packages download the patches they apply with
+`fetchpatch` or `fetchpatch2`, usually from the commit URL of a forge. Both
+normalize the patch before they check its hash, so that the hash does not
+change when the forge changes the text around it
+(`pkgs/build-support/fetchpatch/default.nix`). `lsdiff` lists the files and
+`sort -u` sorts them. `sed` escapes `*` and `?`, and `filterdiff --include=NAME
+--strip=0 --clean` extracts each file in turn. A last `filterdiff -p1` follows.
+`fetchpatch` runs patchutils 0.3.3 and `fetchpatch2` runs 0.4.2, each with the
+patches nixpkgs applies to it, and stdenv then applies the result with
+`patch -p1`. The adapters run exactly these commands with patchutils built from
+the sources nixpkgs uses (`adapters/nix-fetchpatch`). They apply the result as
+the GNU patch adapter does, so a difference to GNU patch comes from the
+normalization. They are given the 203 vectors whose names carry `a/` and `b/`.
+
+| | right | refused | half-done | wrong |
+| --- | --- | --- | --- | --- |
+| GNU patch 2.7.6 alone | 187 | 8 | 6 | 2 |
+| `fetchpatch`, then GNU patch | 134 | 45 | 6 | 18 |
+| `fetchpatch2`, then GNU patch | 145 | 45 | 4 | 9 |
+
+A file section that the normalization loses makes the fetch fail when it was
+the only one ("Normalized patch ... is empty"). In a patch with other files,
+it is dropped without a word, and the build applies the rest. What is lost:
+
+- **Names with `[`, and names that git quotes.** The names from `lsdiff` are
+  used as `fnmatch()` patterns, and only `*` and `?` are escaped. In
+  `pages/[id].tsx`, `[id]` is a set of characters, so the pattern does not
+  match the name. A quoted name does not match either, because its
+  backslashes are read as escapes. git quotes every name outside ASCII, and
+  every name with a double quote, a backslash or a control character
+  (`"a/\303\274ber.txt"`). Both versions lose these files (20 vectors). The
+  dynamic routes of Next.js, Nuxt and SvelteKit (`[slug]`, `[...all]`) are
+  named this way. Escaping `[` and `\` as well (`sed -e 's/[*?[\\]/\\&/g'`)
+  keeps all of them, with either version, and changes no other result. Neither
+  nixpkgs' tracker nor patchutils' has anything on it.
+- **Sections without hunks**: pure renames and copies, mode changes without
+  content changes, and empty files that are added or deleted. This is known
+  (nixpkgs #32084, patchutils #22 and #59). patchutils 0.4.3 added
+  `--git-extended-diffs=include` for them, and nixpkgs is still at 0.4.2
+  (#446436).
+- **The mode of a new file.** `new file mode` goes too, so a new script is not
+  executable (`git/ops/new-executable`), and a new symbolic link becomes a
+  regular file that holds its target (`git/ops/symlink-added`). Both versions
+  do this.
+- **GIT binary patches** (known, nixpkgs #204320). `fetchpatch` also loses the
+  rename of a file that is renamed and changed, and applies the change under
+  the old name.
+
+With patchutils 0.4.5, `--git-extended-diffs=include` on all three calls, and
+the escaping above, the normalization keeps what GNU patch needs: 160 of the
+174 `git diff` patches come out right, against 159 for GNU patch alone and 123
+for `fetchpatch2` today. Changing what fetchpatch writes changes the hash of
+every patch that it now writes differently, which is why nixpkgs keeps the old
+`fetchpatch` and added `fetchpatch2` beside it. The escaping only changes
+patches that touch such names, and for those the current hash is the hash of
+an incomplete patch.
 
 ## Smaller observations
 
