@@ -5,7 +5,7 @@
   "diffutils": "3.10",
   "patch": "2.7.6"
  },
- "count": 252,
+ "count": 254,
  "vectors": [
   {
    "id": "git/basics/modify-one-line",
@@ -2101,6 +2101,28 @@
    ],
    "files": 2,
    "bytes": 286
+  },
+  {
+   "id": "git/ops/directory-becomes-file",
+   "tier": "git",
+   "title": "A directory replaced by a file of the same name: the new file comes first",
+   "tags": [
+    "added",
+    "deleted"
+   ],
+   "files": 2,
+   "bytes": 289
+  },
+  {
+   "id": "git/ops/rename-onto-directory-name",
+   "tier": "git",
+   "title": "A file renamed to the name of a directory whose only file is deleted",
+   "tags": [
+    "rename",
+    "deleted"
+   ],
+   "files": 2,
+   "bytes": 236
   },
   {
    "id": "git/ops/everything-at-once",

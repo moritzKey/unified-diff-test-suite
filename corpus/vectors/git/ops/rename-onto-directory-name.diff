@@ -1,0 +1,11 @@
+diff --git a/notes.txt b/notes
+similarity index 100%
+rename from notes.txt
+rename to notes
+diff --git a/notes/old.txt b/notes/old.txt
+deleted file mode 100644
+index 286c5f5..0000000
+--- a/notes/old.txt
++++ /dev/null
+@@ -1 +0,0 @@
+-gone

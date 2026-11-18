@@ -1,0 +1,14 @@
+diff --git a/thing b/thing
+new file mode 100644
+index 0000000..85e2856
+--- /dev/null
++++ b/thing
+@@ -0,0 +1 @@
++i am a file now
+diff --git a/thing/inside.txt b/thing/inside.txt
+deleted file mode 100644
+index 533b99a..0000000
+--- a/thing/inside.txt
++++ /dev/null
+@@ -1 +0,0 @@
+-i am inside

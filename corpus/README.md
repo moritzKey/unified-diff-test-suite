@@ -78,7 +78,7 @@ parent), `new_start`, `new_lines` and lines of the form
 
 ## Applying
 
-214 of the vectors are patches in the plain sense, and say so:
+216 of the vectors are patches in the plain sense, and say so:
 
 ```jsonc
 "apply": { "from": 0, "to": 1, "strip": 1, "modes": true }

@@ -9,14 +9,14 @@ tools, patch appliers, and the harnesses that score coding agents. The format
 they read has no specification beyond a few paragraphs of documentation, and it
 is full of traps. This repository contains
 
-- **252 test vectors** — real output of `git` and GNU `diff` for carefully
+- **254 test vectors** — real output of `git` and GNU `diff` for carefully
   chosen changes, each with the parse it must produce, in plain JSON that any
   language can read ([`corpus/`](corpus/README.md));
 - **a harness** that runs any parser against them through a small adapter, and
   adapters for twenty-six widely used libraries in JavaScript, Python, Go,
   Rust, Java and C
   ([`RESULTS.md`](RESULTS.md), [`FINDINGS.md`](FINDINGS.md));
-- **the same for programs that apply patches**: 214 of the vectors come with
+- **the same for programs that apply patches**: 216 of the vectors come with
   the file tree before and after, and `git apply`, GNU patch, BusyBox patch,
   toybox patch, the BSD patch of FreeBSD and macOS, Bazel's native patch,
   Mercurial, Subversion, libgit2, JGit, Dulwich, the patching of
@@ -77,7 +77,7 @@ and carries a recipe from which it can be produced again.
 
 | tier | vectors | what it is |
 | --- | --- | --- |
-| `git` | 187 | `git diff` with git's default naming |
+| `git` | 189 | `git diff` with git's default naming |
 | `git-wrapped` | 17 | the same with something around it: `git show`, `git log -p`, `git format-patch`, `--stat` |
 | `git-config` | 21 | the same, named differently: `--no-prefix`, mnemonic prefixes, `-R`, `core.quotePath=false`, … |
 | `combined` | 10 | merge commits (`diff --cc`) |
@@ -137,28 +137,28 @@ one: it reported success and the files are not what they should be.
 
 | | patches | right | refused | left half-done | wrong, no error |
 | --- | --- | --- | --- | --- | --- |
-| `git apply` 2.43.0 | 214 | 203 | 9 | – | 2 |
-| `git apply --unidiff-zero` | 214 | 213 | 1 | – | – |
-| GNU patch 2.7.6 | 214 | 199 | 8 | 5 | 2 |
-| BusyBox patch 1.36.1 | 214 | 106 | 47 | 10 | 51 |
-| toybox patch 0.8.15 | 214 | 138 | 28 | 7 | 41 |
-| BSD patch (FreeBSD, = macOS) | 214 | 142 | 26 | 24 | 22 |
-| Bazel (`repository_ctx.patch`, master) | 214 | 138 | 39 | 3 | 34 |
-| libgit2 1.9.7 (`git_apply`) | 200 | 164 | 31 | – | 5 |
-| JGit 7.8.1 (`Git.apply()`) | 214 | 185 | 21 | 1 | 7 |
-| Dulwich 1.2.21 (`porcelain.apply_patch`) | 214 | 187 | 25 | – | 2 |
-| Mercurial 7.2.4 (`hg import`) | 214 | 175 | 6 | 23 | 10 |
-| Subversion 1.15.0 (`svn patch`) | 214 | 162 | 15 | 24 | 13 |
-| patch-ng 1.19.1 | 214 | 131 | 39 | 13 | 31 |
-| patch-package 8.0.1 | 178 | 127 | 37 | – | 14 |
-| pnpm 11 (`@pnpm/patching.apply-patch`) | 178 | 134 | 30 | – | 14 |
-| Yarn 4 (`@yarnpkg/plugin-patch` 4.0.6) | 178 | 114 | 41 | – | 23 |
-| Bun 1.4.4 (`bun install`, `patchedDependencies`) | 174 | 140 | 28 | – | 6 |
-| jsdiff 9.0.0 (`applyPatch`) | 187 | 187 | – | – | – |
-| whatthepatch 1.0.7 (`apply_diff`) | 187 | 175 | 6 | – | 6 |
-| go-gitdiff 0.9.0 (`Apply`) | 192 | 185 | 2 | – | 5 |
-| diffy 0.5.2 (`apply_bytes`) | 192 | 192 | – | – | – |
-| java-diff-utils 4.18 (`applyTo`) | 187 | 178 | 4 | – | 5 |
+| `git apply` 2.43.0 | 216 | 205 | 9 | – | 2 |
+| `git apply --unidiff-zero` | 216 | 215 | 1 | – | – |
+| GNU patch 2.7.6 | 216 | 199 | 8 | 7 | 2 |
+| BusyBox patch 1.36.1 | 216 | 106 | 48 | 10 | 52 |
+| toybox patch 0.8.15 | 216 | 138 | 29 | 7 | 42 |
+| BSD patch (FreeBSD, = macOS) | 216 | 142 | 27 | 24 | 23 |
+| Bazel (`repository_ctx.patch`, master) | 216 | 138 | 41 | 3 | 34 |
+| libgit2 1.9.7 (`git_apply`) | 202 | 166 | 31 | – | 5 |
+| JGit 7.8.1 (`Git.apply()`) | 216 | 185 | 21 | 3 | 7 |
+| Dulwich 1.2.21 (`porcelain.apply_patch`) | 216 | 187 | 27 | – | 2 |
+| Mercurial 7.2.4 (`hg import`) | 216 | 175 | 7 | 24 | 10 |
+| Subversion 1.15.0 (`svn patch`) | 216 | 162 | 15 | 26 | 13 |
+| patch-ng 1.19.1 | 216 | 131 | 40 | 13 | 32 |
+| patch-package 8.0.1 | 180 | 127 | 39 | – | 14 |
+| pnpm 11 (`@pnpm/patching.apply-patch`) | 180 | 134 | 32 | – | 14 |
+| Yarn 4 (`@yarnpkg/plugin-patch` 4.0.6) | 180 | 114 | 43 | – | 23 |
+| Bun 1.4.4 (`bun install`, `patchedDependencies`) | 176 | 140 | 30 | – | 6 |
+| jsdiff 9.0.0 (`applyPatch`) | 189 | 189 | – | – | – |
+| whatthepatch 1.0.7 (`apply_diff`) | 189 | 177 | 6 | – | 6 |
+| go-gitdiff 0.9.0 (`Apply`) | 194 | 187 | 2 | – | 5 |
+| diffy 0.5.2 (`apply_bytes`) | 194 | 194 | – | – | – |
+| java-diff-utils 4.18 (`applyTo`) | 189 | 180 | 4 | – | 5 |
 
 Three examples of the last column. A diff made with `-U0` that inserts a line
 after line 5 says `@@ -5,0 +6 @@`; plain `git apply` puts the line at the end

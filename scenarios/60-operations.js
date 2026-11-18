@@ -333,6 +333,20 @@ export const scenarios = [
     before: { 'thing': 'i was a file\n' },
     after: { 'thing/inside.txt': 'i am inside\n' },
   }),
+  git('ops/directory-becomes-file', {
+    title: 'A directory replaced by a file of the same name: the new file comes first',
+    why: 'git sorts the sections by name, so "thing" is created before "thing/inside.txt" is deleted. A program that applies the sections one after the other finds the directory still there.',
+    tags: ['added', 'deleted'],
+    before: { 'thing/inside.txt': 'i am inside\n' },
+    after: { 'thing': 'i am a file now\n' },
+  }),
+  git('ops/rename-onto-directory-name', {
+    title: 'A file renamed to the name of a directory whose only file is deleted',
+    why: 'The rename section comes before the deletion that frees its target.',
+    tags: ['rename', 'deleted'],
+    before: { 'notes.txt': 'line one\nline two\nline three\n', 'notes/old.txt': 'gone\n' },
+    after: { 'notes': 'line one\nline two\nline three\n' },
+  }),
   git('ops/everything-at-once', {
     title: 'Added, deleted, modified, renamed, copied, chmod, symlink, submodule and binary in one diff',
     tags: ['rename', 'copy', 'mode', 'symlink', 'submodule', 'binary', 'added', 'deleted'],

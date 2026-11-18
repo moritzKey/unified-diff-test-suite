@@ -29,7 +29,7 @@ test('which vectors are patches', () => {
   assert.match(reason('gnu/labels'), /labels/);
   assert.match(reason('git/basics/empty-diff'), /empty/);
   const cases = all().map(({ vector }) => applyCase(vector)).filter((c) => !c.skip);
-  assert.equal(cases.length, 214);
+  assert.equal(cases.length, 216);
   // What a vector says about itself is what this module works out.
   for (const { vector } of all()) assert.deepEqual(vector.apply, applyInfo(vector), vector.id);
   assert.deepEqual(loadVector('git-wrapped/show-root-commit').vector.apply, { from: null, to: 0, strip: 1, modes: true });
@@ -57,7 +57,7 @@ test('a program that always removes a/ and b/ is given only the vectors with tho
     const c = applyCase(vector);
     return !c.skip && !outOfScope(meta, vector, c);
   });
-  assert.equal(given.length, 178);
+  assert.equal(given.length, 180);
 });
 
 test('a program whose packages hold no symbolic links is not given an old tree with one', () => {
@@ -75,7 +75,7 @@ test('a program whose packages hold no symbolic links is not given an old tree w
     const c = applyCase(vector);
     return !c.skip && !outOfScope(meta, vector, c);
   });
-  assert.equal(given.length, 174);
+  assert.equal(given.length, 176);
 });
 
 test('the reference applier turns every old tree into the new tree', () => {
@@ -91,7 +91,7 @@ test('the reference applier turns every old tree into the new tree', () => {
     assert.ok(c.old.every((e) => Buffer.isBuffer(e.content)));
     sections += vector.expected.files.length;
   }
-  assert.equal(trees, 214);
+  assert.equal(trees, 216);
   assert.ok(sections > 250);
 });
 
@@ -217,7 +217,7 @@ process.stdin.on('data', (data) => {
 
 test('the reference appliers pass every patch through the adapter protocol', async () => {
   const vectors = all();
-  for (const [name, patches] of [['reference-js', 214], ['reference-file-js', 192]]) {
+  for (const [name, patches] of [['reference-js', 216], ['reference-file-js', 194]]) {
     const spec = loadRegistry(undefined, 'appliers').find((a) => a.name === name);
     spec.cmd = [process.execPath, ...spec.cmd.slice(1)]; // the Node.js that runs this test
     const { results } = await runApplier(spec, vectors);
