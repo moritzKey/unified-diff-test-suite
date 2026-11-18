@@ -19,8 +19,8 @@ is full of traps. This repository contains
 - **the same for programs that apply patches**: 214 of the vectors come with
   the file tree before and after, and `git apply`, GNU patch, BusyBox patch,
   toybox patch, the BSD patch of FreeBSD and macOS, Bazel's native patch,
-  Mercurial, Subversion, libgit2, JGit, the patching of patch-package, pnpm,
-  Yarn and Bun, and
+  Mercurial, Subversion, libgit2, JGit, Dulwich, the patching of
+  patch-package, pnpm, Yarn and Bun, and
   six libraries are asked to get from one to the other
   ([`APPLY.md`](APPLY.md));
 - **a description of the format** as the tools actually write it
@@ -146,6 +146,7 @@ one: it reported success and the files are not what they should be.
 | Bazel (`repository_ctx.patch`, master) | 214 | 138 | 39 | 3 | 34 |
 | libgit2 1.9.7 (`git_apply`) | 200 | 164 | 31 | – | 5 |
 | JGit 7.8.1 (`Git.apply()`) | 214 | 185 | 21 | 1 | 7 |
+| Dulwich 1.2.21 (`porcelain.apply_patch`) | 214 | 187 | 25 | – | 2 |
 | Mercurial 7.2.4 (`hg import`) | 214 | 175 | 6 | 23 | 10 |
 | Subversion 1.15.0 (`svn patch`) | 214 | 162 | 15 | 24 | 13 |
 | patch-ng 1.19.1 | 214 | 131 | 39 | 13 | 31 |
@@ -170,7 +171,9 @@ newline in. The `patch` of macOS gets all of those right, but cuts a line at a
 NUL byte and applies the change of a copied file to the original. Mercurial
 drops the renames of a patch that Mercurial itself wrote with `diff.noprefix`.
 `svn patch` stops reading a patch at a rename that also changes the mode, as
-git writes it, and applies nothing at all, with exit status 0.
+git writes it, and applies nothing at all, with exit status 0. Dulwich strips
+one path component too many from the names of renames, so a rename inside a
+directory can rename another file.
 Yarn never applies a mode change, and when a patch fills an empty file with
 content that has no final newline, Yarn leaves the file empty. Bazel rewrites
 a file that a patch only renames or makes executable, which breaks binaries,

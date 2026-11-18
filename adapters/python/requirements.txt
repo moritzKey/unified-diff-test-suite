@@ -1,3 +1,4 @@
+dulwich==1.2.21
 GitPython==3.2.1
 mercurial==7.2.4
 patch-ng==1.19.1

@@ -1,7 +1,7 @@
 # Findings
 
 What the corpus showed when it was first run, on 16 and 17 November 2026,
-against the latest release of twenty-five parsers, and against twenty programs
+against the latest release of twenty-five parsers, and against twenty-one programs
 that apply patches. The numbers are in [`RESULTS.md`](RESULTS.md) and
 [`APPLY.md`](APPLY.md); this file explains them, one kind of problem at a
 time, and records what was already known to the projects.
@@ -39,7 +39,7 @@ Vector ids below (`git/paths/space`) are files under `corpus/vectors/`.
 | 10 | binary files are not recognised | gitdiff-parser, jsdiff, git-diff-view, parse-git-diff, patch-ng, patch and gitpatch (Rust), unidiff (Rust), diffparser (Java) |
 | 11 | names are damaged when the prefixes are not `a/` and `b/` | parse-diff, diff2html, unidiff, go-gitdiff |
 | 12 | a tool's result depends on the user's git configuration | gitleaks (not trufflehog) |
-| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, Bazel, libgit2, JGit, Mercurial, Subversion, patch-ng, patch-package, pnpm, Yarn, Bun, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
+| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, Bazel, libgit2, JGit, Mercurial, Subversion, Dulwich, patch-ng, patch-package, pnpm, Yarn, Bun, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
 
 No parser hung. Four programs end abnormally on valid input: the Rust crates
 patch and gitpatch panic (section 14), waigani/diffparser panics on GNU diffs,
@@ -377,7 +377,7 @@ second case, as `--no-color` closes the first.
 
 Sections 1 to 12 are about reading a diff. This one is about acting on it.
 214 of the vectors are patches in the plain sense — the vector records the tree
-before and the tree after — and twenty programs were asked to get from one to
+before and the tree after — and twenty-one programs were asked to get from one to
 the other ([`APPLY.md`](APPLY.md) has every result; `node src/apply.js --adapter
 gnu-patch --show` repeats one). A program may refuse a patch. What matters here
 is the other outcome: it reports success, and a file is not what it should be.
@@ -386,7 +386,7 @@ libgit2, JGit and patch-ng by calling the program by hand, outside the harness;
 the go-gitdiff case is the one its own tracker describes. toybox patch and JGit
 were added a day later and have their own section, 15; BSD patch and Mercurial
 have sections 16 and 17, patch-package, pnpm, Yarn and Bun section 18, Bazel
-section 19, and Subversion section 20.
+section 19, Subversion section 20, and Dulwich section 21.
 
 **Zero context.** A hunk made with `-U0` that only inserts has an old range of
 length zero, `@@ -5,0 +6 @@`, and that range names the line *after which* the
@@ -1018,6 +1018,37 @@ Refused, or refused after a reject file was written: hunks without context
 that only insert (5 vectors and `gnu/u0`), quoted names, swaps and rotations of
 names ("Skipped"), and trees with names that svn cannot version (a control
 character, or bytes that are not UTF-8).
+
+## 21. Dulwich
+
+Added on 18 November 2026. Dulwich, the git implementation in pure Python (used
+by Poetry for git dependencies, among others), has had its own `git apply`
+since 1.2.0 (April 2026): `porcelain.apply_patch()`, on top of
+`patch.parse_unified_diff()` and `patch.apply_patches()`. The adapter makes the directory a repository with
+Dulwich itself (`porcelain.init()`, `add()` and `commit()`) and calls
+`apply_patch()` with `strip` as for `patch -p`. Of 214 patches, version 1.2.21
+gets 187 right, refuses 25, and applies 2 wrongly without an error:
+
+- **The paths of rename and copy lines lose one component too many.** git
+  writes `rename from`, `rename to`, `copy from` and `copy to` without the
+  `a/` and `b/` prefixes, and git strips one component less from them than
+  `-p` says. Dulwich strips the full `strip` from these lines too. So with the
+  default `strip=1`, `git mv util.js lib/helpers/util.js` puts the file at
+  `helpers/util.js` (`git/ops/rename-into-directory`,
+  `git/ops/rename-and-mode-change`), and a rename out of a directory fails
+  with "Cannot rename: source ... not found" (2 vectors). When a file with the
+  shortened name exists, the wrong file is renamed. After
+  `git mv docs/README.md docs/guide.md` next to a top-level `README.md`, Dulwich
+  renames the top-level file to `guide.md` and leaves `docs/README.md` where
+  it was.
+- Every GNU diff is refused ("No patches found in input"): the parser reads
+  only sections with a `diff --git` header. A `git format-patch` mail is
+  refused because the signature after the last hunk is read as part of it. A
+  file with a lone CR in a line, or with CR line endings, is refused, because
+  `splitlines()` also ends a line at CR. A swap or rotation of names is
+  refused ("already exists in working directory").
+
+Upstream: not found in Dulwich's issues.
 
 ## Smaller observations
 
