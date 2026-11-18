@@ -194,6 +194,11 @@
       "cmd": ["node", "run.mjs", "apply:bsd-patch"]
     },
     {
+      "name": "bazel-patch",
+      "cwd": "bazel-patch",
+      "cmd": ["java", "-cp", "build:lib/*", "BazelPatchHost", "apply:bazel"]
+    },
+    {
       "name": "libgit2",
       "cwd": "python",
       "cmd": [".venv/bin/python", "run.py", "apply:pygit2"]

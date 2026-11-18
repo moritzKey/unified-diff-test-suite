@@ -6,13 +6,17 @@
 // and symbolic links, whose content is their target. Directories are not
 // entries; an empty directory is nothing.
 
-import { lstatSync, readdirSync, readFileSync, readlinkSync } from 'node:fs';
+import { chmodSync, lstatSync, readdirSync, readFileSync, readlinkSync } from 'node:fs';
 import { show, toBuf } from './bytes.js';
 import { MODE } from './tree.js';
 
 const SLASH = Buffer.from('/');
 
-/** Scan a directory. A `.git` or `.hg` at the top (the repository an applier works in) is not part of the tree. */
+/**
+ * Scan a directory. A `.git` or `.hg` at the top (the repository an applier works in) is not part of the tree.
+ * A file or directory that the program left without read permission for its owner is made readable to be
+ * scanned, and the file's entry says what it was left with (`unreadable`, the permission bits in octal).
+ */
 export function scanTree(dir) {
   const root = toBuf(dir);
   const tree = new Map();
@@ -23,9 +27,16 @@ export function scanTree(dir) {
       const path = rel.length ? Buffer.concat([rel, SLASH, name]) : name;
       const abs = Buffer.concat([root, SLASH, path]);
       const st = lstatSync(abs);
+      const need = st.isDirectory() ? 0o500 : 0o400;
+      const left = (st.isDirectory() || st.isFile()) && (st.mode & need) !== need ? (st.mode & 0o777).toString(8).padStart(3, '0') : null;
+      if (left) chmodSync(abs, (st.mode & 0o7777) | need);
       if (st.isDirectory()) walk(path);
       else if (st.isSymbolicLink()) tree.set(path.toString('latin1'), { path, mode: MODE.LINK, content: readlinkSync(abs, { encoding: 'buffer' }) });
-      else if (st.isFile()) tree.set(path.toString('latin1'), { path, mode: st.mode & 0o111 ? MODE.EXE : MODE.FILE, content: readFileSync(abs) });
+      else if (st.isFile()) {
+        const entry = { path, mode: st.mode & 0o111 ? MODE.EXE : MODE.FILE, content: readFileSync(abs) };
+        if (left) entry.unreadable = left;
+        tree.set(path.toString('latin1'), entry);
+      }
       else tree.set(path.toString('latin1'), { path, mode: 'other', content: Buffer.alloc(0) });
     }
   };
@@ -56,7 +67,8 @@ function firstDifference(a, b) {
  *   extra   - a file exists that should not (a leftover, a backup, a reject)
  *   type    - a file where a symbolic link should be, or the reverse
  *   content - the bytes differ
- *   mode    - the executable bit differs (only when `modes` is true)
+ *   mode    - the executable bit differs (only when `modes` is true), or the
+ *             program left a file that its owner cannot read
  */
 export function compareTrees(actual, expected, { modes = true } = {}) {
   const findings = [];
@@ -68,6 +80,7 @@ export function compareTrees(actual, expected, { modes = true } = {}) {
       add('missing', `${name} does not exist`);
       continue;
     }
+    if (got.unreadable) add('mode', `${name} was left with permissions ${got.unreadable}: its owner cannot read it`);
     if ((got.mode === MODE.LINK) !== (want.mode === MODE.LINK) || got.mode === 'other') {
       add('type', `${name} is ${kindOf(got.mode)}, expected ${kindOf(want.mode)}`);
       continue;

@@ -126,7 +126,7 @@ if "skip" not in how:
     # read the directory back and compare it with `after`
 ```
 
-[`APPLY.md`](../APPLY.md) shows what seventeen programs make of them.
+[`APPLY.md`](../APPLY.md) shows what eighteen programs make of them.
 
 ## Tiers
 

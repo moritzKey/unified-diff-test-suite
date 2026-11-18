@@ -1,7 +1,7 @@
 # Findings
 
 What the corpus showed when it was first run, on 16 and 17 November 2026,
-against the latest release of twenty-five parsers, and against seventeen programs
+against the latest release of twenty-five parsers, and against eighteen programs
 that apply patches. The numbers are in [`RESULTS.md`](RESULTS.md) and
 [`APPLY.md`](APPLY.md); this file explains them, one kind of problem at a
 time, and records what was already known to the projects.
@@ -39,7 +39,7 @@ Vector ids below (`git/paths/space`) are files under `corpus/vectors/`.
 | 10 | binary files are not recognised | gitdiff-parser, jsdiff, git-diff-view, parse-git-diff, patch-ng, patch and gitpatch (Rust), unidiff (Rust), diffparser (Java) |
 | 11 | names are damaged when the prefixes are not `a/` and `b/` | parse-diff, diff2html, unidiff, go-gitdiff |
 | 12 | a tool's result depends on the user's git configuration | gitleaks (not trufflehog) |
-| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, libgit2, JGit, Mercurial, patch-ng, patch-package, pnpm, Yarn, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
+| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, Bazel, libgit2, JGit, Mercurial, patch-ng, patch-package, pnpm, Yarn, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
 
 No parser hung. Four programs end abnormally on valid input: the Rust crates
 patch and gitpatch panic (section 14), waigani/diffparser panics on GNU diffs,
@@ -377,7 +377,7 @@ second case, as `--no-color` closes the first.
 
 Sections 1 to 12 are about reading a diff. This one is about acting on it.
 210 of the vectors are patches in the plain sense — the vector records the tree
-before and the tree after — and seventeen programs were asked to get from one to
+before and the tree after — and eighteen programs were asked to get from one to
 the other ([`APPLY.md`](APPLY.md) has every result; `node src/apply.js --adapter
 gnu-patch --show` repeats one). A program may refuse a patch. What matters here
 is the other outcome: it reports success, and a file is not what it should be.
@@ -385,7 +385,8 @@ I reproduced the cases of `git apply`, GNU patch, BusyBox patch, toybox patch,
 libgit2, JGit and patch-ng by calling the program by hand, outside the harness;
 the go-gitdiff case is the one its own tracker describes. toybox patch and JGit
 were added a day later and have their own section, 15; BSD patch and Mercurial
-have sections 16 and 17, and patch-package, pnpm and Yarn section 18.
+have sections 16 and 17, patch-package, pnpm and Yarn section 18, and Bazel
+section 19.
 
 **Zero context.** A hunk made with `-U0` that only inserts has an old range of
 length zero, `@@ -5,0 +6 @@`, and that range names the line *after which* the
@@ -816,6 +817,68 @@ and PR #7128 are about files that already lack a final newline, which this
 corpus covers and Yarn gets right. patch-package's tracker has the binary files
 (#193, closed in 2019), the rename with changes (#518, open) and copies (#530,
 open). pnpm's tracker was not searched.
+
+## 19. Bazel's native patch
+
+Added on 18 November 2026. Bazel applies patches with its own code,
+`PatchUtil.java` on top of java-diff-utils 4.12, in three cases:
+`repository_ctx.patch()`, the `patches` of `http_archive` and
+`git_repository`, and the Bzlmod overrides when no `patch_tool` is set. The
+patches that the Bazel Central Registry keeps for its modules go through it as
+well. The adapter runs Bazel's file unchanged, at master e66a692 (9 November
+2026). Bazel's file system classes are replaced by stand-ins for the two that
+`PatchUtil` uses (`adapters/bazel-patch/vfs`). The cases of the first two
+bullets below were also run through a repository rule with Bazel 9.3.2, the
+latest release. The release differs from master in one way: it reads and
+writes files as UTF-8, so a byte that is not valid UTF-8 also becomes U+FFFD.
+
+Of 210 patches, 136 are right, 38 are refused, 3 are left half-done, and 33 are
+wrong with no error. One of the refusals belongs to the stand-in: Bazel passes
+names on as bytes, and the stand-in cannot create a name that is not UTF-8.
+
+- **A section without hunks rewrites the file.** For a rename (`similarity
+  index 100%`) or a mode change (`old mode`/`new mode`), `applyPatchToFile()`
+  runs with an empty patch. It still reads the file as lines and writes it
+  back with the line break of its first line, and adds a final newline. In
+  Bazel 9.3.2, a PNG of 13 bytes renamed by a patch comes out as 15 bytes: its
+  CRs are gone, a final newline is added, and its first byte is U+FFFD.
+  `chmod +x` on a prebuilt binary rewrites it the same way. In the corpus this
+  shows in `git/bytes/mixed-line-endings-renamed`.
+- **A symbolic link becomes a file its owner cannot read.** The permission is
+  read from the owner digit of the mode, and for `120000` that digit is 0. The
+  link is written as a regular file holding its target, with permissions
+  `----rw-r--` (`git/ops/symlink-added`, `git/ops/file-becomes-symlink`).
+  Changing or deleting an existing link that dangles is refused, because the
+  containment check added on 27 October 2026 cannot resolve it.
+- **The no-newline marker has no effect** (13 vectors). Since #31034 (September
+  2026) the line is accepted. But every file is written with a newline after
+  every line, so a patch that removes a final newline does not remove it, and
+  a file that has none, or a new file without one, gets one.
+- **Zero-context insertions go one line too early** (5 vectors). This is
+  known as #18610.
+- **The line break of the first line is used for every line** (#32511, 9
+  November 2026). A file with mixed line endings changes as a whole (2
+  vectors). A patch that turns LF into CR LF does nothing, because the patch
+  is read as lines too and its CRs are dropped (1 vector). A CR inside a line ends that
+  line, and the hunk's counts no longer fit (3 refused).
+- **Copies are not read.** The change meant for a copy is made to its source,
+  and the copy is not created (3 vectors).
+- **Quoted names are not unquoted.** The new file `Übersicht 2024.txt` is
+  created as `\303\234bersicht 2024.txt"`. The other 21 vectors with quoted
+  names are refused, mostly with "Cannot find file to patch". The `diff --git` line is split
+  at every space, so a section that only that line names (a rename, a mode
+  change, an empty file) cannot name a file whose name contains a space, and
+  is refused (4 vectors). Rotating three names or swapping two files is
+  refused too, because the target of the first rename exists.
+- **An empty new file is refused**, and **an empty file that the patch deletes
+  stays** without a word. git writes no hunk for either.
+- GIT binary patches are skipped, which the documentation of `http_archive`
+  states. Sections are applied one at a time, so when a later section fails,
+  the earlier ones stay applied (3 vectors left half-done).
+
+Upstream: #18610 (`-U0`) is open. The CRLF problem (#32510) and the
+no-newline line (#31034) were fixed this autumn. Bazel's tracker has nothing
+on renames, mode changes, symbolic links or empty files.
 
 ## Smaller observations
 

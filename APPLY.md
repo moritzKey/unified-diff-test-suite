@@ -31,6 +31,7 @@ There are four ways this can end:
 | [BusyBox patch](#busybox-patch) | 1.36.1 | `busybox patch -pN -i FILE` | 210 | 105 | 46 | 10 | **49** | – |
 | [toybox patch](#toybox-patch) | 0.8.15 | `toybox patch -pN -i FILE` | 210 | 137 | 27 | 7 | **39** | – |
 | [BSD patch](#bsd-patch) | 2.0-12u11 FreeBSD | `patch -pN -f -s -E -V none -i FILE` | 210 | 141 | 24 | 24 | **21** | – |
+| [Bazel](#bazel-patch) | master e66a6922a0 | `PatchUtil.apply(patchFile, strip, outputDirectory)` | 210 | 136 | 38 | 3 | **33** | – |
 | [libgit2](#libgit2) | 1.9.7 (via pygit2 1.21.0) | `Diff.parse_diff, then Repository.apply (git_diff_from_buffer, git_apply)` | 196 | 163 | 29 | – | **4** | – |
 | [JGit](#jgit) | 7.8.1.202611041320-r | `Git.apply().setPatch(stream).call()` | 210 | 182 | 21 | 1 | **6** | – |
 | [patch-ng](#patch-ng) | 1.19.1 | `fromfile(path).apply(strip=N, root=directory)` | 210 | 129 | 38 | 13 | **30** | – |
@@ -56,6 +57,7 @@ What the wrong results are (a patch can show several):
 | BusyBox patch | 49 | 14 | 24 | 16 | 1 | 10 |
 | toybox patch | 39 | 10 | 13 | 17 | 2 | 11 |
 | BSD patch | 21 | 2 | 13 | 15 | 2 | 10 |
+| Bazel | 33 | 25 | 4 | 5 | 2 | 2 |
 | libgit2 | 4 | 2 | – | 2 | – | – |
 | JGit | 6 | 3 | 1 | 1 | 2 | – |
 | patch-ng | 30 | 22 | 3 | 7 | 2 | 2 |
@@ -79,6 +81,7 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 | BusyBox patch | 83/168, **42 wrong** | 7/10, **2 wrong** | 7/18, **3 wrong** | 8/14, **2 wrong** |
 | toybox patch | 108/168, **35 wrong** | 8/10, **1 wrong** | 9/18, **3 wrong** | 12/14 |
 | BSD patch | 113/168, **13 wrong** | 9/10, **1 wrong** | 8/18, **7 wrong** | 11/14 |
+| Bazel | 105/168, **29 wrong** | 8/10, **1 wrong** | 15/18 | 8/14, **3 wrong** |
 | libgit2 | 147/168, **4 wrong** | 9/10 | 7/18 | – |
 | JGit | 153/168, **6 wrong** | 10/10 | 10/18 | 9/14 |
 | patch-ng | 105/168, **24 wrong** | 8/10, **1 wrong** | 6/18, **3 wrong** | 10/14, **2 wrong** |
@@ -96,22 +99,22 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 
 Vectors of the `git` tier, grouped by tag; a vector can carry several. "12/14, **1**" reads: 14 patches given, 12 applied correctly, 1 applied wrongly without an error.
 
-| trap | git apply | git apply --unidiff-zero | GNU patch | BusyBox patch | toybox patch | BSD patch | libgit2 | JGit | patch-ng | Mercurial | patch-package | pnpm | Yarn | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
-| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | 2/9, **4** | 1/9, **2** | 8/9, **1** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | 5/9, **4** | 5/9, **4** | 3/9, **6** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
-| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 1/20, **7** | 4/20, **6** | 16/20, **1** | 17/20 | 16/20, **1** | 6/20, **10** | 19/20 | 16/20 | 16/20 | 15/20 | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
-| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | **6/6** | **6/6** | **6/6** | 5/6 | **6/6** | **6/6** | 3/6 | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
-| carriage returns in content | **9/9** | **9/9** | **9/9** | 6/9, **1** | 7/9, **1** | 7/9 | **9/9** | 7/9, **2** | 7/9, **1** | 7/9 | 8/9 | 8/9 | 2/9, **3** | **8/8** | 1/8, **5** | **8/8** | **8/8** | 1/8, **4** |
-| spaces in file names | 20/21 | 20/21 | 16/21 | 13/21, **5** | 16/21, **4** | 13/21, **2** | 15/21 | 19/21, **1** | 12/21, **1** | 14/21, **1** | 15/21 | 16/21 | 14/21, **2** | **17/17** | **17/17** | **17/17** | **17/17** | **17/17** |
-| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **2** | 16/19, **1** | 0/19, **2** | 17/19, **2** | 15/19, **1** | 0/19, **1** | 0/19, **3** | 0/19 | 0/19 | 0/19 | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
-| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **4** | 3/10, **4** | 3/10, **2** | 5/10 | **10/10** | 3/10 | 5/10, **1** | 7/10 | 8/10 | 6/10, **2** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
-| renames | **17/17** | **17/17** | 14/17, **1** | 1/17, **11** | 2/17, **10** | 2/17, **4** | 15/17 | 14/17, **1** | 8/17, **4** | 13/17, **1** | 8/17, **3** | 12/17, **3** | 8/17, **3** | **7/7** | **7/7** | **7/7** | **7/7** | **7/7** |
-| copies | **3/3** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 1/3, **2** | **3/3** | 0/3, **2** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
-| mode changes | 9/10 | 9/10 | 8/10 | 0/10, **9** | 1/10, **8** | 1/10, **3** | 8/10 | **10/10** | 4/10 | 9/10, **1** | 7/10 | 9/10 | 2/10, **5** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
-| empty files | **8/8** | **8/8** | 7/8 | 1/8, **5** | 2/8, **6** | 2/8, **2** | 4/8 | **8/8** | 1/8, **2** | **8/8** | **8/8** | **8/8** | 6/8, **1** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
-| binary patches | **3/3** | **3/3** | 0/3 | 0/3, **3** | 0/3, **3** | 0/3 | **3/3** | **3/3** | 0/3 | **3/3** | 0/3, **3** | 0/3, **3** | 0/3, **1** | – | – | **3/3** | **3/3** | – |
-| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **1** | 2/6, **2** | 0/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | 0/6 | 0/6 | 0/6 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| trap | git apply | git apply --unidiff-zero | GNU patch | BusyBox patch | toybox patch | BSD patch | Bazel | libgit2 | JGit | patch-ng | Mercurial | patch-package | pnpm | Yarn | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
+| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | 2/9, **4** | 1/9, **2** | 8/9, **1** | 5/9, **4** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | 5/9, **4** | 5/9, **4** | 3/9, **6** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
+| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 1/20, **7** | 4/20, **6** | 16/20, **1** | 4/20, **12** | 17/20 | 16/20, **1** | 6/20, **10** | 19/20 | 16/20 | 16/20 | 15/20 | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
+| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | 3/6 | **6/6** | **6/6** | **6/6** | 5/6 | **6/6** | **6/6** | 3/6 | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
+| carriage returns in content | **9/9** | **9/9** | **9/9** | 6/9, **1** | 7/9, **1** | 7/9 | 1/9, **4** | **9/9** | 7/9, **2** | 7/9, **1** | 7/9 | 8/9 | 8/9 | 2/9, **3** | **8/8** | 1/8, **5** | **8/8** | **8/8** | 1/8, **4** |
+| spaces in file names | 20/21 | 20/21 | 16/21 | 13/21, **5** | 16/21, **4** | 13/21, **2** | 13/21, **1** | 15/21 | 19/21, **1** | 12/21, **1** | 14/21, **1** | 15/21 | 16/21 | 14/21, **2** | **17/17** | **17/17** | **17/17** | **17/17** | **17/17** |
+| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **2** | 16/19, **1** | 0/19, **2** | 0/19, **2** | 17/19, **2** | 15/19, **1** | 0/19, **1** | 0/19, **3** | 0/19 | 0/19 | 0/19 | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
+| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **4** | 3/10, **4** | 3/10, **2** | 4/10, **1** | 5/10 | **10/10** | 3/10 | 5/10, **1** | 7/10 | 8/10 | 6/10, **2** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| renames | **17/17** | **17/17** | 14/17, **1** | 1/17, **11** | 2/17, **10** | 2/17, **4** | 10/17, **3** | 15/17 | 14/17, **1** | 8/17, **4** | 13/17, **1** | 8/17, **3** | 12/17, **3** | 8/17, **3** | **7/7** | **7/7** | **7/7** | **7/7** | **7/7** |
+| copies | **3/3** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 0/3, **3** | 1/3, **2** | **3/3** | 0/3, **2** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
+| mode changes | 9/10 | 9/10 | 8/10 | 0/10, **9** | 1/10, **8** | 1/10, **3** | 7/10 | 8/10 | **10/10** | 4/10 | 9/10, **1** | 7/10 | 9/10 | 2/10, **5** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
+| empty files | **8/8** | **8/8** | 7/8 | 1/8, **5** | 2/8, **6** | 2/8, **2** | 4/8, **1** | 4/8 | **8/8** | 1/8, **2** | **8/8** | **8/8** | **8/8** | 6/8, **1** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
+| binary patches | **3/3** | **3/3** | 0/3 | 0/3, **3** | 0/3, **3** | 0/3 | 0/3, **2** | **3/3** | **3/3** | 0/3 | **3/3** | 0/3, **3** | 0/3, **3** | 0/3, **1** | – | – | **3/3** | **3/3** | – |
+| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **1** | 2/6, **2** | 0/6, **2** | 0/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | 0/6 | 0/6 | 0/6 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
 
 ## Per program
 
@@ -383,6 +386,97 @@ BSD patch 2.0-12u11 FreeBSD · C · <https://cgit.freebsd.org/src/tree/usr.bin/p
 | --- | --- | --- |
 | exit N: I can't seem to find a patch in there anywhere. | 23 | `git/bytes/mixed-line-endings-renamed` |
 | exit N: No file to patch.  Skipping... | 1 | `git/paths/cjk-quoted` |
+
+### bazel-patch
+
+Bazel master e66a6922a0 · Java · <https://github.com/bazelbuild/bazel/blob/master/src/main/java/com/google/devtools/build/lib/bazel/repository/decompressor/PatchUtil.java>
+
+- Under test: `PatchUtil.apply(patchFile, strip, outputDirectory)` — on a directory
+- What repository_ctx.patch() calls, and with it the patches of http_archive, git_repository and the Bzlmod overrides when no patch_tool is set. PatchUtil.java is Bazel's file at the commit in the version, unchanged; the vfs classes Path and FileSystemUtils are stand-ins (adapters/bazel-patch/vfs) that do what Bazel's do on Linux. Bazel's build uses java-diff-utils 4.12 and Guava 33.7.2, and so does this one.
+
+136 of 210 patches are applied correctly.
+
+**Wrong without an error (33):**
+
+| vector | what is in the directory afterwards |
+| --- | --- |
+| `git/ranges/u0-insert` | "f.txt": 61 bytes, expected 61; first difference at byte 8 (line 5): expected "1\n2\n3\n4\n5\nfive and a half\nfive a", got "1\n2\n3\n4\nfive and a half\nfive and" |
+| `git/ranges/u0-insert-one` | "f.txt": 37 bytes, expected 37; first difference at byte 8 (line 5): expected "1\n2\n3\n4\n5\nfive and a half\n6\n7\n8\n", got "1\n2\n3\n4\nfive and a half\n5\n6\n7\n8\n" |
+| `git/ranges/u0-append` | "f.txt": 35 bytes, expected 35; first difference at byte 18 (line 10): expected "4\n5\n6\n7\n8\n9\n10\neleven\ntwelve\n", got "4\n5\n6\n7\n8\n9\neleven\ntwelve\n10\n" |
+| `git/ranges/u0-mixed-file` | "f.txt": 115 bytes, expected 115; first difference at byte 6 (line 4): expected "1\n2\n3\n4\ninserted\n5\n6\n7\n8\n9\n10\n", got "1\n2\n3\ninserted\n4\n5\n6\n7\n8\n9\n10\n" |
+| `git/content/no-newline-text-as-content` | "faq.txt": 63 bytes, expected 62; first difference at byte 62 (line 3): expected "A: see above", got "A: see above\n" |
+| `git/newline/removed-at-end` | "f.txt": 8 bytes, expected 7; first difference at byte 7 (line 2): expected "one\ntwo", got "one\ntwo\n" |
+| `git/newline/both-missing-last-line-changed` | "f.txt": 8 bytes, expected 7; first difference at byte 7 (line 2): expected "one\nTWO", got "one\nTWO\n" |
+| `git/newline/both-missing-context` | "f.txt": 14 bytes, expected 13; first difference at byte 13 (line 3): expected "ne\nTWO\nthree", got "ne\nTWO\nthree\n" |
+| `git/newline/marker-mid-hunk-both-sides` | "f.txt": 14 bytes, expected 13; first difference at byte 13 (line 3): expected "ne\ntwo\nthree", got "ne\ntwo\nthree\n" |
+| `git/newline/new-file-without` | "f.txt": 8 bytes, expected 7; first difference at byte 7 (line 2): expected "one\ntwo", got "one\ntwo\n" |
+| `git/newline/single-line-file-without` | "VERSION": 6 bytes, expected 5; first difference at byte 5 (line 1): expected "1.0.1", got "1.0.1\n" |
+| `git/newline/u0-marker` | "f.txt": 17 bytes, expected 16; first difference at byte 16 (line 7): expected "3\n4\n5\n6\nLAST", got "3\n4\n5\n6\nLAST\n" |
+| `git/newline/two-files-with-markers` | "a.txt": 2 bytes, expected 1; first difference at byte 1 (line 1): expected "A", got "A\n" |
+| `git/newline/trailing-blank-lines` | "f.txt": 9 bytes, expected 8; first difference at byte 8 (line 4): expected "text\n\n\n ", got "text\n\n\n \n" |
+| `git/newline/context-marker-then-second-hunk-absent` | "f.txt": 57 bytes, expected 56; first difference at byte 56 (line 21): expected "18\n19\n20\nend", got "18\n19\n20\nend\n" |
+| `git/bytes/lf-to-crlf` | "conv.txt": 8 bytes, expected 10; first difference at byte 3 (line 1): expected "one\r\ntwo\r\n", got "one\ntwo\n" |
+| `git/bytes/mixed-line-endings` | "mixed.txt": 12 bytes, expected 10; first difference at byte 1 (line 1): expected "a\nb\r\nc\r\nD\n", got "a\r\nb\r\nc\r\nD\r\n" |
+| `git/bytes/mixed-line-endings-change-elsewhere` | "notes.txt": 35 bytes, expected 27; first difference at byte 8 (line 2): expected "title\r\n1\n2\n3\n4\n5\n6\n7\neight\n", got "title\r\n1\r\n2\r\n3\r\n4\r\n5\r\n6\r\n7\r\neigh" |
+| `git/bytes/mixed-line-endings-renamed` | "new.txt": 6 bytes, expected 7; first difference at byte 3 (line 2): expected "a\nb\r\nc\n", got "a\nb\nc\n" |
+| `git/paths/two-names-one-quoted` | "we\tird.txt" does not exist (and 1 more difference) |
+| `git/paths/quoted-name-with-space-added` | "Übersicht 2024.txt" does not exist (and 1 more difference) |
+| `git/ops/copy-pure` | "instance.txt" does not exist |
+| `git/ops/copy-and-edit` | "template.txt": 89 bytes, expected 87; first difference at byte 12 (line 2): expected "line 1\nline 2\nline 3\nline 4\nline 5\nl", got "line 1\nline two\nline 3\nline 4\nline 5" (and 1 more difference) |
+| `git/ops/copy-and-rename-same-source` | "first.txt" does not exist |
+| `git/ops/empty-file-deleted` | ".gitkeep" exists and should not |
+| `git/ops/symlink-added` | "latest" was left with permissions 064: its owner cannot read it (and 1 more difference) |
+| `git/ops/file-becomes-symlink` | "config" was left with permissions 064: its owner cannot read it (and 1 more difference) |
+| `git/ops/binary-patch-literal` | "logo.png": 108 bytes, expected 108; first difference at byte 13 (line 3): expected "PNG\r\n\x1a\n\x00\x00\x00\r\x07\x0c\x11\x16\x1b %*/49>CHMRW\…", got "PNG\r\n\x1a\n\x00\x00\x00\r\x07\n\r\x10\x13\x16\x19\x1c\x1f"…" |
+| `git/ops/binary-patch-delta` | "blob.bin": 4004 bytes, expected 4004; first difference at byte 2004 (line 9): expected "\xb4\xd3\xf2\x111Po\x8e\xad\xcc\xeb\x0a\x01Ih\x87\xa6\xc5\xe…", got "\xb4\xd3\xf2\x111Po\x8e\xad\xcc\xeb\x0a*Ih\x87\xa6\xc5\xe4\x…" |
+| `git-wrapped/format-patch-no-newline-then-signature` | "VERSION": 2 bytes, expected 1; first difference at byte 1 (line 1): expected "2", got "2\n" |
+| `gnu/new-and-deleted-files` | "gone.txt" exists and should not |
+| `gnu/no-newline` | "b.txt": 8 bytes, expected 7; first difference at byte 7 (line 2): expected "one\ntwo", got "one\ntwo\n" (and 1 more difference) |
+| `gnu/u0` | "f.txt": 35 bytes, expected 35; first difference at byte 8 (line 5): expected "1\n2\n3\n4\n5\nfive and a half\n6\n7\n9\n", got "1\n2\n3\n4\nfive and a half\n5\n6\n7\n9\n" |
+
+**Left half-done (3):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (b\\s.txtFILE) doesn't exist. | 1 | `git/paths/many-odd-names` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (FILE) doesn't exist, new file name (FILE)  | 1 | `git/ops/empty-files-between-others` |
+| PatchFailedException: Cannot rename file (near line N), old file name (old) doesn't exist, new file name is not specifie | 1 | `git-wrapped/summary-and-patch` |
+
+**Refused (38):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| PatchFailedException: Cannot resolve file path FILE at line N: FILE | 4 | `git/newline/symlink-target-changed` |
+| PatchFailedException: Expecting more chunk line at line N | 3 | `git/content/section-heading-with-control-characters` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (FILE) doesn't exist, new file name (FILE)  | 2 | `git/paths/trailing-space` |
+| PatchFailedException: Cannot rename file (near line N), new file name (FILE) already exists. | 2 | `git/ops/swap-two-files-break-rewrites` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (\N\Nber.txtFILE) doesn't exist. | 1 | `git/paths/non-ascii-quoted` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (\N\N\N\N\N\N/\N\N\N\N\N\N.mdFILE) doesn't  | 1 | `git/paths/cjk-quoted` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (emoji \N\N\N\N.txtFILE) doesn't exist. | 1 | `git/paths/emoji-and-space-quoted` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (say \FILE) doesn't exist, new file name (s | 1 | `git/paths/double-quote` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (\FILE) doesn't exist, new file name (\FILE | 1 | `git/paths/starts-with-double-quote` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (back\\slash.txtFILE) doesn't exist. | 1 | `git/paths/backslash` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (colN\tcolN.tsvFILE) doesn't exist. | 1 | `git/paths/tab` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (lineN\nlineN.txtFILE) doesn't exist. | 1 | `git/paths/newline` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (bell\aesc\Ndel\N.txtFILE) doesn't exist. | 1 | `git/paths/control-chars` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (cr\rname.txtFILE) doesn't exist. | 1 | `git/paths/carriage-return` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (caf\N.txtFILE) doesn't exist. | 1 | `git/paths/latin1-name` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (nbsp\N\Nname.txtFILE) doesn't exist. | 1 | `git/paths/no-break-space` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (e\N\N.txtFILE) doesn't exist. | 1 | `git/paths/combining-accent` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (\\N\\N.txtFILE) doesn't exist. | 1 | `git/paths/literal-backslash-digits` |
+| PatchFailedException: Cannot rename file (near line N), old file name (we\FILE") doesn't exist. | 1 | `git/paths/two-names-first-quoted` |
+| PatchFailedException: Cannot rename file (near line N), old file name (old) doesn't exist, new file name is not specifie | 1 | `git/paths/pure-rename-with-spaces` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (run) doesn't exist, new file name is not s | 1 | `git/paths/mode-change-with-space` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (pr\N\Nfen.shFILE) doesn't exist. | 1 | `git/paths/mode-change-quoted` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (an) doesn't exist, new file name is not sp | 1 | `git/paths/empty-file-with-space-added` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (dir) doesn't exist, new file name (FILE) d | 1 | `git/paths/directory-ending-in-space-mode-change` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (.gitkeep) doesn't exist, new file name (.g | 1 | `git/ops/empty-file-added` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (chmod) doesn't exist, new file name (FILE) | 1 | `git-config/noprefix/space-and-quoting` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (q\FILE) doesn't exist, new file name (q\FI | 1 | `git-config/quotepath/off-still-quoted` |
+| IllegalArgumentException: the stand-in for Bazel's Path cannot name a file that is not UTF-N: café.txt | 1 | `git-config/quotepath/off-latin1-name` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (my file.txtFILE) doesn't exist. | 1 | `gnu/space-in-name` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (b\\s.txtFILE) doesn't exist. | 1 | `gnu/special-names` |
+| PatchFailedException: Cannot find file to patch (near line N), old file name (gr\N\N\N\Ne.txtFILE) doesn't exist. | 1 | `gnu/unicode-name-utf8-locale` |
 
 ### libgit2
 

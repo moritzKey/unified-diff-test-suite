@@ -18,9 +18,9 @@ is full of traps. This repository contains
   ([`RESULTS.md`](RESULTS.md), [`FINDINGS.md`](FINDINGS.md));
 - **the same for programs that apply patches**: 210 of the vectors come with
   the file tree before and after, and `git apply`, GNU patch, BusyBox patch,
-  toybox patch, the BSD patch of FreeBSD and macOS, Mercurial, libgit2, JGit,
-  the patching of patch-package, pnpm and Yarn, and six libraries are asked to
-  get from one to the other
+  toybox patch, the BSD patch of FreeBSD and macOS, Bazel's native patch,
+  Mercurial, libgit2, JGit, the patching of patch-package, pnpm and Yarn, and
+  six libraries are asked to get from one to the other
   ([`APPLY.md`](APPLY.md));
 - **a description of the format** as the tools actually write it
   ([`SPEC.md`](SPEC.md));
@@ -142,6 +142,7 @@ one: it reported success and the files are not what they should be.
 | BusyBox patch 1.36.1 | 210 | 105 | 46 | 10 | 49 |
 | toybox patch 0.8.15 | 210 | 137 | 27 | 7 | 39 |
 | BSD patch (FreeBSD, = macOS) | 210 | 141 | 24 | 24 | 21 |
+| Bazel (`repository_ctx.patch`, master) | 210 | 136 | 38 | 3 | 33 |
 | libgit2 1.9.7 (`git_apply`) | 196 | 163 | 29 | – | 4 |
 | JGit 7.8.1 (`Git.apply()`) | 210 | 182 | 21 | 1 | 6 |
 | Mercurial 7.2.4 (`hg import`) | 210 | 173 | 6 | 22 | 9 |
@@ -166,7 +167,9 @@ newline in. The `patch` of macOS gets all of those right, but cuts a line at a
 NUL byte and applies the change of a copied file to the original. Mercurial
 drops the renames of a patch that Mercurial itself wrote with `diff.noprefix`.
 Yarn never applies a mode change, and when a patch fills an empty file with
-content that has no final newline, Yarn leaves the file empty.
+content that has no final newline, Yarn leaves the file empty. Bazel rewrites
+a file that a patch only renames or makes executable, which breaks binaries,
+and turns a symbolic link into a file that its owner cannot read.
 [`FINDINGS.md`](FINDINGS.md#13-applying) has the rest.
 
 ## Running it
@@ -187,6 +190,7 @@ python3 -m venv adapters/python/.venv && adapters/python/.venv/bin/pip install -
 (cd adapters/rust && cargo build --release --locked)                              # the Rust libraries
 adapters/java/build.sh                                                            # the Java libraries
 adapters/bsd-patch/build.sh                       # FreeBSD's patch, on Linux (a Mac has it)
+adapters/bazel-patch/build.sh                     # Bazel's native patch (needs a JDK)
 
 node src/run.js                           # everything; writes results/*.json
 node src/run.js --adapter parse-diff --show

@@ -3,7 +3,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadRegistry, ROOT } from '../src/adapters.js';
 import { outOfScope, runApplier } from '../src/apply.js';
@@ -139,6 +139,18 @@ test('every kind of damage to a tree is noticed', () => {
   check([...base.slice(1), { path: Buffer.from('A.txt'), mode: MODE.FILE, content: base[0].content }], ['extra', 'missing']);
   const message = compareTrees(treeOf(change('a.txt', { content: Buffer.from('one\ntwo') })), treeOf(base))[0].message;
   assert.match(message, /"a\.txt": 7 bytes, expected 8; first difference at byte 7 \(line 2\)/);
+  // A file left without read permission for its owner (Bazel's native patch writes a symbolic link so):
+  // the scan reads it anyway, and the comparison says so.
+  const dir = makeTempDir('udts-unreadable-');
+  try {
+    materialize(dir, { files: base.filter((e) => e.mode !== MODE.LINK) });
+    chmodSync(join(dir, 'a.txt'), 0o064);
+    const scanned = scanTree(dir);
+    assert.equal(scanned.get('a.txt').unreadable, '064');
+    assert.deepEqual(kinds(compareTrees(scanned, treeOf(base.filter((e) => e.mode !== MODE.LINK)))), ['mode']);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 test('the four outcomes are told apart', async () => {
