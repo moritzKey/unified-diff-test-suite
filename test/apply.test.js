@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadRegistry, ROOT } from '../src/adapters.js';
-import { runApplier } from '../src/apply.js';
+import { outOfScope, runApplier } from '../src/apply.js';
 import { applyCase, applyInfo } from '../src/applycase.js';
 import { loadIndex, loadVector } from '../src/corpus.js';
 import { makeTempDir } from '../src/git.js';
@@ -40,6 +40,24 @@ test('which vectors are patches', () => {
   const reversed = loadVector('git-config/prefix/reversed').vector;
   const c = applyCase(reversed);
   assert.deepEqual(c.new.map((e) => e.path.toString()), reversed.recipe.states[0].files.map((f) => f.path));
+});
+
+test('a program that always removes a/ and b/ is given only the vectors with those prefixes', () => {
+  // patch-package, pnpm and Yarn take no -p.
+  const meta = { scope: ['git', 'git-config'], prefixes: ['a/', 'b/'] };
+  const out = (id) => {
+    const { vector } = loadVector(id);
+    return outOfScope(meta, vector, applyCase(vector));
+  };
+  assert.equal(out('git/basics/modify-one-line'), null);
+  assert.match(out('git-config/noprefix/option'), /prefixes/);
+  assert.match(out('git-config/prefix/reversed'), /prefixes/); // b/ and a/
+  assert.match(out('gnu/single-file'), /sets out to read/);
+  const given = all().filter(({ vector }) => {
+    const c = applyCase(vector);
+    return !c.skip && !outOfScope(meta, vector, c);
+  });
+  assert.equal(given.length, 174);
 });
 
 test('the reference applier turns every old tree into the new tree', () => {

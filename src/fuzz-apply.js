@@ -18,7 +18,7 @@ import { pathToFileURL } from 'node:url';
 import { createHash } from 'node:crypto';
 import { AdapterProcess, loadRegistry } from './adapters.js';
 import { applyCase } from './applycase.js';
-import { applyToFiles, applyToTree } from './apply.js';
+import { applyToFiles, applyToTree, outOfScope } from './apply.js';
 import { stringifyVector } from './corpus.js';
 import { makeTempDir } from './git.js';
 import { genScenario, rng, Session, simplifications, sizeOf } from './fuzz.js';
@@ -74,7 +74,7 @@ class Appliers {
     const meta = this.metas[i];
     const c = applyCase(built.vector);
     if (c.skip) return null;
-    if (meta.scope && !meta.scope.includes(built.vector.tier)) return null;
+    if (outOfScope(meta, built.vector, c)) return null;
     const dir = join(this.work, String(this.n++));
     let res;
     try {

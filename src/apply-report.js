@@ -115,7 +115,7 @@ export function buildApplyReport() {
   }
   push(
     '',
-    'The reference appliers are part of this repository (`src/refapply.js`, `reference/python/udiff_reference.py`). They are in the table to show that every one of these patches can be applied from its text and the old files alone. A library that patches one file at a time is not given the vectors in which no file content changes (pure renames, mode changes), and a library that takes text is not given files that are not valid UTF-8; that is why the number of patches differs.',
+    'The reference appliers are part of this repository (`src/refapply.js`, `reference/python/udiff_reference.py`). They are in the table to show that every one of these patches can be applied from its text and the old files alone. A library that patches one file at a time is not given the vectors in which no file content changes (pure renames, mode changes), a library that takes text is not given files that are not valid UTF-8, libgit2 is not given what GNU diff wrote, and patch-package, pnpm and Yarn, which always remove `a/` and `b/` and take no `-p`, are given only the vectors of the `git` and `git-config` tiers whose names carry those two prefixes. That is why the number of patches differs.',
     '',
   );
 

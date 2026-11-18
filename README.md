@@ -18,8 +18,9 @@ is full of traps. This repository contains
   ([`RESULTS.md`](RESULTS.md), [`FINDINGS.md`](FINDINGS.md));
 - **the same for programs that apply patches**: 210 of the vectors come with
   the file tree before and after, and `git apply`, GNU patch, BusyBox patch,
-  toybox patch, the BSD patch of FreeBSD and macOS, Mercurial, libgit2, JGit
-  and six libraries are asked to get from one to the other
+  toybox patch, the BSD patch of FreeBSD and macOS, Mercurial, libgit2, JGit,
+  the patching of patch-package, pnpm and Yarn, and six libraries are asked to
+  get from one to the other
   ([`APPLY.md`](APPLY.md));
 - **a description of the format** as the tools actually write it
   ([`SPEC.md`](SPEC.md));
@@ -145,6 +146,9 @@ one: it reported success and the files are not what they should be.
 | JGit 7.8.1 (`Git.apply()`) | 210 | 182 | 21 | 1 | 6 |
 | Mercurial 7.2.4 (`hg import`) | 210 | 173 | 6 | 22 | 9 |
 | patch-ng 1.19.1 | 210 | 129 | 38 | 13 | 30 |
+| patch-package 8.0.1 | 174 | 126 | 36 | – | 12 |
+| pnpm 11 (`@pnpm/patching.apply-patch`) | 174 | 132 | 30 | – | 12 |
+| Yarn 4 (`@yarnpkg/plugin-patch` 4.0.6) | 174 | 112 | 41 | – | 21 |
 | jsdiff 9.0.0 (`applyPatch`) | 185 | 185 | – | – | – |
 | whatthepatch 1.0.7 (`apply_diff`) | 185 | 173 | 6 | – | 6 |
 | go-gitdiff 0.9.0 (`Apply`) | 190 | 183 | 2 | – | 5 |
@@ -161,6 +165,8 @@ end of file`; BusyBox patch, toybox patch and patch-ng apply it and leave the
 newline in. The `patch` of macOS gets all of those right, but cuts a line at a
 NUL byte and applies the change of a copied file to the original. Mercurial
 drops the renames of a patch that Mercurial itself wrote with `diff.noprefix`.
+Yarn never applies a mode change, and when a patch fills an empty file with
+content that has no final newline, Yarn leaves the file empty.
 [`FINDINGS.md`](FINDINGS.md#13-applying) has the rest.
 
 ## Running it
@@ -172,7 +178,7 @@ check and the runs of all parsers and appliers give identical results with
 Node.js 20, 22, 24 and 26.
 
 ```sh
-npm test                                  # the suite's own tests (48)
+npm test                                  # the suite's own tests (49)
 node src/generate.js --check              # rebuild every vector and compare
 
 cd adapters/node && npm ci && cd ../..    # the JavaScript libraries under test

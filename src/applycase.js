@@ -13,9 +13,10 @@ const skip = (reason) => ({ skip: reason });
 const key = (buf) => buf.toString('latin1');
 
 /**
- * Returns { old, new, strip, modes, from, to } - the tree before, the tree
- * after (arrays of {path, content, mode}), the number of leading path
- * components the names in the diff carry (the N of `patch -pN`), whether the
+ * Returns { old, new, strip, prefixes, modes, from, to } - the tree before, the
+ * tree after (arrays of {path, content, mode}), the number of leading path
+ * components the names in the diff carry (the N of `patch -pN`), the prefixes
+ * themselves (["a/", "b/"] for most vectors), whether the
  * diff states file modes, and the indexes of the two trees in recipe.states
  * (`from` is null for "nothing") - or { skip: reason } when the diff is not a
  * patch for a tree.
@@ -79,7 +80,7 @@ export function applyCase(vector) {
     const same = x && y && x.content.equals(y.content) && (gnu || x.mode === y.mode);
     if (!same && !touched.has(path)) return skip('the diff does not describe every difference between the two trees');
   }
-  return { old: before, new: after, strip: depth(prefixes[0]), modes: !gnu, from, to };
+  return { old: before, new: after, strip: depth(prefixes[0]), prefixes, modes: !gnu, from, to };
 }
 
 /** The same in the form that is stored in a vector (`apply`), for readers in any language. */

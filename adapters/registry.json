@@ -214,6 +214,21 @@
       "cmd": [".venv/bin/python", "run.py", "apply:mercurial"]
     },
     {
+      "name": "patch-package",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:patch-package"]
+    },
+    {
+      "name": "pnpm",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:pnpm"]
+    },
+    {
+      "name": "yarn",
+      "cwd": "node",
+      "cmd": ["node", "run.mjs", "apply:yarn"]
+    },
+    {
       "name": "jsdiff",
       "cwd": "node",
       "cmd": ["node", "run.mjs", "apply:jsdiff"]

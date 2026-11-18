@@ -35,6 +35,9 @@ There are four ways this can end:
 | [JGit](#jgit) | 7.8.1.202611041320-r | `Git.apply().setPatch(stream).call()` | 210 | 182 | 21 | 1 | **6** | – |
 | [patch-ng](#patch-ng) | 1.19.1 | `fromfile(path).apply(strip=N, root=directory)` | 210 | 129 | 38 | 13 | **30** | – |
 | [Mercurial](#mercurial) | 7.2.4 | `hg import --no-commit -pN FILE` | 210 | 173 | 6 | 22 | **9** | – |
+| [patch-package](#patch-package) | 8.0.1 | `parsePatchFile() + executeEffects(), as applyPatch() calls them` | 174 | 126 | 36 | – | **12** | – |
+| [pnpm](#pnpm) | 1100.0.12 | `applyPatchToDir({ patchFilePath, patchedDir })` | 174 | 132 | 30 | – | **12** | – |
+| [Yarn](#yarn) | 4.0.6 | `parsePatchFile() + applyPatchFile(), as PatchFetcher does` | 174 | 112 | 41 | – | **21** | – |
 | [jsdiff](#jsdiff) | 9.0.0 | `applyPatch(source, patch)` | 185 | 185 | – | – | – | – |
 | [whatthepatch](#whatthepatch) | 1.0.7 | `apply_diff(diff, old_text)  with diff from parse_patch(text)` | 185 | 173 | 6 | – | **6** | – |
 | [go-gitdiff](#go-gitdiff) | v0.9.0 | `gitdiff.Parse, then gitdiff.Apply(dst, src, file)` | 190 | 183 | 2 | – | **5** | – |
@@ -57,11 +60,14 @@ What the wrong results are (a patch can show several):
 | JGit | 6 | 3 | 1 | 1 | 2 | – |
 | patch-ng | 30 | 22 | 3 | 7 | 2 | 2 |
 | Mercurial | 9 | – | 7 | 6 | – | 6 |
+| patch-package | 12 | 10 | – | 2 | – | – |
+| pnpm | 12 | 10 | – | 2 | – | – |
+| Yarn | 21 | 13 | – | 3 | – | 7 |
 | whatthepatch | 6 | 6 | – | – | – | – |
 | go-gitdiff | 5 | 5 | – | – | – | – |
 | java-diff-utils | 5 | 5 | – | – | – | – |
 
-The reference appliers are part of this repository (`src/refapply.js`, `reference/python/udiff_reference.py`). They are in the table to show that every one of these patches can be applied from its text and the old files alone. A library that patches one file at a time is not given the vectors in which no file content changes (pure renames, mode changes), and a library that takes text is not given files that are not valid UTF-8; that is why the number of patches differs.
+The reference appliers are part of this repository (`src/refapply.js`, `reference/python/udiff_reference.py`). They are in the table to show that every one of these patches can be applied from its text and the old files alone. A library that patches one file at a time is not given the vectors in which no file content changes (pure renames, mode changes), a library that takes text is not given files that are not valid UTF-8, libgit2 is not given what GNU diff wrote, and patch-package, pnpm and Yarn, which always remove `a/` and `b/` and take no `-p`, are given only the vectors of the `git` and `git-config` tiers whose names carry those two prefixes. That is why the number of patches differs.
 
 ## By tier
 
@@ -77,6 +83,9 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 | JGit | 153/168, **6 wrong** | 10/10 | 10/18 | 9/14 |
 | patch-ng | 105/168, **24 wrong** | 8/10, **1 wrong** | 6/18, **3 wrong** | 10/14, **2 wrong** |
 | Mercurial | 142/168, **3 wrong** | 10/10 | 11/18, **5 wrong** | 10/14, **1 wrong** |
+| patch-package | 124/168, **12 wrong** | – | 2/6 | – |
+| pnpm | 128/168, **12 wrong** | – | 4/6 | – |
+| Yarn | 111/168, **19 wrong** | – | 1/6, **2 wrong** | – |
 | jsdiff | 145/145 | 10/10 | 16/16 | 14/14 |
 | whatthepatch | 135/145, **5 wrong** | 10/10 | 16/16 | 12/14, **1 wrong** |
 | go-gitdiff | 143/149, **4 wrong** | 10/10 | 17/17 | 13/14, **1 wrong** |
@@ -87,22 +96,22 @@ The reference appliers are part of this repository (`src/refapply.js`, `referenc
 
 Vectors of the `git` tier, grouped by tag; a vector can carry several. "12/14, **1**" reads: 14 patches given, 12 applied correctly, 1 applied wrongly without an error.
 
-| trap | git apply | git apply --unidiff-zero | GNU patch | BusyBox patch | toybox patch | BSD patch | libgit2 | JGit | patch-ng | Mercurial | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
-| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | 2/9, **4** | 1/9, **2** | 8/9, **1** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
-| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 1/20, **7** | 4/20, **6** | 16/20, **1** | 17/20 | 16/20, **1** | 6/20, **10** | 19/20 | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
-| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | **6/6** | **6/6** | **6/6** | 5/6 | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
-| carriage returns in content | **9/9** | **9/9** | **9/9** | 6/9, **1** | 7/9, **1** | 7/9 | **9/9** | 7/9, **2** | 7/9, **1** | 7/9 | **8/8** | 1/8, **5** | **8/8** | **8/8** | 1/8, **4** |
-| spaces in file names | 20/21 | 20/21 | 16/21 | 13/21, **5** | 16/21, **4** | 13/21, **2** | 15/21 | 19/21, **1** | 12/21, **1** | 14/21, **1** | **17/17** | **17/17** | **17/17** | **17/17** | **17/17** |
-| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **2** | 16/19, **1** | 0/19, **2** | 17/19, **2** | 15/19, **1** | 0/19, **1** | 0/19, **3** | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
-| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **4** | 3/10, **4** | 3/10, **2** | 5/10 | **10/10** | 3/10 | 5/10, **1** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
-| renames | **17/17** | **17/17** | 14/17, **1** | 1/17, **11** | 2/17, **10** | 2/17, **4** | 15/17 | 14/17, **1** | 8/17, **4** | 13/17, **1** | **7/7** | **7/7** | **7/7** | **7/7** | **7/7** |
-| copies | **3/3** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 1/3, **2** | **3/3** | 0/3, **2** | **3/3** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
-| mode changes | 9/10 | 9/10 | 8/10 | 0/10, **9** | 1/10, **8** | 1/10, **3** | 8/10 | **10/10** | 4/10 | 9/10, **1** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
-| empty files | **8/8** | **8/8** | 7/8 | 1/8, **5** | 2/8, **6** | 2/8, **2** | 4/8 | **8/8** | 1/8, **2** | **8/8** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
-| binary patches | **3/3** | **3/3** | 0/3 | 0/3, **3** | 0/3, **3** | 0/3 | **3/3** | **3/3** | 0/3 | **3/3** | – | – | **3/3** | **3/3** | – |
-| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **1** | 2/6, **2** | 0/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| trap | git apply | git apply --unidiff-zero | GNU patch | BusyBox patch | toybox patch | BSD patch | libgit2 | JGit | patch-ng | Mercurial | patch-package | pnpm | Yarn | jsdiff | whatthepatch | go-gitdiff | diffy | java-diff-utils |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| content that looks like `--- `/`+++ ` headers | 13/14 | **14/14** | **14/14** | 13/14 | 13/14 | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** | **14/14** |
+| zero-length ranges (`-5,0`, `+0,0`) | 3/9, **2** | **9/9** | **9/9** | 2/9, **4** | 1/9, **2** | 8/9, **1** | 7/9 | 8/9, **1** | 4/9, **4** | **9/9** | 5/9, **4** | 5/9, **4** | 3/9, **6** | **9/9** | **9/9** | 3/9, **4** | **9/9** | **9/9** |
+| `\ No newline at end of file` | **20/20** | **20/20** | **20/20** | 1/20, **7** | 4/20, **6** | 16/20, **1** | 17/20 | 16/20, **1** | 6/20, **10** | 19/20 | 16/20 | 16/20 | 15/20 | **20/20** | 19/20, **1** | **20/20** | **20/20** | 19/20 |
+| CR, FF, U+2028 inside a line | **6/6** | **6/6** | **6/6** | 5/6 | 5/6 | **6/6** | **6/6** | **6/6** | **6/6** | 5/6 | **6/6** | **6/6** | 3/6 | **6/6** | 0/6, **1** | **6/6** | **6/6** | 3/6 |
+| carriage returns in content | **9/9** | **9/9** | **9/9** | 6/9, **1** | 7/9, **1** | 7/9 | **9/9** | 7/9, **2** | 7/9, **1** | 7/9 | 8/9 | 8/9 | 2/9, **3** | **8/8** | 1/8, **5** | **8/8** | **8/8** | 1/8, **4** |
+| spaces in file names | 20/21 | 20/21 | 16/21 | 13/21, **5** | 16/21, **4** | 13/21, **2** | 15/21 | 19/21, **1** | 12/21, **1** | 14/21, **1** | 15/21 | 16/21 | 14/21, **2** | **17/17** | **17/17** | **17/17** | **17/17** | **17/17** |
+| quoted file names (non-ASCII, quotes, control characters) | **19/19** | **19/19** | **19/19** | 0/19, **2** | 16/19, **1** | 0/19, **2** | 17/19, **2** | 15/19, **1** | 0/19, **1** | 0/19, **3** | 0/19 | 0/19 | 0/19 | **18/18** | **18/18** | **18/18** | **18/18** | **18/18** |
+| names that only the `diff --git` line carries | 9/10 | 9/10 | 6/10 | 3/10, **4** | 3/10, **4** | 3/10, **2** | 5/10 | **10/10** | 3/10 | 5/10, **1** | 7/10 | 8/10 | 6/10, **2** | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
+| renames | **17/17** | **17/17** | 14/17, **1** | 1/17, **11** | 2/17, **10** | 2/17, **4** | 15/17 | 14/17, **1** | 8/17, **4** | 13/17, **1** | 8/17, **3** | 12/17, **3** | 8/17, **3** | **7/7** | **7/7** | **7/7** | **7/7** | **7/7** |
+| copies | **3/3** | **3/3** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | 1/3, **2** | **3/3** | 0/3, **2** | **3/3** | 0/3, **2** | 0/3, **2** | 0/3, **1** | **1/1** | **1/1** | **1/1** | **1/1** | **1/1** |
+| mode changes | 9/10 | 9/10 | 8/10 | 0/10, **9** | 1/10, **8** | 1/10, **3** | 8/10 | **10/10** | 4/10 | 9/10, **1** | 7/10 | 9/10 | 2/10, **5** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
+| empty files | **8/8** | **8/8** | 7/8 | 1/8, **5** | 2/8, **6** | 2/8, **2** | 4/8 | **8/8** | 1/8, **2** | **8/8** | **8/8** | **8/8** | 6/8, **1** | **4/4** | **4/4** | **4/4** | **4/4** | **4/4** |
+| binary patches | **3/3** | **3/3** | 0/3 | 0/3, **3** | 0/3, **3** | 0/3 | **3/3** | **3/3** | 0/3 | **3/3** | 0/3, **3** | 0/3, **3** | 0/3, **1** | – | – | **3/3** | **3/3** | – |
+| symbolic links | **6/6** | **6/6** | **6/6** | 0/6, **1** | 2/6, **2** | 0/6, **2** | 2/6 | 0/6, **2** | 0/6, **2** | **6/6** | 0/6 | 0/6 | 0/6 | **6/6** | **6/6** | **6/6** | **6/6** | **6/6** |
 
 ## Per program
 
@@ -550,6 +559,129 @@ Mercurial 7.2.4 · Python · <https://www.mercurial-scm.org/>
 | RuntimeError: hg import: exit N: abort: failed to synchronize metadata for FILE | 3 | `git/paths/space-then-b-slash` |
 | RuntimeError: hg commit: exit N: abort: FILE and FILE disallowed in filenames: FILE | 2 | `git/paths/newline` |
 | RuntimeError: hg commit: exit N: warning: filename contains FILE, which is invalid on Windows: FILE | 1 | `gnu/special-names` |
+
+### patch-package
+
+patch-package 8.0.1 · JavaScript · <https://github.com/ds300/patch-package>
+
+- Under test: `parsePatchFile() + executeEffects(), as applyPatch() calls them` — on a directory
+- The steps of applyPatch() in dist/applyPatches.js: read the file (readFileSync().toString(), so as UTF-8), parse it, a dry run, the real run; when that fails, a patch whose reverse would apply is taken to be applied already and counts as success. patch-package makes its patches with `git diff --src-prefix=a/ --dst-prefix=b/` and takes no -p: it always removes a/ and b/, so only vectors with those prefixes are given. readPatch() exits the process on a parse error; the adapter calls the parser itself and reports the error instead.
+
+126 of 174 patches are applied correctly.
+
+**Wrong without an error (12):**
+
+| vector | what is in the directory afterwards |
+| --- | --- |
+| `git/ranges/u0-insert` | "f.txt": 61 bytes, expected 61; first difference at byte 8 (line 5): expected "1\n2\n3\n4\n5\nfive and a half\nfive a", got "1\n2\n3\n4\nfive and a half\nfive and" |
+| `git/ranges/u0-insert-one` | "f.txt": 37 bytes, expected 37; first difference at byte 8 (line 5): expected "1\n2\n3\n4\n5\nfive and a half\n6\n7\n8\n", got "1\n2\n3\n4\nfive and a half\n5\n6\n7\n8\n" |
+| `git/ranges/u0-append` | "f.txt": 35 bytes, expected 35; first difference at byte 18 (line 10): expected "4\n5\n6\n7\n8\n9\n10\neleven\ntwelve\n", got "4\n5\n6\n7\n8\n9\neleven\ntwelve\n10\n" |
+| `git/ranges/u0-mixed-file` | "f.txt": 115 bytes, expected 115; first difference at byte 6 (line 4): expected "1\n2\n3\n4\ninserted\n5\n6\n7\n8\n9\n10\n", got "1\n2\n3\ninserted\n4\n5\n6\n7\n8\n9\n10\n" |
+| `git/bytes/latin1-content` | "legacy.txt": 15 bytes, expected 11; first difference at byte 2 (line 1): expected "Gr\xfc\xdfe!\x0aend\x0a", got "Gr��e!\nend\n" |
+| `git/ops/swap-two-files-break-rewrites` | "left.txt": 771 bytes, expected 831; first difference at byte 0 (line 1): expected "right line 1\nright line ", got "left line 1\nleft line 2\n" (and 1 more difference) |
+| `git/ops/rename-chain` | "one.txt": 771 bytes, expected 831; first difference at byte 0 (line 1): expected "tres linea 1\ntres linea ", got "uno linea 1\nuno linea 2\n" (and 2 more differences) |
+| `git/ops/copy-pure` | "instance.txt" does not exist |
+| `git/ops/copy-and-rename-same-source` | "first.txt" does not exist |
+| `git/ops/binary-patch-literal` | "logo.png": 108 bytes, expected 108; first difference at byte 13 (line 3): expected "PNG\r\n\x1a\n\x00\x00\x00\r\x07\x0c\x11\x16\x1b %*/49>CHMRW\…", got "PNG\r\n\x1a\n\x00\x00\x00\r\x07\n\r\x10\x13\x16\x19\x1c\x1f"…" |
+| `git/ops/binary-patch-delta` | "blob.bin": 4004 bytes, expected 4004; first difference at byte 2004 (line 9): expected "\xb4\xd3\xf2\x111Po\x8e\xad\xcc\xeb\x0a\x01Ih\x87\xa6\xc5\xe…", got "\xb4\xd3\xf2\x111Po\x8e\xad\xcc\xeb\x0a*Ih\x87\xa6\xc5\xe4\x…" |
+| `git/ops/binary-patch-added-and-deleted` | "new.bin": 0 bytes, expected 108; first difference at byte 0 (line 1): expected "\x89PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x07\x0e\x15\x1c#*18?…", got "" |
+
+**Refused (36):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| Bad diff line: diff --git FILE FILE | 18 | `git/paths/non-ascii-quoted` |
+| ENOENT: no such file or directory, open FILE | 7 | `git/newline/symlink-target-changed` |
+| Unexpected file mode string: N | 4 | `git/ops/symlink-added` |
+| ENOENT: no such file or directory, open FILE FILE' | 3 | `git/paths/rename-with-spaces` |
+| ENOENT: no such file or directory, stat FILE | 2 | `git/ops/rename-and-mode-change` |
+| Bad diff line: diff --git a/FILE FILE | 1 | `git/paths/two-names-one-quoted` |
+| Bad diff line: diff --git FILE b/FILE | 1 | `git/paths/two-names-first-quoted` |
+
+### pnpm
+
+pnpm 1100.0.12 · JavaScript · <https://github.com/pnpm/pnpm/tree/main/pnpm11/patching/apply-patch>
+
+- Under test: `applyPatchToDir({ patchFilePath, patchedDir })` — on a directory
+- pnpm 11; the package is its own port of patch-package. It reads the patch as UTF-8 and applies it without a dry run; a patch whose reverse would apply is taken to be applied already. `pnpm patch-commit` writes patches with `--src-prefix=a/ --dst-prefix=b/` and the applier takes no -p, so only vectors with those prefixes are given.
+
+132 of 174 patches are applied correctly.
+
+**Wrong without an error (12):**
+
+| vector | what is in the directory afterwards |
+| --- | --- |
+| `git/ranges/u0-insert` | "f.txt": 61 bytes, expected 61; first difference at byte 8 (line 5): expected "1\n2\n3\n4\n5\nfive and a half\nfive a", got "1\n2\n3\n4\nfive and a half\nfive and" |
+| `git/ranges/u0-insert-one` | "f.txt": 37 bytes, expected 37; first difference at byte 8 (line 5): expected "1\n2\n3\n4\n5\nfive and a half\n6\n7\n8\n", got "1\n2\n3\n4\nfive and a half\n5\n6\n7\n8\n" |
+| `git/ranges/u0-append` | "f.txt": 35 bytes, expected 35; first difference at byte 18 (line 10): expected "4\n5\n6\n7\n8\n9\n10\neleven\ntwelve\n", got "4\n5\n6\n7\n8\n9\neleven\ntwelve\n10\n" |
+| `git/ranges/u0-mixed-file` | "f.txt": 115 bytes, expected 115; first difference at byte 6 (line 4): expected "1\n2\n3\n4\ninserted\n5\n6\n7\n8\n9\n10\n", got "1\n2\n3\ninserted\n4\n5\n6\n7\n8\n9\n10\n" |
+| `git/bytes/latin1-content` | "legacy.txt": 15 bytes, expected 11; first difference at byte 2 (line 1): expected "Gr\xfc\xdfe!\x0aend\x0a", got "Gr��e!\nend\n" |
+| `git/ops/swap-two-files-break-rewrites` | "left.txt": 771 bytes, expected 831; first difference at byte 0 (line 1): expected "right line 1\nright line ", got "left line 1\nleft line 2\n" (and 1 more difference) |
+| `git/ops/rename-chain` | "one.txt": 771 bytes, expected 831; first difference at byte 0 (line 1): expected "tres linea 1\ntres linea ", got "uno linea 1\nuno linea 2\n" (and 2 more differences) |
+| `git/ops/copy-pure` | "instance.txt" does not exist |
+| `git/ops/copy-and-rename-same-source` | "first.txt" does not exist |
+| `git/ops/binary-patch-literal` | "logo.png": 108 bytes, expected 108; first difference at byte 13 (line 3): expected "PNG\r\n\x1a\n\x00\x00\x00\r\x07\x0c\x11\x16\x1b %*/49>CHMRW\…", got "PNG\r\n\x1a\n\x00\x00\x00\r\x07\n\r\x10\x13\x16\x19\x1c\x1f"…" |
+| `git/ops/binary-patch-delta` | "blob.bin": 4004 bytes, expected 4004; first difference at byte 2004 (line 9): expected "\xb4\xd3\xf2\x111Po\x8e\xad\xcc\xeb\x0a\x01Ih\x87\xa6\xc5\xe…", got "\xb4\xd3\xf2\x111Po\x8e\xad\xcc\xeb\x0a*Ih\x87\xa6\xc5\xe4\x…" |
+| `git/ops/binary-patch-added-and-deleted` | "new.bin": 0 bytes, expected 108; first difference at byte 0 (line 1): expected "\x89PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x07\x0e\x15\x1c#*18?…", got "" |
+
+**Refused (30):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| Applying patch FILE failed: Bad diff line: diff --git FILE FILE | 17 | `git/paths/non-ascii-quoted` |
+| Could not apply patch /home/moritz/.tN-firma/scratch/N-N-N-ok-ich-wei-nicht-was-N/unified-diff-test-suite/corpus/vectors | 6 | `git/newline/symlink-target-changed` |
+| Applying patch FILE failed: Unexpected file mode string: N | 4 | `git/ops/symlink-added` |
+| Applying patch FILE failed: Bad diff line: diff --git FILE "b/\N\N\N\N\N\N/\N\N\N\N\N\FILE | 1 | `git/paths/cjk-quoted` |
+| Applying patch FILE failed: Bad diff line: diff --git a/FILE FILE | 1 | `git/paths/two-names-one-quoted` |
+| Applying patch FILE failed: Bad diff line: diff --git FILE b/FILE | 1 | `git/paths/two-names-first-quoted` |
+
+### yarn
+
+Yarn 4.0.6 · JavaScript · <https://github.com/yarnpkg/berry/tree/master/packages/plugin-patch>
+
+- Under test: `parsePatchFile() + applyPatchFile(), as PatchFetcher does` — on a directory
+- The steps of loadPatchFiles() and PatchFetcher.patchPackage(): read the patch as UTF-8, turn every CR LF and every CR into LF, parse, apply with no dry run. Yarn applies to a copy of the package (a zip archive) and throws the copy away when a hunk fails; the adapter does the same with a copy of the directory. `yarn patch-commit` writes patches with `--src-prefix=a/ --dst-prefix=b/` and the applier takes no -p, so only vectors with those prefixes are given.
+
+112 of 174 patches are applied correctly.
+
+**Wrong without an error (21):**
+
+| vector | what is in the directory afterwards |
+| --- | --- |
+| `git/ranges/u0-insert` | "f.txt": 61 bytes, expected 61; first difference at byte 10 (line 6): expected "1\n2\n3\n4\n5\nfive and a half\nfive and", got "1\n2\n3\n4\n5\n6\nfive and a half\nfive a" |
+| `git/ranges/u0-insert-one` | "f.txt": 37 bytes, expected 37; first difference at byte 10 (line 6): expected "1\n2\n3\n4\n5\nfive and a half\n6\n7\n8\n9\n", got "1\n2\n3\n4\n5\n6\nfive and a half\n7\n8\n9\n" |
+| `git/ranges/u0-insert-at-top` | "f.txt": 33 bytes, expected 33; first difference at byte 0 (line 1): expected "zero\nnought\n1\n2\n3\n4\n5\n6\n", got "1\nzero\nnought\n2\n3\n4\n5\n6\n" |
+| `git/ranges/u0-append` | "f.txt": 35 bytes, expected 35; first difference at byte 21 (line 11): expected "\n6\n7\n8\n9\n10\neleven\ntwelve\n", got "\n6\n7\n8\n9\n10\n\neleven\ntwelve" |
+| `git/ranges/u0-mixed-file` | "f.txt": 115 bytes, expected 115; first difference at byte 8 (line 5): expected "1\n2\n3\n4\ninserted\n5\n6\n7\n8\n9\n10\n11", got "1\n2\n3\n4\n5\ninserted\n6\n7\n8\n9\n10\n11" |
+| `git/ranges/filled-empty-file` | "notes.txt": 14 bytes, expected 14; first difference at byte 0 (line 1): expected "one\ntwo\nthree\n", got "\none\ntwo\nthree" |
+| `git/bytes/crlf-file-modified` | "win.txt": 16 bytes, expected 17; first difference at byte 8 (line 2): expected "one\r\nTWO\r\nthree\r\n", got "one\r\nTWO\nthree\r\n" |
+| `git/bytes/lf-to-crlf` | "conv.txt": 8 bytes, expected 10; first difference at byte 3 (line 1): expected "one\r\ntwo\r\n", got "one\ntwo\n" |
+| `git/bytes/mixed-line-endings` | "mixed.txt": 9 bytes, expected 10; first difference at byte 3 (line 2): expected "a\nb\r\nc\r\nD\n", got "a\nb\nc\r\nD\n" |
+| `git/bytes/latin1-content` | "legacy.txt": 15 bytes, expected 11; first difference at byte 2 (line 1): expected "Gr\xfc\xdfe!\x0aend\x0a", got "Gr��e!\nend\n" |
+| `git/paths/mode-change-with-space` | "run me.sh" has mode 100644, expected 100755 |
+| `git/paths/directory-ending-in-space-mode-change` | "dir /run.sh" has mode 100644, expected 100755 |
+| `git/ops/swap-two-files-break-rewrites` | "left.txt" does not exist (and 1 more difference) |
+| `git/ops/rename-chain` | "one.txt" does not exist (and 1 more difference) |
+| `git/ops/copy-and-rename-same-source` | "first.txt" does not exist |
+| `git/ops/mode-change-only` | "run.sh" has mode 100644, expected 100755 |
+| `git/ops/mode-change-and-edit` | "run.sh" has mode 100644, expected 100755 |
+| `git/ops/mode-removed` | "run.sh" has mode 100755, expected 100644 |
+| `git/ops/binary-patch-added-and-deleted` | "new.bin": 0 bytes, expected 108; first difference at byte 0 (line 1): expected "\x89PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x07\x0e\x15\x1c#*18?…", got "" |
+| `git-config/prefix/pinned-despite-config` | "tool.sh" has mode 100644, expected 100755 |
+| `git-config/prefix/default-prefix-option` | "tool.sh" has mode 100644, expected 100755 |
+
+**Refused (41):**
+
+| what it said | vectors | for example |
+| --- | --- | --- |
+| Bad diff line: diff --git FILE FILE | 18 | `git/paths/non-ascii-quoted` |
+| ENOENT: no such file or directory, lstat FILE | 9 | `git/paths/leading-space` |
+| Unexpected file mode string: N | 4 | `git/ops/symlink-added` |
+| hunk header integrity check failed (expected @@ +N +N @@, got @@ +N +N @@) | 3 | `git/content/section-heading-with-control-characters` |
+| Unable to parse patch file: No changes found. Make sure the patch is a valid UTFN encoded string | 3 | `git/ops/copy-pure` |
+| ENOENT: no such file or directory, stat FILE | 2 | `git/newline/symlink-target-changed` |
+| Bad diff line: diff --git a/FILE FILE | 1 | `git/paths/two-names-one-quoted` |
+| Bad diff line: diff --git FILE b/FILE | 1 | `git/paths/two-names-first-quoted` |
 
 ### jsdiff
 

@@ -1,7 +1,7 @@
 # Findings
 
 What the corpus showed when it was first run, on 16 and 17 November 2026,
-against the latest release of twenty-five parsers, and against fourteen programs
+against the latest release of twenty-five parsers, and against seventeen programs
 that apply patches. The numbers are in [`RESULTS.md`](RESULTS.md) and
 [`APPLY.md`](APPLY.md); this file explains them, one kind of problem at a
 time, and records what was already known to the projects.
@@ -39,7 +39,7 @@ Vector ids below (`git/paths/space`) are files under `corpus/vectors/`.
 | 10 | binary files are not recognised | gitdiff-parser, jsdiff, git-diff-view, parse-git-diff, patch-ng, patch and gitpatch (Rust), unidiff (Rust), diffparser (Java) |
 | 11 | names are damaged when the prefixes are not `a/` and `b/` | parse-diff, diff2html, unidiff, go-gitdiff |
 | 12 | a tool's result depends on the user's git configuration | gitleaks (not trufflehog) |
-| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, libgit2, JGit, Mercurial, patch-ng, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
+| 13 | a patch is applied wrongly and success is reported | `git apply` without `--unidiff-zero`, GNU patch, BusyBox patch, toybox patch, BSD patch, libgit2, JGit, Mercurial, patch-ng, patch-package, pnpm, Yarn, go-gitdiff, whatthepatch, java-diff-utils (not jsdiff, not diffy) |
 
 No parser hung. Four programs end abnormally on valid input: the Rust crates
 patch and gitpatch panic (section 14), waigani/diffparser panics on GNU diffs,
@@ -377,7 +377,7 @@ second case, as `--no-color` closes the first.
 
 Sections 1 to 12 are about reading a diff. This one is about acting on it.
 210 of the vectors are patches in the plain sense — the vector records the tree
-before and the tree after — and fourteen programs were asked to get from one to
+before and the tree after — and seventeen programs were asked to get from one to
 the other ([`APPLY.md`](APPLY.md) has every result; `node src/apply.js --adapter
 gnu-patch --show` repeats one). A program may refuse a patch. What matters here
 is the other outcome: it reports success, and a file is not what it should be.
@@ -385,7 +385,7 @@ I reproduced the cases of `git apply`, GNU patch, BusyBox patch, toybox patch,
 libgit2, JGit and patch-ng by calling the program by hand, outside the harness;
 the go-gitdiff case is the one its own tracker describes. toybox patch and JGit
 were added a day later and have their own section, 15; BSD patch and Mercurial
-have sections 16 and 17.
+have sections 16 and 17, and patch-package, pnpm and Yarn section 18.
 
 **Zero context.** A hunk made with `-U0` that only inserts has an old range of
 length zero, `@@ -5,0 +6 @@`, and that range names the line *after which* the
@@ -716,6 +716,106 @@ all right. A file with classic Mac line endings (CR only) is refused.
 Upstream: nothing in Mercurial's tracker (foss.heptapod.net, which holds the
 old Bugzilla too) on git's quoting or on importing a patch without prefixes.
 Issue 3723 (2012, closed) was about names with spaces in Mercurial's own diffs.
+
+## 18. patch-package, pnpm and Yarn
+
+Added on 18 November 2026. These three tools apply the patches that JavaScript
+projects keep for their dependencies. patch-package (8.0.1, about eight million
+downloads a week) runs from `postinstall`. pnpm 11 applies `patchedDependencies`
+with `@pnpm/patching.apply-patch` (1100.0.12). Yarn applies the `patch:`
+protocol with `@yarnpkg/plugin-patch` (4.0.6, and the two functions discussed
+below are the same in the `yarn.js` of Yarn 4.18.1). Yarn also uses that
+protocol for the patches it ships for TypeScript, fsevents and resolve. None of
+the three calls git or patch: pnpm's and Yarn's code are ports of
+patch-package's parser and applier. Each tool writes its patches with
+`git diff --src-prefix=a/ --dst-prefix=b/` and always removes those two
+prefixes, with no `-p`. Each was therefore given the 174 vectors of the `git`
+and `git-config` tiers whose names carry them. The adapters call the parser and
+the applier the way each tool does. patch-package does a dry run first. Yarn
+applies to a copy of the package and discards the copy when a hunk fails. pnpm
+applies in place.
+
+| | right | refused | wrong |
+| --- | --- | --- | --- |
+| patch-package | 126 | 36 | 12 |
+| pnpm | 132 | 30 | 12 |
+| Yarn | 112 | 41 | 21 |
+
+Common to all three:
+
+- **Quoted names are refused** ("Bad diff line", 20 vectors). **Names are
+  trimmed**, so a name that begins or ends with a space is not found. Both
+  failures are safe. There is one consequence for patch-package: it runs git
+  with the default `core.quotePath`, so a package file whose name is not ASCII
+  gives a patch that patch-package cannot read. It parses the patch right after
+  making it and stops ("unable to read the patch-file made by git"). Yarn passes
+  `core.quotePath=false`.
+- **Files are read and written as UTF-8 text.** A byte that is not valid UTF-8
+  becomes U+FFFD in every line of the file, not only in the changed ones
+  (`git/bytes/latin1-content`).
+- Symbolic links are refused ("Unexpected file mode string: 120000"), and a
+  GIT binary patch is skipped without a word. A new binary file is created
+  empty (`git/ops/binary-patch-added-and-deleted`). Yarn refuses a patch that
+  only changes a binary file, and the other two leave the file as it was. The
+  patches these tools make carry no binary data, because git without
+  `--binary` writes only "Binary files a/x and b/x differ". That line is
+  skipped too, so a change to a binary file is lost when the patch is made
+  (patch-package #193).
+
+Yarn:
+
+- **A mode change is never applied** (7 vectors). The test before `chmod` in
+  `applyPatchFile()` is inverted: it skips the change exactly when the
+  executable bit differs. Checked with Yarn 4.18.1: after `yarn patch`,
+  `chmod +x` and `yarn patch-commit`, the patch says `new mode 100755`, and
+  after `yarn install` the file is still `-rw-rw-r--`.
+- **A hunk without context lines is placed one line too far down** (6
+  vectors). Yarn's first guess for where a hunk starts in the old file is the
+  start line of the new side, read as an index into the old file. That is one
+  line too far, and further for a hunk that comes after hunks that added
+  lines. A hunk with context lines is found nearby. A hunk without context
+  lines fits anywhere and is taken at the guess. git writes such a hunk for
+  every file that was empty (`@@ -0,0 +1 @@`). Filling an empty file therefore
+  gives a leading empty line and loses the final newline. When the new content
+  has no final newline, the `\ No newline at end of file` marker then removes
+  the line that was just added, and the file stays empty. The applier fuzzer
+  found this last case. All of it was checked with Yarn 4.18.1, through
+  `yarn patch` and `yarn patch-commit`.
+- **Every CR in a patch becomes LF** before the patch is parsed. This is
+  deliberate (`loadPatchFiles()`, for patches checked out with CRLF on
+  Windows). Lines that a patch adds to a file with CRLF line endings get LF (3
+  vectors), and a CR inside a line ends that line (3 refused).
+- **Renames overwrite.** When three files rotate their names, or two files are
+  swapped (`git/ops/rename-chain`, `git/ops/swap-two-files-break-rewrites`),
+  one of them is lost. A rename into a directory that does not exist yet is
+  refused.
+
+patch-package and pnpm:
+
+- **A zero-context insertion goes one line too early** (4 vectors). This is
+  the opposite of Yarn's error and the same as go-gitdiff's.
+- **A failure can be reported as "already applied".** When a patch does not
+  apply, both tools check whether its reverse would, and if it would, they
+  report success. For a rename, that check only asks whether the files exist.
+  When three files rotate their names, or two are swapped, the first rename
+  stops because its target exists. Nothing has changed at that point, the
+  reverse check passes, and the patch counts as applied (2 vectors).
+- **Copies are not read.** A pure copy is skipped without an error
+  (`git/ops/copy-pure`), and a copy with changes is refused. This is known as
+  patch-package #530.
+- patch-package refuses **a rename with changes**. Its dry run looks for the
+  file under the new name before the rename has happened (known, #518). pnpm
+  has no dry run and applies it.
+- The fuzzer found two ways a failing patch leaves changes behind. patch-package's
+  dry run changes file modes for real (`chmodSync` is outside the `dryRun`
+  test). pnpm applies in place, so the parts before a failing one stay
+  applied. No vector of the corpus shows either.
+
+Upstream: Yarn's tracker has nothing on mode changes or on empty files. #6612
+and PR #7128 are about files that already lack a final newline, which this
+corpus covers and Yarn gets right. patch-package's tracker has the binary files
+(#193, closed in 2019), the rename with changes (#518, open) and copies (#530,
+open). pnpm's tracker was not searched.
 
 ## Smaller observations
 

@@ -133,6 +133,16 @@ export async function applyToFiles(proc, meta, id, diff, vector, c, dir) {
   return { verdict: seen.has('wrong') ? 'wrong' : seen.has('refused') ? 'refused' : 'ok', findings };
 }
 
+/** Why a vector is not for this applier, or null. */
+export function outOfScope(meta, vector, c) {
+  if (meta.scope && !meta.scope.includes(vector.tier)) return 'not a kind of diff this program sets out to read';
+  // A program that always removes the same two prefixes (patch-package and its kin take `a/` and `b/`, and no -p).
+  if (meta.prefixes && (c.prefixes[0] !== meta.prefixes[0] || c.prefixes[1] !== meta.prefixes[1])) {
+    return `the names carry other prefixes than ${meta.prefixes.join(' and ')}, the only ones this program removes`;
+  }
+  return null;
+}
+
 /** Run one applier over the given vectors. Returns { meta, results: {id: {verdict, findings}} }. */
 export async function runApplier(spec, vectors, { timeoutMs = 20000 } = {}) {
   const proc = new AdapterProcess(spec, { timeoutMs });
@@ -148,8 +158,9 @@ export async function runApplier(spec, vectors, { timeoutMs = 20000 } = {}) {
         results[vector.id] = { verdict: 'n/a', findings: [], reason: c.skip };
         continue;
       }
-      if (meta.scope && !meta.scope.includes(vector.tier)) {
-        results[vector.id] = { verdict: 'n/a', findings: [], reason: 'not a kind of diff this program sets out to read' };
+      const out = outOfScope(meta, vector, c);
+      if (out) {
+        results[vector.id] = { verdict: 'n/a', findings: [], reason: out };
         continue;
       }
       const dir = join(work, String(n++));
